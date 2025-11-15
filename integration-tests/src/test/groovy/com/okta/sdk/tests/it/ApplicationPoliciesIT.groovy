@@ -559,4 +559,35 @@ class ApplicationPoliciesIT extends ITSupport {
 
         logger.info("Comprehensive lifecycle test completed successfully!")
     }
+
+    /**
+     * Test 10: Map parameter variant
+     * Tests the assignApplicationPolicy method with Map parameter (for additional parameters).
+     */
+    @Test
+    void testAssignApplicationPolicyWithMapParameter() {
+        logger.info("Testing application policy assignment with Map parameter...")
+
+        // Arrange - Use empty map for additional parameters (common pattern in generated code)
+        def additionalParams = [:]
+
+        // Act - Assign policy using Map parameter variant
+        applicationPoliciesApi.assignApplicationPolicy(testAppId, testPolicyId, additionalParams)
+        Thread.sleep(1000)
+
+        // Assert - Verify the assignment by checking the application's access policy link
+        Application app = applicationApi.getApplication(testAppId, null)
+        
+        assertThat(app, notNullValue())
+        assertThat(app.getId(), equalTo(testAppId))
+        assertThat("Application should have links", app.getLinks(), notNullValue())
+        assertThat("Application should have access policy link after assignment with Map param", 
+            app.getLinks().getAccessPolicy(), notNullValue())
+        assertThat("Access policy link should have href", 
+            app.getLinks().getAccessPolicy().getHref(), not(emptyOrNullString()))
+        assertThat("Access policy link should reference the assigned policy",
+            app.getLinks().getAccessPolicy().getHref(), containsString(testPolicyId))
+
+        logger.info("Map parameter variant test completed successfully!")
+    }
 }

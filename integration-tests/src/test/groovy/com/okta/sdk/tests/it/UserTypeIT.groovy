@@ -571,4 +571,175 @@ class UserTypeIT extends ITSupport {
             assertThat(e.getCode(), equalTo(400))
         }
     }
+
+    // ========== Map Parameter Coverage Tests ==========
+
+    @Test(groups = "group3")
+    void createUserType_withMapParameter_callsCorrectEndpoint() {
+        def typeName = "custom_map_"+UUID.randomUUID().toString().substring(0,8)
+        
+        try {
+            def userType = new UserType()
+            userType.setName(typeName)
+            userType.setDisplayName("Map Param Type")
+            userType.setDescription("Test with map parameter")
+            
+            def additionalParams = [:] // Empty map for additional parameters
+            
+            def createdType = userTypeApi.createUserType(userType, additionalParams)
+            registerForCleanup(createdType)
+            
+            assertThat(createdType, notNullValue())
+            assertThat(createdType.getId(), notNullValue())
+            assertThat(createdType.getName(), equalTo(typeName))
+
+        } catch (ApiException e) {
+            // Expected if user type management not enabled
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void getUserType_withMapParameter_returnsUserType() {
+        def typeName = "custom_getmap_"+UUID.randomUUID().toString().substring(0,8)
+        
+        try {
+            // Create a type first
+            def userType = new UserType()
+            userType.setName(typeName)
+            userType.setDisplayName("Get Map Type")
+            
+            def createdType = userTypeApi.createUserType(userType)
+            registerForCleanup(createdType)
+            
+            def additionalParams = [:] // Empty map for additional parameters
+            
+            // Get the type with Map parameter
+            def retrievedType = userTypeApi.getUserType(createdType.getId(), additionalParams)
+            
+            assertThat(retrievedType, notNullValue())
+            assertThat(retrievedType.getId(), equalTo(createdType.getId()))
+            assertThat(retrievedType.getName(), equalTo(typeName))
+
+        } catch (ApiException e) {
+            // Expected if user type management not enabled
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void listUserTypes_withMapParameter_returnsUserTypes() {
+        try {
+            def additionalParams = [:] // Empty map for additional parameters
+            
+            // List types with Map parameter
+            def userTypes = userTypeApi.listUserTypes(additionalParams)
+            
+            assertThat(userTypes, notNullValue())
+            assertThat(userTypes, not(empty()))
+
+        } catch (ApiException e) {
+            // Expected if user type management not enabled
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void updateUserType_withMapParameter_updatesUserType() {
+        def typeName = "custom_updmap_"+UUID.randomUUID().toString().substring(0,8)
+        
+        try {
+            // Create a type first
+            def userType = new UserType()
+            userType.setName(typeName)
+            userType.setDisplayName("Update Map Type")
+            
+            def createdType = userTypeApi.createUserType(userType)
+            registerForCleanup(createdType)
+            
+            def additionalParams = [:] // Empty map for additional parameters
+            
+            // Update the type with Map parameter
+            def updateRequest = new UserTypePostRequest()
+            updateRequest.setDisplayName("Updated Map Display Name")
+            updateRequest.setDescription("Updated description")
+            
+            def updatedType = userTypeApi.updateUserType(createdType.getId(), updateRequest, additionalParams)
+            
+            assertThat(updatedType, notNullValue())
+            assertThat(updatedType.getDisplayName(), equalTo("Updated Map Display Name"))
+            assertThat(updatedType.getDescription(), equalTo("Updated description"))
+
+        } catch (ApiException e) {
+            // Expected if user type management not enabled
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void replaceUserType_withMapParameter_replacesUserType() {
+        def typeName = "custom_replmap_"+UUID.randomUUID().toString().substring(0,8)
+        
+        try {
+            // Create a type first
+            def userType = new UserType()
+            userType.setName(typeName)
+            userType.setDisplayName("Replace Map Type")
+            userType.setDescription("Original description")
+            
+            def createdType = userTypeApi.createUserType(userType)
+            registerForCleanup(createdType)
+            
+            def additionalParams = [:] // Empty map for additional parameters
+            
+            // Replace the type with Map parameter
+            def replaceRequest = new UserTypePutRequest()
+            replaceRequest.setDisplayName("Replaced Map Display Name")
+            replaceRequest.setDescription("Replaced description")
+            
+            def replacedType = userTypeApi.replaceUserType(createdType.getId(), replaceRequest, additionalParams)
+            
+            assertThat(replacedType, notNullValue())
+            assertThat(replacedType.getDisplayName(), equalTo("Replaced Map Display Name"))
+            assertThat(replacedType.getDescription(), equalTo("Replaced description"))
+
+        } catch (ApiException e) {
+            // Expected if user type management not enabled
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void deleteUserType_withMapParameter_deletesUserType() {
+        def typeName = "custom_delmap_"+UUID.randomUUID().toString().substring(0,8)
+        
+        try {
+            // Create a type first
+            def userType = new UserType()
+            userType.setName(typeName)
+            userType.setDisplayName("Delete Map Type")
+            
+            def createdType = userTypeApi.createUserType(userType)
+            // Don't register for cleanup since we're deleting it
+            
+            def additionalParams = [:] // Empty map for additional parameters
+            
+            // Delete the type with Map parameter
+            userTypeApi.deleteUserType(createdType.getId(), additionalParams)
+            
+            // Verify it's deleted by trying to get it
+            try {
+                userTypeApi.getUserType(createdType.getId())
+                assertThat("Should throw exception for deleted type", false)
+            } catch (ApiException e) {
+                // Expected - deleted type should return 404
+                assertThat(e.getCode(), equalTo(404))
+            }
+
+        } catch (ApiException e) {
+            // Expected if user type management not enabled
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
 }
+

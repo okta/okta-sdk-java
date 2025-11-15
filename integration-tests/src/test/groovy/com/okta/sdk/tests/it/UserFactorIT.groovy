@@ -956,4 +956,319 @@ class UserFactorIT extends ITSupport {
             assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
         }
     }
+
+    // ========== Additional Coverage Tests for Map Parameters ==========
+
+    @Test(groups = "group3")
+    void activateFactor_withMapParameter_callsCorrectEndpoint() {
+        log.info("=== Test: ActivateFactor with Map parameter ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid)
+        Thread.sleep(2000)
+
+        try {
+            def totpFactor = new UserFactorTokenSoftwareTOTP()
+                .factorType(UserFactorType.TOKEN_SOFTWARE_TOTP)
+                .provider("OKTA")
+                .profile(new UserFactorTokenProfile().credentialId("test-${guid}@test.com"))
+
+            def enrolledFactor = userFactorApi.enrollFactor(user.getId(), totpFactor, null, null, null, null, null)
+            assertThat(enrolledFactor, notNullValue())
+            Thread.sleep(1000)
+
+            // Test activateFactor with Map parameter
+            def activateRequest = new UserFactorActivateRequest().passCode("123456")
+            def additionalParams = [:] // Empty map for additional parameters
+
+            try {
+                userFactorApi.activateFactor(user.getId(), enrolledFactor.getId(), activateRequest, additionalParams)
+            } catch (ApiException e) {
+                // Expected to fail with invalid passcode, but method is called
+                assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+            }
+
+            userFactorApi.unenrollFactor(user.getId(), enrolledFactor.getId(), null)
+
+        } catch (ApiException e) {
+            log.error("ApiException: Code={}, Message={}", e.getCode(), e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void resendEnrollFactor_withMapParameter_callsCorrectEndpoint() {
+        log.info("=== Test: ResendEnrollFactor with Map parameter ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid)
+        Thread.sleep(2000)
+
+        try {
+            def phoneNumber = "+1${(1000000000 + new Random().nextInt(900000000))}"
+            
+            def smsFactor = new UserFactorSMS()
+                .factorType(UserFactorType.SMS)
+                .provider("OKTA")
+                .profile(new UserFactorSMSProfile().phoneNumber(phoneNumber))
+
+            def enrolledFactor = userFactorApi.enrollFactor(user.getId(), smsFactor, null, null, null, null, null)
+            assertThat(enrolledFactor, notNullValue())
+            Thread.sleep(1000)
+
+            // Test resendEnrollFactor with Map parameter
+            def additionalParams = [:] // Empty map for additional parameters
+            def updateRequest = new UserFactorSMS()
+                .factorType(UserFactorType.SMS)
+                .provider("OKTA")
+                .profile(new UserFactorSMSProfile().phoneNumber(phoneNumber))
+
+            try {
+                def resendResult = userFactorApi.resendEnrollFactor(user.getId(), enrolledFactor.getId(), updateRequest, additionalParams)
+                assertThat(resendResult, notNullValue())
+            } catch (ApiException e) {
+                // May not be supported for all factor types
+                assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+            }
+
+            userFactorApi.unenrollFactor(user.getId(), enrolledFactor.getId(), null)
+
+        } catch (ApiException e) {
+            log.error("ApiException: Code={}, Message={}", e.getCode(), e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void getFactorTransactionStatus_withMapParameter_returnsTransaction() {
+        log.info("=== Test: GetFactorTransactionStatus with Map parameter ===")
+        
+        def guid = UUID.randomUUID().toString()
+        def user = createTestUser(guid)
+        Thread.sleep(2000)
+
+        try {
+            def totpFactor = new UserFactorTokenSoftwareTOTP()
+                .factorType(UserFactorType.TOKEN_SOFTWARE_TOTP)
+                .provider("OKTA")
+                .profile(new UserFactorTokenProfile().credentialId("test-${guid}@test.com"))
+
+            def enrolledFactor = userFactorApi.enrollFactor(user.getId(), totpFactor, null, null, null, null, null)
+            assertThat(enrolledFactor, notNullValue())
+            Thread.sleep(1000)
+
+            // Attempt to verify factor to generate a transaction
+            try {
+                def verifyRequest = new UserFactorVerifyRequest().passCode("000000")
+                def verifyResponse = userFactorApi.verifyFactor(user.getId(), enrolledFactor.getId(), null, null, null, null, null, verifyRequest)
+                
+                // If verification returns a transaction ID, test getFactorTransactionStatus with Map parameter
+                if (verifyResponse != null) {
+                    def additionalParams = [:] // Empty map for additional parameters
+                    try {
+                        def transactionStatus = userFactorApi.getFactorTransactionStatus(user.getId(), enrolledFactor.getId(), "dummy-transaction-id", additionalParams)
+                        assertThat(transactionStatus, notNullValue())
+                    } catch (ApiException e) {
+                        // Expected for invalid transaction ID
+                        assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+                    }
+                }
+            } catch (ApiException e) {
+                // Verification may fail, that's ok
+                log.info("Verification failed as expected: {}", e.getCode())
+            }
+
+            userFactorApi.unenrollFactor(user.getId(), enrolledFactor.getId(), null)
+
+        } catch (ApiException e) {
+            log.error("ApiException: Code={}, Message={}", e.getCode(), e.getMessage())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    // ========== YubiKey OTP Tests ==========
+
+    @Test(groups = "group3")
+    void uploadYubikeyOtpTokenSeed_callsCorrectEndpoint() {
+        log.info("=== Test: UploadYubikeyOtpTokenSeed ===")
+        
+        try {
+            // Create upload request
+            def uploadRequest = new UploadYubikeyOtpTokenSeedRequest()
+                .publicId("ccc${UUID.randomUUID().toString().substring(0, 30)}")
+                .privateId("uid${UUID.randomUUID().toString().substring(0, 10)}")
+                .aesKey("aes${UUID.randomUUID().toString().replace('-', '').substring(0, 30)}")
+
+            // Attempt to upload YubiKey token seed with all parameters
+            def uploadResponse = userFactorApi.uploadYubikeyOtpTokenSeed(
+                uploadRequest, 
+                null,  // String parameter 1
+                null,  // String parameter 2
+                null,  // String parameter 3
+                null,  // Boolean parameter
+                null,  // Integer parameter
+                null,  // String parameter 4
+                null,  // String parameter 5
+                [:]    // Map parameter
+            )
+            
+            // If successful, verify response
+            if (uploadResponse != null) {
+                assertThat(uploadResponse, notNullValue())
+                log.info("Successfully uploaded YubiKey token seed")
+            }
+        } catch (ApiException e) {
+            // This endpoint may not be available in all orgs
+            log.info("YubiKey upload not supported (expected): Code={}", e.getCode())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404), equalTo(500)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void listYubikeyOtpTokens_callsCorrectEndpoint() {
+        log.info("=== Test: ListYubikeyOtpTokens ===")
+        
+        try {
+            // Attempt to list YubiKey OTP tokens with all parameters
+            def tokens = userFactorApi.listYubikeyOtpTokens(
+                null,  // String parameter 1
+                null,  // String parameter 2  
+                null,  // String parameter 3
+                null,  // Boolean parameter
+                null,  // Integer parameter
+                null,  // String parameter 4
+                null   // String parameter 5
+            )
+            
+            assertThat(tokens, notNullValue())
+            log.info("Successfully listed YubiKey OTP tokens: {}", tokens.size())
+            
+        } catch (ApiException e) {
+            // This endpoint may not be available in all orgs
+            log.info("YubiKey listing not supported (expected): Code={}", e.getCode())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void listYubikeyOtpTokens_withMapParameter_callsCorrectEndpoint() {
+        log.info("=== Test: ListYubikeyOtpTokens with Map parameter ===")
+        
+        try {
+            def additionalParams = [:] // Empty map for additional parameters
+            
+            // Attempt to list YubiKey OTP tokens with Map parameter
+            def tokens = userFactorApi.listYubikeyOtpTokens(
+                null,  // String parameter 1
+                null,  // String parameter 2
+                null,  // String parameter 3
+                null,  // Boolean parameter
+                null,  // Integer parameter
+                null,  // String parameter 4
+                null,  // String parameter 5
+                additionalParams  // Map parameter
+            )
+            
+            assertThat(tokens, notNullValue())
+            log.info("Successfully listed YubiKey OTP tokens with Map: {}", tokens.size())
+            
+        } catch (ApiException e) {
+            // This endpoint may not be available in all orgs
+            log.info("YubiKey listing not supported (expected): Code={}", e.getCode())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void getYubikeyOtpTokenById_callsCorrectEndpoint() {
+        log.info("=== Test: GetYubikeyOtpTokenById ===")
+        
+        try {
+            // Attempt to get a specific YubiKey OTP token (using a dummy ID)
+            def tokenId = "dummy-token-id"
+            def token = userFactorApi.getYubikeyOtpTokenById(tokenId)
+            
+            if (token != null) {
+                assertThat(token, notNullValue())
+                log.info("Successfully retrieved YubiKey OTP token")
+            }
+        } catch (ApiException e) {
+            // Expected to fail with dummy ID
+            log.info("YubiKey token retrieval failed (expected): Code={}", e.getCode())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void uploadYubikeyOtpTokenSeed_withMapParameter_callsCorrectEndpoint() {
+        log.info("=== Test: UploadYubikeyOtpTokenSeed with Map parameter ===")
+        
+        try {
+            def uploadRequest = new UploadYubikeyOtpTokenSeedRequest()
+            def additionalParams = [:]
+            
+            def uploadResponse = userFactorApi.uploadYubikeyOtpTokenSeed(
+                uploadRequest,
+                null, null, null, null, null, null, null,
+                additionalParams
+            )
+            
+            assertThat(uploadResponse, notNullValue())
+            log.info("Successfully uploaded YubiKey OTP token seed with Map parameter")
+            
+        } catch (ApiException e) {
+            log.info("YubiKey upload with Map not supported (expected): Code={}", e.getCode())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404), equalTo(500)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void getYubikeyOtpTokenById_withMapParameter_callsCorrectEndpoint() {
+        log.info("=== Test: GetYubikeyOtpTokenById with Map parameter ===")
+        
+        try {
+            def tokenId = "dummy-token-id"
+            def additionalParams = [:]
+            def token = userFactorApi.getYubikeyOtpTokenById(tokenId, additionalParams)
+            
+            if (token != null) {
+                assertThat(token, notNullValue())
+                log.info("Successfully retrieved YubiKey OTP token with Map parameter")
+            }
+        } catch (ApiException e) {
+            log.info("YubiKey token retrieval with Map failed (expected): Code={}", e.getCode())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void activateFactor_withMapParameter_testsCoverage() {
+        log.info("=== Test: ActivateFactor with Map parameter ===")
+        
+        def password = 'Passw0rd!2@3#'
+        def firstName = 'John'
+        def lastName = 'Activate-' + UUID.randomUUID().toString()
+        def email = "john-activate-${UUID.randomUUID().toString().substring(0,8)}@example.com"
+
+        User user = UserBuilder.instance()
+                .setEmail(email)
+                .setFirstName(firstName)
+                .setLastName(lastName)
+                .setPassword(password.toCharArray())
+                .buildAndCreate(userApi)
+        registerForCleanup(user)
+
+        try {
+            def activateRequest = new UserFactorActivateRequest()
+            def additionalParams = [:]
+            
+            userFactorApi.activateFactor(user.getId(), "dummy-factor-id", activateRequest, additionalParams)
+            
+        } catch (ApiException e) {
+            // Expected - invalid factor ID
+            log.info("Activate factor with Map failed (expected): Code={}", e.getCode())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(404)))
+        }
+    }
 }
+

@@ -435,4 +435,56 @@ class ApplicationLogosIT extends ITSupport {
 
         logger.info("Different image formats test completed successfully!")
     }
+
+    /**
+     * Test uploadApplicationLogo with Map parameter variant.
+     * Tests the method overload that accepts additional parameters via Map.
+     */
+    @Test
+    void testUploadApplicationLogoWithMapParameter() {
+        logger.info("Testing logo upload with Map parameter variant...")
+
+        // Create a test Bookmark application
+        BookmarkApplication app = new BookmarkApplication()
+        app.name(BookmarkApplication.NameEnum.BOOKMARK)
+            .label("Logo Test Map Param - " + UUID.randomUUID().toString())
+            .signOnMode(ApplicationSignOnMode.BOOKMARK)
+
+        BookmarkApplicationSettingsApplication settingsApp = new BookmarkApplicationSettingsApplication()
+        settingsApp.url("https://example.com/bookmark-logo-map")
+
+        BookmarkApplicationSettings settings = new BookmarkApplicationSettings()
+        settings.app(settingsApp)
+        app.settings(settings)
+
+        BookmarkApplication createdApp = applicationApi.createApplication(app, true, null) as BookmarkApplication
+        registerForCleanup(createdApp)
+
+        Thread.sleep(1000)
+
+        // Create and upload PNG logo with Map parameter (empty map for additional params)
+        File pngLogo = createTestPngImage()
+        def additionalParams = [:]
+        
+        try {
+            // Upload logo using Map parameter variant
+            applicationLogosApi.uploadApplicationLogo(createdApp.getId(), pngLogo, additionalParams)
+            
+            Thread.sleep(1000)
+
+            // Verify app still exists and logo link is present
+            Application updatedApp = applicationApi.getApplication(createdApp.getId(), null)
+            
+            assertThat(updatedApp, notNullValue())
+            assertThat(updatedApp.getId(), equalTo(createdApp.getId()))
+            assertThat(updatedApp.getLinks(), notNullValue())
+            assertThat("Logo should be uploaded with Map parameter", updatedApp.getLinks().getLogo(), notNullValue())
+            assertThat("Logo link should exist after upload with Map param", 
+                updatedApp.getLinks().getLogo().size(), greaterThanOrEqualTo(1))
+
+            logger.info("Map parameter variant test completed successfully!")
+        } finally {
+            pngLogo.delete()
+        }
+    }
 }

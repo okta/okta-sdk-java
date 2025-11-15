@@ -17,401 +17,376 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.okta</groupId>
-        <artifactId>okta-parent</artifactId>
-        <version>38</version>
-    </parent>
+        <parent>
+            <groupId>com.okta</groupId>
+            <artifactId>okta-parent</artifactId>
+            <version>38</version>
+        </parent>
 
-    <groupId>com.okta.sdk</groupId>
-    <artifactId>okta-sdk-root</artifactId>
-    <version>25.0.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+        <groupId>com.okta.sdk</groupId>
+        <artifactId>okta-sdk-root</artifactId>
+        <version>25.0.0-SNAPSHOT</version>
+        <packaging>pom</packaging>
 
-    <name>Okta Java SDK</name>
-    <description>Okta SDK for Java</description>
-    <url>https://github.com/okta/okta-sdk-java</url>
-    <inceptionYear>2017</inceptionYear>
+        <name>Okta Java SDK</name>
+        <description>Okta SDK for Java</description>
+        <url>https://github.com/okta/okta-sdk-java</url>
+        <inceptionYear>2017</inceptionYear>
 
-    <properties>
-        <jackson.version>2.18.2</jackson.version>
-        <snakeyaml.version>2.4</snakeyaml.version>
-        <bouncycastle.version>1.78.1</bouncycastle.version>
-        <jjwt.version>0.12.6</jjwt.version>
-        <org.apache.httpcomponents.client5.version>5.3.1</org.apache.httpcomponents.client5.version>
-        <okta.sdk.previousVersion>24.0.0</okta.sdk.previousVersion>
-        <okta.commons.version>2.0.1</okta.commons.version>
-        <com.google.auto.service.version>1.1.1</com.google.auto.service.version>
-        <github.slug>okta/okta-sdk-java</github.slug>
-    </properties>
+        <properties>
+            <jackson.version>2.18.2</jackson.version>
+            <snakeyaml.version>2.4</snakeyaml.version>
+            <bouncycastle.version>1.78.1</bouncycastle.version>
+            <jjwt.version>0.12.6</jjwt.version>
+            <org.apache.httpcomponents.client5.version>5.3.1</org.apache.httpcomponents.client5.version>
+            <okta.sdk.previousVersion>24.0.0</okta.sdk.previousVersion>
+            <okta.commons.version>2.0.1</okta.commons.version>
+            <com.google.auto.service.version>1.1.1</com.google.auto.service.version>
+            <github.slug>okta/okta-sdk-java</github.slug>
+        </properties>
 
-    <modules>
-        <module>api</module>
-        <module>impl</module>
-        <module>integration-tests</module>
-        <module>examples</module>
-        <module>coverage</module>
-    </modules>
+        <modules>
+            <module>api</module>
+            <module>impl</module>
+            <module>integration-tests</module>
+            <module>examples</module>
+            <module>coverage</module>
+        </modules>
 
-    <dependencyManagement>
+        <dependencyManagement>
+            <dependencies>
+
+                <dependency>
+                    <groupId>com.fasterxml.jackson</groupId>
+                    <artifactId>jackson-bom</artifactId>
+                    <version>${jackson.version}</version>
+                    <scope>import</scope>
+                    <type>pom</type>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.okta.sdk</groupId>
+                    <artifactId>okta-sdk-api</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.okta.sdk</groupId>
+                    <artifactId>okta-sdk-impl</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.okta.commons</groupId>
+                    <artifactId>okta-config-check</artifactId>
+                    <version>${okta.commons.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.okta.commons</groupId>
+                    <artifactId>okta-commons-lang</artifactId>
+                    <version>${okta.commons.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.okta.commons</groupId>
+                    <artifactId>okta-http-api</artifactId>
+                    <version>${okta.commons.version}</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>javax.annotation</groupId>
+                    <artifactId>javax.annotation-api</artifactId>
+                    <version>1.3.2</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.okta.sdk</groupId>
+                    <artifactId>okta-sdk-integration-tests</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.okta.sdk</groupId>
+                    <artifactId>okta-sdk-examples-quickstart</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                    <version>${slf4j.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jcl-over-slf4j</artifactId>
+                    <version>${slf4j.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                    <version>1.3.14</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk18on</artifactId>
+                    <version>${bouncycastle.version}</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcpkix-jdk18on</artifactId>
+                    <version>${bouncycastle.version}</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>io.jsonwebtoken</groupId>
+                    <artifactId>jjwt-api</artifactId>
+                    <version>${jjwt.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>io.jsonwebtoken</groupId>
+                    <artifactId>jjwt-impl</artifactId>
+                    <version>${jjwt.version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>io.jsonwebtoken</groupId>
+                    <artifactId>jjwt-jackson</artifactId>
+                    <version>${jjwt.version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.httpcomponents.client5</groupId>
+                    <artifactId>httpclient5</artifactId>
+                    <version>${org.apache.httpcomponents.client5.version}</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.yaml</groupId>
+                    <artifactId>snakeyaml</artifactId>
+                    <version>${snakeyaml.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.google.auto.service</groupId>
+                    <artifactId>auto-service</artifactId>
+                    <version>${com.google.auto.service.version}</version>
+                    <optional>true</optional>
+                </dependency>
+                <dependency>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                    <version>32.0.1-jre</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.testng</groupId>
+                    <artifactId>testng</artifactId>
+                    <version>7.0.0</version>
+                    <scope>test</scope>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.beanshell</groupId>
+                            <artifactId>bsh</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-core</artifactId>
+                    <version>3.1.0</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                    <version>${slf4j.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </dependencyManagement>
+
         <dependencies>
 
             <dependency>
-                <groupId>com.fasterxml.jackson</groupId>
-                <artifactId>jackson-bom</artifactId>
-                <version>${jackson.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-
-            <!-- Inter project dependencies -->
-            <dependency>
-                <groupId>com.okta.sdk</groupId>
-                <artifactId>okta-sdk-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.okta.sdk</groupId>
-                <artifactId>okta-sdk-impl</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <!-- Other Okta Projects -->
-            <dependency>
-                <groupId>com.okta.commons</groupId>
-                <artifactId>okta-config-check</artifactId>
-                <version>${okta.commons.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.okta.commons</groupId>
-                <artifactId>okta-commons-lang</artifactId>
-                <version>${okta.commons.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.okta.commons</groupId>
-                <artifactId>okta-http-api</artifactId>
-                <version>${okta.commons.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>javax.annotation</groupId>
-                <artifactId>javax.annotation-api</artifactId>
-                <version>1.3.2</version>
-            </dependency>
-
-            <!-- ITs -->
-            <dependency>
-                <groupId>com.okta.sdk</groupId>
-                <artifactId>okta-sdk-integration-tests</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <!-- Examples -->
-            <dependency>
-                <groupId>com.okta.sdk</groupId>
-                <artifactId>okta-sdk-examples-quickstart</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <!-- Logging -->
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>jcl-over-slf4j</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>1.3.14</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk18on</artifactId>
-                <version>${bouncycastle.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcpkix-jdk18on</artifactId>
-                <version>${bouncycastle.version}</version>
-            </dependency>
-
-            <!-- JJWT -->
-            <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt-api</artifactId>
-                <version>${jjwt.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt-impl</artifactId>
-                <version>${jjwt.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt-jackson</artifactId>
-                <version>${jjwt.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.httpcomponents.client5</groupId>
-                <artifactId>httpclient5</artifactId>
-                <version>${org.apache.httpcomponents.client5.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.yaml</groupId>
-                <artifactId>snakeyaml</artifactId>
-                <version>${snakeyaml.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.auto.service</groupId>
-                <artifactId>auto-service</artifactId>
-                <version>${com.google.auto.service.version}</version>
-                <optional>true</optional>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>32.0.1-jre</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>7.0.0</version>
-                <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.beanshell</groupId>
-                        <artifactId>bsh</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>3.1.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-simple</artifactId>
-                <version>${slf4j.version}</version>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest</artifactId>
                 <scope>test</scope>
             </dependency>
         </dependencies>
-    </dependencyManagement>
-
-    <dependencies>
-
-        <!-- Test dependencies -->
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.sonatype.central</groupId>
-                    <artifactId>central-publishing-maven-plugin</artifactId>
-                    <version>0.8.0</version>
-                    <extensions>true</extensions>
-                    <configuration>
-                        <publishingServerId>central</publishingServerId>
-                        <autoPublish>true</autoPublish>
-                        <waitUntil>published</waitUntil>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <configuration>
-                        <trimStackTrace>false</trimStackTrace>
-                        <reuseForks>true</reuseForks>
-                        <forkCount>1</forkCount>
-                        <parallel>classesAndMethods</parallel>
-                        <threadCount>5</threadCount>
-                        <skipTests>${skipImplTests}</skipTests>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-failsafe-plugin</artifactId>
-                    <configuration>
-                        <trimStackTrace>false</trimStackTrace>
-                        <reuseForks>true</reuseForks>
-                        <!--<forkCount>2C</forkCount>
-                        <parallel>classes</parallel>
-                        <threadCount>5</threadCount>-->
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-pmd-plugin</artifactId>
-                    <configuration>
-                        <excludeRoots>
-                            <!-- exclude the generated code from PMD, Findbugs will still run -->
-                            <excludeRoot>${project.build.directory}/generated-sources/openapi</excludeRoot>
-                        </excludeRoots>
-                        <excludes>
-                            <!-- lang contains a few files copied from other projects -->
-                            <exclude>**/lang/*.java</exclude>
-                            <exclude>**/com/okta/sdk/impl/util/Base64.java</exclude>
-                            <exclude>**/com/okta/sdk/impl/util/BaseNCodec.java</exclude>
-                            <exclude>**/com/okta/sdk/impl/util/LinkedCaseInsensitiveMap</exclude>
-                            <!-- caching needs a little work -->
-                            <exclude>**/com/okta/sdk/impl/ds/cache/WriteCacheFilter.java</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <configuration>
-                        <!-- exclude generated enums coverage -->
-                        <excludes>
-
-                            <exclude>**/quickstart/**/*</exclude>
-                        </excludes>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>prepare-agent-integration</id>
-                            <goals>
-                                <goal>prepare-agent-integration</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>report-integration</id>
-                            <phase>post-integration-test</phase>
-                            <goals>
-                                <goal>report-integration</goal>
-                            </goals>
-                            <configuration>
-                                <classDirectories>
-                                    <classDirectory>${project.build.outputDirectory}</classDirectory>
-                                    <classDirectory>${project.build.testOutputDirectory}</classDirectory>
-                                </classDirectories>
-                                <sourceDirectories>
-                                    <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
-                                    <sourceDirectory>${project.build.testSourceDirectory}</sourceDirectory>
-                                </sourceDirectories>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.15.0</version>
-                    <configuration>
-                        <generateBackupPoms>false</generateBackupPoms>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>com.github.siom79.japicmp</groupId>
-                    <artifactId>japicmp-maven-plugin</artifactId>
-                    <version>0.15.7</version>
-                    <configuration>
-                        <oldVersion>
-                            <dependency>
-                                <groupId>${project.groupId}</groupId>
-                                <artifactId>${project.artifactId}</artifactId>
-                                <version>${okta.sdk.previousVersion}</version>
-                                <type>jar</type>
-                            </dependency>
-                        </oldVersion>
-                        <parameter>
-                            <onlyModified>true</onlyModified>
-                            <breakBuildOnBinaryIncompatibleModifications>false</breakBuildOnBinaryIncompatibleModifications>
-                            <breakBuildBasedOnSemanticVersioning>true</breakBuildBasedOnSemanticVersioning>
-                            <postAnalysisScript>${root.dir}/src/japicmp/postAnalysisScript.groovy</postAnalysisScript>
-                        </parameter>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>com.okta</groupId>
-                    <artifactId>okta-code-snippet-maven-plugin</artifactId>
-                    <configuration>
-                        <sourceFile>examples/quickstart/src/main/java/quickstart/ReadmeSnippets.java</sourceFile>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.owasp</groupId>
-                    <artifactId>dependency-check-maven</artifactId>
-                    <version>12.1.0</version>
-                    <configuration>
-                        <!-- no js is used in this project -->
-                        <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
-                        <ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-        <plugins>
-            <plugin>
-                <groupId>org.jasig.maven</groupId>
-                <artifactId>maven-notice-plugin</artifactId>
-                <version>1.1.0</version>
-                <inherited>false</inherited>
-                <configuration>
-                    <noticeTemplate>${root.dir}/src/license/NOTICE.template</noticeTemplate>
-                    <licenseMapping>
-                        <mapping>${root.dir}/src/license/mapping.xml</mapping>
-                    </licenseMapping>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-    <profiles>
-        <profile>
-            <id>pub-docs</id>
-            <build>
+        <build>
+            <pluginManagement>
                 <plugins>
                     <plugin>
-                        <groupId>com.okta</groupId>
-                        <artifactId>okta-doclist-maven-plugin</artifactId>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.8.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                            <waitUntil>published</waitUntil>
+                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jxr-plugin</artifactId>
+                        <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
-                            <sourcePath>${project.build.sourceDirectory};${root.dir}/api/target/generated-sources/swagger-codegen;${root.dir}/impl/target/generated-sources/swagger-codegen</sourcePath>
-                            <excludes>**/com/okta/swagger/**</excludes>
+                            <trimStackTrace>false</trimStackTrace>
+                            <reuseForks>true</reuseForks>
+                            <forkCount>1</forkCount>
+                            <parallel>classesAndMethods</parallel>
+                            <threadCount>5</threadCount>
+                            <skipTests>${skipImplTests}</skipTests>
+                            <argLine>${argLine} --add-opens java.base/java.util=ALL-UNNAMED</argLine>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <trimStackTrace>false</trimStackTrace>
+                            <reuseForks>true</reuseForks>
+                            <argLine>${argLine} --add-opens java.base/java.util=ALL-UNNAMED</argLine>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <configuration>
+                            <excludeRoots>
+                                <excludeRoot>${project.build.directory}/generated-sources/openapi</excludeRoot>
+                            </excludeRoots>
+                            <excludes>
+                                <exclude>**/lang/*.java</exclude>
+                                <exclude>**/com/okta/sdk/impl/util/Base64.java</exclude>
+                                <exclude>**/com/okta/sdk/impl/util/BaseNCodec.java</exclude>
+                                <exclude>**/com/okta/sdk/impl/util/LinkedCaseInsensitiveMap</exclude>
+                                <exclude>**/com/okta/sdk/impl/ds/cache/WriteCacheFilter.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/quickstart/**/*</exclude>
+                            </excludes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>prepare-agent-integration</id>
+                                <goals>
+                                    <goal>prepare-agent-integration</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>versions-maven-plugin</artifactId>
+                        <version>2.15.0</version>
+                        <configuration>
+                            <generateBackupPoms>false</generateBackupPoms>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.siom79.japicmp</groupId>
+                        <artifactId>japicmp-maven-plugin</artifactId>
+                        <version>0.15.7</version>
+                        <configuration>
+                            <oldVersion>
+                                <dependency>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.artifactId}</artifactId>
+                                    <version>${okta.sdk.previousVersion}</version>
+                                    <type>jar</type>
+                                </dependency>
+                            </oldVersion>
+                            <parameter>
+                                <onlyModified>true</onlyModified>
+                                <breakBuildOnBinaryIncompatibleModifications>false</breakBuildOnBinaryIncompatibleModifications>
+                                <breakBuildBasedOnSemanticVersioning>true</breakBuildBasedOnSemanticVersioning>
+                                <postAnalysisScript>${root.dir}/src/japicmp/postAnalysisScript.groovy</postAnalysisScript>
+                            </parameter>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.okta</groupId>
+                        <artifactId>okta-code-snippet-maven-plugin</artifactId>
+                        <configuration>
+                            <sourceFile>examples/quickstart/src/main/java/quickstart/ReadmeSnippets.java</sourceFile>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>12.1.0</version>
+                        <configuration>
+                            <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
+                            <ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
                         </configuration>
                     </plugin>
                 </plugins>
-            </build>
-        </profile>
-    </profiles>
+            </pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.jasig.maven</groupId>
+                    <artifactId>maven-notice-plugin</artifactId>
+                    <version>1.1.0</version>
+                    <inherited>false</inherited>
+                    <configuration>
+                        <noticeTemplate>${root.dir}/src/license/NOTICE.template</noticeTemplate>
+                        <licenseMapping>
+                            <mapping>${root.dir}/src/license/mapping.xml</mapping>
+                        </licenseMapping>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>generate-resources</phase>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </build>
+        <profiles>
+            <profile>
+                <id>pub-docs</id>
+                <build>
+                    <plugins>
+                        <plugin>
+                            <groupId>com.okta</groupId>
+                            <artifactId>okta-doclist-maven-plugin</artifactId>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-jxr-plugin</artifactId>
+                            <configuration>
+                                <sourcePath>${project.build.sourceDirectory};${root.dir}/api/target/generated-sources/swagger-codegen;${root.dir}/impl/target/generated-sources/swagger-codegen</sourcePath>
+                                <excludes>**/com/okta/swagger/**</excludes>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </build>
+            </profile>
+        </profiles>
 
-    <scm>
-        <tag>okta-sdk-root-23.0.0</tag>
-    </scm>
-</project>
-
+        <scm>
+            <tag>okta-sdk-root-23.0.0</tag>
+        </scm>
+    </project>

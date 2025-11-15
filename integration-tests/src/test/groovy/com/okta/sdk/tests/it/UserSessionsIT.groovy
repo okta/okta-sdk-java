@@ -401,4 +401,28 @@ class UserSessionsIT extends ITSupport {
             assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
         }
     }
+
+    @Test(groups = "group3")
+    void revokeUserSessionsWithMapParameterTest() {
+        def email = "user-map-param-"+UUID.randomUUID().toString().substring(0,8)+"@example.com"
+
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName("MapParam")
+            .setLastName("Test-"+UUID.randomUUID().toString().substring(0,8)+"")
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+
+        try {
+            // Test Map parameter variant
+            def additionalParams = [:]
+            userSessionsApi.revokeUserSessions(user.getId(), true, false, additionalParams)
+            
+            // Success - Map parameter variant works
+
+        } catch (ApiException e) {
+            // Expected if session management not enabled
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
 }

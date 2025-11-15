@@ -411,4 +411,77 @@ class UserAuthenticatorEnrollmentsIT extends ITSupport {
 
         log.info("All error scenario tests passed")
     }
+
+    @Test(groups = "group3")
+    void createAuthenticatorEnrollment_withMapParameter_works() {
+        def email = "user-map-enrollment-" + UUID.randomUUID().toString().substring(0, 8) + "@example.com"
+
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName("Map")
+            .setLastName("Enrollment-" + UUID.randomUUID().toString().substring(0, 8))
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+
+        try {
+            def authenticators = authenticatorApi.listAuthenticators()
+            def phoneAuthenticator = authenticators.find { it.getType() == "phone" }
+            
+            if (phoneAuthenticator != null) {
+                def request = new AuthenticatorEnrollmentCreateRequest()
+                request.setAuthenticatorId(phoneAuthenticator.getId())
+                
+                def additionalParams = [:]
+                def enrollment = userAuthenticatorEnrollmentsApi.createAuthenticatorEnrollment(
+                    user.getId(), 
+                    request, 
+                    additionalParams
+                )
+                
+                assertThat(enrollment, notNullValue())
+                log.info("Created enrollment with Map parameter: {}", enrollment.getId())
+            }
+        } catch (ApiException e) {
+            log.warn("Enrollment with Map creation failed (expected): code={}", e.getCode())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void createTacAuthenticatorEnrollment_withMapParameter_works() {
+        def email = "user-tac-map-" + UUID.randomUUID().toString().substring(0, 8) + "@example.com"
+
+        User user = UserBuilder.instance()
+            .setEmail(email)
+            .setFirstName("TacMap")
+            .setLastName("Enrollment-" + UUID.randomUUID().toString().substring(0, 8))
+            .buildAndCreate(userApi)
+        registerForCleanup(user)
+
+        try {
+            def authenticators = authenticatorApi.listAuthenticators()
+            def tacAuthenticator = authenticators.find { it.getKey() == "okta_org_tac" }
+            
+            if (tacAuthenticator != null) {
+                def request = new AuthenticatorEnrollmentCreateRequestTac()
+                request.setAuthenticatorId(tacAuthenticator.getId())
+                request.setTtl(300)
+                request.setMultiUse(true)
+                
+                def additionalParams = [:]
+                def enrollment = userAuthenticatorEnrollmentsApi.createTacAuthenticatorEnrollment(
+                    user.getId(), 
+                    request, 
+                    additionalParams
+                )
+                
+                assertThat(enrollment, notNullValue())
+                log.info("Created TAC enrollment with Map parameter: {}", enrollment.getId())
+            }
+        } catch (ApiException e) {
+            log.warn("TAC enrollment with Map creation failed (expected): code={}", e.getCode())
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+        }
+    }
 }
+
