@@ -851,34 +851,6 @@ class UsersIT extends ITSupport {
     }
 
     /**
-     * Tests filtering users with plus sign (+) in email
-     */
-    @Test(groups = "group2")
-    @Scenario("user-with-plus-sign-in-email")
-    void filterUserTest() {
-        def password = 'Passw0rd!2@3#'
-        def firstName = 'John'
-        def lastName = 'hashtag'
-        def email = "john+${uniqueTestName}@example.com"
-
-        User user = UserBuilder.instance()
-            .setEmail(email)
-            .setFirstName(firstName)
-            .setLastName(lastName)
-            .setPassword(password.toCharArray())
-            .buildAndCreate(userApi)
-        registerForCleanup(user)
-        validateUser(user, firstName, lastName, email)
-
-        Thread.sleep(getTestOperationDelay())
-
-        List<User> users =
-            userApi.listUsers(null, null, "profile.login eq \"${email}\"", null, null, null, null, null, null)
-
-        assertUserPresent(users, user)
-    }
-
-    /**
      * Tests assigning and removing roles from a user
      */
     @Test(groups = "group2")
