@@ -181,6 +181,82 @@ class ApplicationPoliciesIT extends ITSupport {
     }
 
     /**
+     * Test 3: Policy replacement
+     * Verifies that assigning a new policy to an application replaces the existing policy.
+     */
+    @Test
+    void testPolicyReplacement() {
+        logger.info("Testing policy replacement...")
+
+        // Arrange - Create second policy with retry logic for timeout handling
+        Policy secondPolicy = new Policy()
+        secondPolicy.type(PolicyType.ACCESS_POLICY)
+            .status(LifecycleStatus.ACTIVE)
+            .name(prefix + "auth-policy-2-" + UUID.randomUUID().toString())
+            .description("Second test policy")
+
+        Policy createdSecondPolicy = null
+        int maxRetries = 3
+        int retryCount = 0
+        Exception lastException = null
+
+        while (retryCount < maxRetries && createdSecondPolicy == null) {
+            try {
+                createdSecondPolicy = policyApi.createPolicy(secondPolicy, true)
+                logger.info("Successfully created second policy on attempt ${retryCount + 1}")
+            } catch (ApiException e) {
+                lastException = e
+                if (e.getCause() instanceof java.net.SocketTimeoutException) {
+                    retryCount++
+                    if (retryCount < maxRetries) {
+                        logger.warn("Policy creation timed out, retrying (${retryCount}/${maxRetries})...")
+                        Thread.sleep(2000) // Wait before retry
+                    }
+                } else {
+                    throw e // Re-throw if it's not a timeout
+                }
+            }
+        }
+
+        if (createdSecondPolicy == null) {
+            throw new AssertionError("Failed to create policy after ${maxRetries} attempts due to timeout", lastException)
+        }
+
+        String secondPolicyId = createdSecondPolicy.getId()
+        registerForCleanup(createdSecondPolicy)
+
+        Thread.sleep(2000)
+
+        // Assign first policy
+        applicationPoliciesApi.assignApplicationPolicy(testAppId, testPolicyId)
+        Thread.sleep(1000)
+
+        // Verify the first policy is assigned
+        Application appAfterFirstAssignment = applicationApi.getApplication(testAppId, null)
+        assertThat(appAfterFirstAssignment.getLinks().getAccessPolicy(), notNullValue())
+        assertThat("First policy should be assigned",
+            appAfterFirstAssignment.getLinks().getAccessPolicy().getHref(), containsString(testPolicyId))
+
+        // Act - Assign second policy (should replace first)
+        applicationPoliciesApi.assignApplicationPolicy(testAppId, secondPolicyId)
+        Thread.sleep(1000)
+
+        // Assert - Verify second policy replaced the first
+        Application app = applicationApi.getApplication(testAppId, null)
+
+        assertThat(app, notNullValue())
+        assertThat(app.getId(), equalTo(testAppId))
+        assertThat("Application should have access policy link",
+            app.getLinks().getAccessPolicy(), notNullValue())
+        assertThat("Second policy should replace first policy",
+            app.getLinks().getAccessPolicy().getHref(), containsString(secondPolicyId))
+        assertThat("First policy should no longer be assigned",
+            app.getLinks().getAccessPolicy().getHref(), not(containsString(testPolicyId)))
+
+        logger.info("Policy replacement test completed successfully!")
+    }
+
+    /**
      * Test 4: Error handling - Non-existent application
      * Verifies that assigning a policy to a non-existent application throws appropriate error.
      */
