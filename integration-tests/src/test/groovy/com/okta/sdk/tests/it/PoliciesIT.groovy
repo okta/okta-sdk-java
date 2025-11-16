@@ -475,12 +475,39 @@ class PoliciesIT extends ITSupport {
 
         String originalName = "policy+" + UUID.randomUUID().toString()
 
-        OktaSignOnPolicy policy = OktaSignOnPolicyBuilder.instance()
-            .setName(originalName)
-            .setDescription("IT created Policy - testReplacePolicy")
-            .setType(PolicyType.OKTA_SIGN_ON)
-            .setStatus(LifecycleStatus.ACTIVE)
-            .buildAndCreate(policyApi) as OktaSignOnPolicy
+        // Create policy with retry logic
+        OktaSignOnPolicy policy = null
+        int createMaxRetries = 3
+        int createRetryCount = 0
+        Exception createLastException = null
+
+        while (createRetryCount < createMaxRetries && policy == null) {
+            try {
+                policy = OktaSignOnPolicyBuilder.instance()
+                    .setName(originalName)
+                    .setDescription("IT created Policy - testReplacePolicy")
+                    .setType(PolicyType.OKTA_SIGN_ON)
+                    .setStatus(LifecycleStatus.ACTIVE)
+                    .buildAndCreate(policyApi) as OktaSignOnPolicy
+            } catch (ApiException e) {
+                createLastException = e
+                String errorCode = e.getResponseBody()?.contains('"errorCode":"E0000009"') ? "E0000009" : "unknown"
+                if (errorCode == "E0000009" || e.getCode() == 500) {
+                    createRetryCount++
+                    if (createRetryCount < createMaxRetries) {
+                        log.warn("Policy creation failed (${errorCode}), retrying (${createRetryCount}/${createMaxRetries})...")
+                        Thread.sleep(5000)
+                    }
+                } else {
+                    throw e
+                }
+            }
+        }
+
+        if (policy == null) {
+            throw createLastException
+        }
+
         registerForCleanup(policy)
 
         assertThat(policy.getName(), is(originalName))
