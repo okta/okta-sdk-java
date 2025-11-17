@@ -161,8 +161,26 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
 
     private Cache<String, Object> cache;
 
-    private Map<Long, Integer> lastStatusCodeByThread = new ConcurrentHashMap<>();
-    private Map<Long, Map<String, List<String>>> lastResponseHeadersByThread = new ConcurrentHashMap<>();
+    /**
+     * ThreadLocal storage for the last HTTP status code.
+     * Using ThreadLocal instead of ConcurrentHashMap to prevent memory leaks
+     * when threads are garbage collected.
+     */
+    private final ThreadLocal<Integer> lastStatusCode = new ThreadLocal<>();
+    
+    /**
+     * ThreadLocal storage for the last HTTP response headers.
+     * Using ThreadLocal instead of ConcurrentHashMap to prevent memory leaks
+     * when threads are garbage collected.
+     */
+    private final ThreadLocal<Map<String, List<String>>> lastResponseHeaders = new ThreadLocal<>();
+    
+    /**
+     * Utility to track and warn about multi-threaded usage patterns.
+     * This helps developers identify potentially problematic usage of the SDK.
+     */
+    private final com.okta.sdk.client.MultiThreadingWarningUtil threadingWarningUtil = 
+        new com.okta.sdk.client.MultiThreadingWarningUtil();
 
         private DateFormat dateFormat;
 
@@ -172,14 +190,6 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
             public ApiClient(CloseableHttpClient httpClient, CacheManager cacheManager) {
             if (httpClient == null) throw new IllegalArgumentException("httpClient cannot be null");
             if (cacheManager == null) throw new IllegalArgumentException("cacheManager cannot be null");
-
-            // MULTITHREADING WARNING: Creating multiple ApiClient instances in a multi-threaded application
-            // is not supported and may lead to cache inconsistencies and memory leaks. The internal cache
-            // manager is shared across all ApiClient instances within the same JVM. You must use a single
-            // ApiClient instance throughout the entire lifecycle of your application.
-            // See: https://github.com/okta/okta-sdk-java/blob/master/README.md#thread-safety
-            log.warn("Creating ApiClient instance. Note: Multiple ApiClient instances in multi-threaded " +
-                     "applications are not supported. Use a single instance throughout your application lifecycle.");
 
             objectMapper = new ObjectMapper();
             objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -331,7 +341,10 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                     */
                     @Deprecated
                     public int getStatusCode() {
-                    return lastStatusCodeByThread.get(Thread.currentThread().getId());
+                    // Record thread access for monitoring multi-threaded usage
+                    threadingWarningUtil.recordThreadAccess();
+                    Integer statusCode = lastStatusCode.get();
+                    return statusCode != null ? statusCode : 0;
                     }
 
                     /**
@@ -340,7 +353,23 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                     */
                     @Deprecated
                     public Map<String, List<String>> getResponseHeaders() {
-                        return lastResponseHeadersByThread.get(Thread.currentThread().getId());
+                        // Record thread access for monitoring multi-threaded usage
+                        threadingWarningUtil.recordThreadAccess();
+                        return lastResponseHeaders.get();
+                        }
+
+                        /**
+                        * Gets the count of unique threads that have accessed this ApiClient instance.
+                        * This is useful for monitoring and debugging multi-threaded usage patterns.
+                        * 
+                        * <p><strong>Note:</strong> A count greater than 1 indicates multi-threaded usage,
+                        * which may lead to unexpected behavior with pagination and other stateful operations.</p>
+                        *
+                        * @return the number of unique threads that have accessed this ApiClient
+                        * @since 14.0.0
+                        */
+                        public int getUniqueThreadCount() {
+                        return threadingWarningUtil.getUniqueThreadCount();
                         }
 
                         /**
@@ -1108,26 +1137,26 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
 
                                                                     protected <T> T processResponse(CloseableHttpResponse response, TypeReference<T> returnType) throws ApiException, IOException, ParseException {
                                                                         int statusCode = response.getCode();
-                                                                        long threadId = Thread.currentThread().getId();
-                                                                        lastStatusCodeByThread.put(threadId, statusCode);
+                                                                        // Record thread access for monitoring multi-threaded usage
+                                                                        threadingWarningUtil.recordThreadAccess();
+                                                                        // Store status code in ThreadLocal instead of ConcurrentHashMap
+                                                                        lastStatusCode.set(statusCode);
                                                                         if (statusCode == HttpStatus.SC_NO_CONTENT) {
                                                                         return null;
                                                                         }
 
                                                                         Map<String, List<String>> responseHeaders = transformResponseHeaders(response.getHeaders());
-                                                                            lastResponseHeadersByThread.put(threadId, responseHeaders);
+                                                                            // Store response headers in ThreadLocal instead of ConcurrentHashMap
+                                                                            lastResponseHeaders.set(responseHeaders);
 
-                                                                                try {
-                                                                                if (isSuccessfulStatus(statusCode)) {
-                                                                                return this.deserialize(response, returnType);
-                                                                                } else {
-                                                                                String message = EntityUtils.toString(response.getEntity());
-                                                                                throw new ApiException(message, statusCode, responseHeaders, message);
-                                                                                }
-                                                                                } finally {
-                                                                                cleanupThreadData(threadId);
-                                                                                }
-                                                                              }
+                                                                            if (isSuccessfulStatus(statusCode)) {
+                                                                            return this.deserialize(response, returnType);
+                                                                            } else {
+                                                                            String message = EntityUtils.toString(response.getEntity());
+                                                                            throw new ApiException(message, statusCode, responseHeaders, message);
+                                                                            }
+                                                                            }
+
                                                                         /**
                                                                         * Invoke API by sending HTTP request with the given options.
                                                                         *
@@ -1294,13 +1323,6 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                                             }
                                                                                             }
 
-                                                                                                    /**
-                                                                                                    * Removes thread-specific data from status and response header maps.
-                                                                                                    */
-                                                                                                    private void cleanupThreadData(long threadId) {
-                                                                                                    lastStatusCodeByThread.remove(threadId);
-                                                                                                    lastResponseHeadersByThread.remove(threadId);
-                                                                                                    }
 
                                                                                             /**
                                                                                             * Update query and header parameters based on authentication settings.

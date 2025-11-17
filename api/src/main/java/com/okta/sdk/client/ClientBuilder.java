@@ -324,17 +324,6 @@ public interface ClientBuilder {
 
     /**
      * Constructs a new {@link ApiClient} instance based on the ClientBuilder's current configuration state.
-     * <p>
-     * <b>IMPORTANT - Multi-Threading Warning:</b> Creating multiple {@link ApiClient} instances in a
-     * multi-threaded application is <b>NOT SUPPORTED</b>. The SDK uses an internal cache manager that
-     * is shared across all ApiClient instances within the same JVM. Creating multiple instances may
-     * lead to sub-optimal caching behavior and memory leaks. You <b>MUST</b> use a single ApiClient
-     * instance throughout the entire lifecycle of your application.
-     * </p>
-     * <p>
-     * For more information, see the Thread Safety section in the README:
-     * <a href="https://github.com/okta/okta-sdk-java/blob/master/README.md#thread-safety">Thread Safety Documentation</a>
-     * </p>
      *
      * @return a new {@link ApiClient} instance based on the ClientBuilder's current configuration state.
      */

@@ -49,13 +49,6 @@ import static com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl.TOKEN_URI
 /**
  * Interceptor that handle DPoP handshake during auth and adds DPoP header to regular requests.
  * It is always enabled, but is only active when a DPoP error is received during auth.
- * <p>
- * <b>IMPORTANT - Thread Safety:</b> This interceptor uses ThreadLocal for MessageDigest instances.
- * While this class is designed to work in multi-threaded environments, the SDK as a whole is NOT
- * designed for creating multiple ApiClient instances in a multi-threaded application. Use a single
- * ApiClient instance throughout your application lifecycle to avoid cache inconsistencies and
- * memory leaks.
- * </p>
  *
  * @see <a href="https://developer.okta.com/docs/guides/dpop/oktaresourceserver/main/">documentation</a>
  */
@@ -68,8 +61,6 @@ public class DPoPInterceptor implements ExecChainHandler {
     //nonce is valid for 24 hours, but can only refresh it when doing a token request => start refreshing after 22 hours
     private static final int NONCE_VALID_SECONDS = 60 * 60 * 22;
     //MessageDigest is not thread-safe, need one per thread
-    //WARNING: While ThreadLocal is used here for thread-safety, the SDK does NOT support multiple
-    //ApiClient instances in multi-threaded applications due to shared cache manager state.
     private static final ThreadLocal<MessageDigest> SHA256 = ThreadLocal.withInitial(() -> {
         try {
             return MessageDigest.getInstance("SHA-256");

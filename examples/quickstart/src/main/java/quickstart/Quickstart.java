@@ -54,30 +54,6 @@ public class Quickstart {
         GroupApi groupApi = null;
 
         try {
-            println("\n" + "=".repeat(80));
-            println("DEMO: Multi-Threading Warning System");
-            println("=".repeat(80));
-            println("Creating multiple ApiClient instances will trigger automatic warnings.");
-            println("Watch for INFO and WARN logs from MultiThreadingWarningUtil below:");
-            println("=".repeat(80) + "\n");
-
-            // Demo: Creating multiple ApiClient instances triggers automatic warnings
-            println("Creating 1st ApiClient instance...");
-            println("  --> Expect: INFO log about using single instance");
-            ApiClient demoClient1 = Clients.builder().build();
-            
-            println("\nCreating 2nd ApiClient instance...");
-            println("  --> Expect: WARNING banner about multiple instances detected");
-            ApiClient demoClient2 = Clients.builder().build();
-            
-            println("\nCreating 3rd ApiClient instance...");
-            println("  --> Expect: Simplified WARN message");
-            ApiClient demoClient3 = Clients.builder().build();
-
-            println("\n" + "=".repeat(80));
-            println("Multi-Threading Warning Demo Complete");
-            println("=".repeat(80) + "\n");
-
             // Instantiate a builder for your Client. If needed, settings like Proxy and Caching can be defined here.
             builder = Clients.builder();
 
