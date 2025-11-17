@@ -180,7 +180,7 @@ You can start using these clients to call management APIs relevant to the chosen
 
 ### Thread safety considerations
 
-**Important:** The SDK stores pagination metadata in thread-local state. Sharing a single `ApiClient` across multiple threads can surface stale data or grow memory usage inside large thread pools. When the SDK detects concurrent access it emits a warning (once per `ApiClient`) through the installed SLF4J logger.
+**Important:** The SDK stores pagination metadata keyed by thread ID. Sharing a single `ApiClient` across multiple threads can surface stale data or grow memory usage inside large thread pools. When the SDK detects concurrent access it emits a warning (once per `ApiClient`) through the installed SLF4J logger.
 
 ### Non-Admin users
 

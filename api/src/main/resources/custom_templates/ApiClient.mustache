@@ -162,24 +162,19 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
     private Cache<String, Object> cache;
 
     /**
-     * ThreadLocal storage for the last HTTP status code.
-     * Using ThreadLocal instead of ConcurrentHashMap to prevent memory leaks
-     * when threads are garbage collected.
+     * Stores the last HTTP status code for each thread.
      */
-    private final ThreadLocal<Integer> lastStatusCode = new ThreadLocal<>();
-    
+    private final Map<Long, Integer> lastStatusCodeByThread = new ConcurrentHashMap<>();
+
     /**
-     * ThreadLocal storage for the last HTTP response headers.
-     * Using ThreadLocal instead of ConcurrentHashMap to prevent memory leaks
-     * when threads are garbage collected.
+     * Stores the last HTTP response headers for each thread.
      */
-    private final ThreadLocal<Map<String, List<String>>> lastResponseHeaders = new ThreadLocal<>();
-    
+    private final Map<Long, Map<String, List<String>>> lastResponseHeadersByThread = new ConcurrentHashMap<>();
+
     /**
      * Utility to track and warn about multi-threaded usage patterns.
-     * This helps developers identify potentially problematic usage of the SDK.
      */
-    private final com.okta.sdk.client.MultiThreadingWarningUtil threadingWarningUtil = 
+    private final com.okta.sdk.client.MultiThreadingWarningUtil threadingWarningUtil =
         new com.okta.sdk.client.MultiThreadingWarningUtil();
 
         private DateFormat dateFormat;
@@ -343,7 +338,8 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                     public int getStatusCode() {
                     // Record thread access for monitoring multi-threaded usage
                     threadingWarningUtil.recordThreadAccess();
-                    Integer statusCode = lastStatusCode.get();
+                    Long threadId = Thread.currentThread().getId();
+                    Integer statusCode = lastStatusCodeByThread.get(threadId);
                     return statusCode != null ? statusCode : 0;
                     }
 
@@ -355,7 +351,8 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                     public Map<String, List<String>> getResponseHeaders() {
                         // Record thread access for monitoring multi-threaded usage
                         threadingWarningUtil.recordThreadAccess();
-                        return lastResponseHeaders.get();
+                        Long threadId = Thread.currentThread().getId();
+                        return lastResponseHeadersByThread.get(threadId);
                         }
 
                         /**
@@ -1139,15 +1136,14 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                         int statusCode = response.getCode();
                                                                         // Record thread access for monitoring multi-threaded usage
                                                                         threadingWarningUtil.recordThreadAccess();
-                                                                        // Store status code in ThreadLocal instead of ConcurrentHashMap
-                                                                        lastStatusCode.set(statusCode);
+                                                                        Long threadId = Thread.currentThread().getId();
+                                                                        lastStatusCodeByThread.put(threadId, statusCode);
                                                                         if (statusCode == HttpStatus.SC_NO_CONTENT) {
                                                                         return null;
                                                                         }
 
                                                                         Map<String, List<String>> responseHeaders = transformResponseHeaders(response.getHeaders());
-                                                                            // Store response headers in ThreadLocal instead of ConcurrentHashMap
-                                                                            lastResponseHeaders.set(responseHeaders);
+                                                                            lastResponseHeadersByThread.put(threadId, responseHeaders);
 
                                                                             if (isSuccessfulStatus(statusCode)) {
                                                                             return this.deserialize(response, returnType);

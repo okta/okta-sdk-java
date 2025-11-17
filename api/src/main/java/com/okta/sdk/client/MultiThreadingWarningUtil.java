@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Utility class to detect and warn about multi-threaded usage of the Okta SDK.
  * 
- * <p>The Okta SDK stores thread-local state for pagination purposes. When multiple threads
+ * <p>The Okta SDK stores per-thread pagination state keyed by thread ID. When multiple threads
  * use the same ApiClient instance, this can lead to:</p>
  * <ul>
  *   <li>Unexpected pagination behavior (threads interfering with each other's pagination state)</li>
@@ -102,6 +102,8 @@ public class MultiThreadingWarningUtil {
             
             // Check if we've exceeded the tracking limit
             if (threadCount > MAX_TRACKED_THREADS) {
+                accessedThreadIds.remove(currentThreadId);
+                uniqueThreadCount.decrementAndGet();
                 if (maxThreadsReachedWarningEmitted.compareAndSet(false, true)) {
                     log.warn(
                         "OKTA SDK WARNING: Maximum tracked threads ({}) exceeded. " +
@@ -173,13 +175,13 @@ public class MultiThreadingWarningUtil {
             "OKTA SDK MULTI-THREADING WARNING\n" +
             "================================================================================\n" +
             "The Okta SDK has detected that {} unique threads are accessing the same\n" +
-            "ApiClient instance. The SDK uses thread-local state for pagination and is\n" +
+            "ApiClient instance. The SDK stores pagination metadata per thread and is\n" +
             "NOT designed for concurrent, multi-threaded usage patterns.\n" +
             "\n" +
             "POTENTIAL ISSUES:\n" +
             "  - Pagination may behave unexpectedly when multiple threads make requests\n" +
             "  - Thread state may interfere between concurrent operations\n" +
-            "  - In thread pool environments, ThreadLocal state persists across requests\n" +
+            "  - In thread pool environments, per-thread state persists across requests\n" +
             "\n" +
             "RECOMMENDATIONS:\n" +
             "  1. Use a separate ApiClient instance per thread (thread-local pattern)\n" +
@@ -208,7 +210,7 @@ public class MultiThreadingWarningUtil {
             "\n" +
             "THREAD POOL ISSUE:\n" +
             "  - Thread pool threads are reused and live for the lifetime of the application\n" +
-            "  - ThreadLocal state from one request can leak into subsequent requests\n" +
+            "  - Per-thread state from one request can leak into subsequent requests\n" +
             "    handled by the same thread\n" +
             "  - Pagination state from Request A might unexpectedly affect Request B\n" +
             "\n" +
