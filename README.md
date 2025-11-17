@@ -10,6 +10,7 @@
 * [Need help?](#need-help)
 * [Getting started](#getting-started)
 * [Usage guide](#usage-guide)
+    * [Thread safety considerations](#thread-safety-considerations)
 * [Spring Support](#spring-support)
 * [Configuration reference](#configuration-reference)
 * [Building the SDK](#building-the-sdk)
@@ -176,6 +177,10 @@ These examples will help you understand how to use this library. You can also br
 
 Once you initialize a `ApiClient` instance, you can pass this instance to the constructor of any API area clients (such as `UserApi`, `GroupApi`, `ApplicationApi` etc.).
 You can start using these clients to call management APIs relevant to the chosen API area.
+
+### Thread safety considerations
+
+**Important:** The SDK stores pagination metadata in thread-local state. Sharing a single `ApiClient` across multiple threads can surface stale data or grow memory usage inside large thread pools. When the SDK detects concurrent access it emits a warning (once per `ApiClient`) through the installed SLF4J logger.
 
 ### Non-Admin users
 
@@ -540,7 +545,7 @@ do {
 
 ### Thread Safety
 
-Every instance of the SDK `Client` is thread-safe. You **should** use the same instance throughout the entire lifecycle of your application. Each instance has its own Connection pool and Caching resources that are automatically released when the instance is garbage collected.
+Each instance of the SDK `Client` owns its own HTTP connection pool and cache. It is safe to reuse that instance on the same thread, but sharing it across concurrent threads can leak pagination state. Follow the patterns in [Thread safety considerations](#thread-safety-considerations) to scope clients correctly. The underlying resources are released when the instance becomes eligible for garbage collection.
 
 <a name="spring-support"></a>
 ## Inject the Okta Java SDK in Spring
