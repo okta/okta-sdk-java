@@ -38,7 +38,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * usage is detected. It is designed to have minimal performance impact and will only log
  * warnings, not prevent multi-threaded usage.</p>
  * 
- * @since 14.0.0
  */
 public class MultiThreadingWarningUtil {
     
@@ -94,7 +93,6 @@ public class MultiThreadingWarningUtil {
         long currentThreadId = Thread.currentThread().getId();
         String currentThreadName = Thread.currentThread().getName();
         
-        // Bail out early if we've already hit the cap to avoid churn
         if (uniqueThreadCount.get() >= MAX_TRACKED_THREADS) {
             if (maxThreadsReachedWarningEmitted.compareAndSet(false, true)) {
                 log.warn(
@@ -108,18 +106,15 @@ public class MultiThreadingWarningUtil {
             return;
         }
 
-        // Deduplicate fast path
         if (!accessedThreadIds.add(currentThreadId)) {
             return;
         }
 
-        // Atomically "increment if below MAX"
-        int previousCount = uniqueThreadCount.getAndUpdate(count ->
+        int threadCount = uniqueThreadCount.getAndUpdate(count ->
             count >= MAX_TRACKED_THREADS ? count : count + 1
         );
 
-        if (previousCount >= MAX_TRACKED_THREADS) {
-            // We didn't bump the counter, so drop the ID and warn once
+        if (threadCount >= MAX_TRACKED_THREADS) {
             accessedThreadIds.remove(currentThreadId);
             if (maxThreadsReachedWarningEmitted.compareAndSet(false, true)) {
                 log.warn(
@@ -133,19 +128,17 @@ public class MultiThreadingWarningUtil {
             return;
         }
 
-        int threadCount = previousCount + 1; // safe: we know we actually incremented
+        threadCount += 1;
 
         log.debug("New thread detected accessing Okta SDK: {} (ID: {}). Total unique threads: {}",
             currentThreadName, currentThreadId, threadCount);
 
-        // Emit warning if we've crossed the threshold
         if (threadCount > THREAD_COUNT_WARNING_THRESHOLD) {
             if (multiThreadWarningEmitted.compareAndSet(false, true)) {
                 emitMultiThreadingWarning(threadCount);
             }
         }
 
-        // Check if this looks like a thread pool pattern
         if (threadCount > 1 && isLikelyThreadPoolThread(currentThreadName)) {
             if (threadPoolWarningEmitted.compareAndSet(false, true)) {
                 emitThreadPoolWarning();
