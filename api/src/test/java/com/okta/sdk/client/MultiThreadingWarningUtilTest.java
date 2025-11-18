@@ -237,7 +237,16 @@ public class MultiThreadingWarningUtilTest {
         
         // The utility should cap tracking at MAX_TRACKED_THREADS
         int uniqueThreads = util.getUniqueThreadCount();
-        assertTrue(uniqueThreads <= 1000, 
-            "Should not track more than MAX_TRACKED_THREADS");
+        assertEquals(uniqueThreads, 1000,
+            "Tracker should cap at MAX_TRACKED_THREADS when additional threads appear");
+
+        // When: even more threads arrive after the cap is hit
+        Thread extraThread = new Thread(util::recordThreadAccess);
+        extraThread.start();
+        extraThread.join();
+
+        // Then: the count should remain capped
+        assertEquals(util.getUniqueThreadCount(), 1000,
+            "Tracker must remain capped after hitting MAX_TRACKED_THREADS");
     }
 }
