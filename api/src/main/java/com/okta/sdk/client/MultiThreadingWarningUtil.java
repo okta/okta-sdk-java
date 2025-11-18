@@ -94,43 +94,61 @@ public class MultiThreadingWarningUtil {
         long currentThreadId = Thread.currentThread().getId();
         String currentThreadName = Thread.currentThread().getName();
         
-        // Check if we've already seen this thread
-        boolean isNewThread = accessedThreadIds.add(currentThreadId);
-        
-        if (isNewThread) {
-            int threadCount = uniqueThreadCount.incrementAndGet();
-            
-            // Check if we've exceeded the tracking limit
-            if (threadCount > MAX_TRACKED_THREADS) {
-                accessedThreadIds.remove(currentThreadId);
-                uniqueThreadCount.decrementAndGet();
-                if (maxThreadsReachedWarningEmitted.compareAndSet(false, true)) {
-                    log.warn(
-                        "OKTA SDK WARNING: Maximum tracked threads ({}) exceeded. " +
-                        "Stopping thread tracking to prevent memory issues. " +
-                        "This indicates excessive thread churn. " +
-                        "The Okta SDK is not designed for high-concurrency, multi-threaded usage with a single ApiClient instance.",
-                        MAX_TRACKED_THREADS
-                    );
-                }
-                return; // Stop tracking to prevent memory issues
+        // Bail out early if we've already hit the cap to avoid churn
+        if (uniqueThreadCount.get() >= MAX_TRACKED_THREADS) {
+            if (maxThreadsReachedWarningEmitted.compareAndSet(false, true)) {
+                log.warn(
+                    "OKTA SDK WARNING: Maximum tracked threads ({}) exceeded. " +
+                    "Stopping thread tracking to prevent memory issues. " +
+                    "This indicates excessive thread churn. " +
+                    "The Okta SDK is not designed for high-concurrency, multi-threaded usage with a single ApiClient instance.",
+                    MAX_TRACKED_THREADS
+                );
             }
-            
-            log.debug("New thread detected accessing Okta SDK: {} (ID: {}). Total unique threads: {}",
-                currentThreadName, currentThreadId, threadCount);
-            
-            // Emit warning if we've crossed the threshold
-            if (threadCount > THREAD_COUNT_WARNING_THRESHOLD) {
-                if (multiThreadWarningEmitted.compareAndSet(false, true)) {
-                    emitMultiThreadingWarning(threadCount);
-                }
+            return;
+        }
+
+        // Deduplicate fast path
+        if (!accessedThreadIds.add(currentThreadId)) {
+            return;
+        }
+
+        // Atomically "increment if below MAX"
+        int previousCount = uniqueThreadCount.getAndUpdate(count ->
+            count >= MAX_TRACKED_THREADS ? count : count + 1
+        );
+
+        if (previousCount >= MAX_TRACKED_THREADS) {
+            // We didn't bump the counter, so drop the ID and warn once
+            accessedThreadIds.remove(currentThreadId);
+            if (maxThreadsReachedWarningEmitted.compareAndSet(false, true)) {
+                log.warn(
+                    "OKTA SDK WARNING: Maximum tracked threads ({}) exceeded. " +
+                    "Stopping thread tracking to prevent memory issues. " +
+                    "This indicates excessive thread churn. " +
+                    "The Okta SDK is not designed for high-concurrency, multi-threaded usage with a single ApiClient instance.",
+                    MAX_TRACKED_THREADS
+                );
             }
-            
-            // Check if this looks like a thread pool pattern
-            if (threadCount > 1 && isLikelyThreadPoolThread(currentThreadName)) {
-                if (threadPoolWarningEmitted.compareAndSet(false, true)) {
-                    emitThreadPoolWarning();
-                }
+            return;
+        }
+
+        int threadCount = previousCount + 1; // safe: we know we actually incremented
+
+        log.debug("New thread detected accessing Okta SDK: {} (ID: {}). Total unique threads: {}",
+            currentThreadName, currentThreadId, threadCount);
+
+        // Emit warning if we've crossed the threshold
+        if (threadCount > THREAD_COUNT_WARNING_THRESHOLD) {
+            if (multiThreadWarningEmitted.compareAndSet(false, true)) {
+                emitMultiThreadingWarning(threadCount);
+            }
+        }
+
+        // Check if this looks like a thread pool pattern
+        if (threadCount > 1 && isLikelyThreadPoolThread(currentThreadName)) {
+            if (threadPoolWarningEmitted.compareAndSet(false, true)) {
+                emitThreadPoolWarning();
             }
         }
     }
