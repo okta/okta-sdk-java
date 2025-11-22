@@ -161,8 +161,10 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
 
     private Cache<String, Object> cache;
 
-    private Map<Long, Integer> lastStatusCodeByThread = new ConcurrentHashMap<>();
-    private Map<Long, Map<String, List<String>>> lastResponseHeadersByThread = new ConcurrentHashMap<>();
+    // ThreadLocal for backward compatibility with old pagination methods (PaginationUtil)
+    // These are automatically cleaned up when threads die, preventing memory leaks
+    private static final ThreadLocal<Integer> lastStatusCode = new ThreadLocal<>();
+    private static final ThreadLocal<Map<String, List<String>>> lastResponseHeaders = new ThreadLocal<>();
 
         private DateFormat dateFormat;
 
@@ -323,16 +325,25 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                     */
                     @Deprecated
                     public int getStatusCode() {
-                    return lastStatusCodeByThread.get(Thread.currentThread().getId());
+                    Integer statusCode = lastStatusCode.get();
+                    return statusCode != null ? statusCode : 0;
                     }
 
                     /**
                     * Gets the response headers of the previous request
-                    * @return Response headers
+                    * 
+                    * @deprecated This method is NOT thread-safe and causes memory leaks.
+                    * It relies on storing state by thread ID, which fails in thread pools.
+                    * Use the new paginated methods (e.g., listUsersPaged()) that return
+                    * Iterable instead, or use invokeAPIWithHttpInfo() to get ApiResponse objects.
+                    * This method will be removed in a future version.
+                    * 
+                    * @return Response headers (may be null or stale in multi-threaded environments)
                     */
                     @Deprecated
                     public Map<String, List<String>> getResponseHeaders() {
-                        return lastResponseHeadersByThread.get(Thread.currentThread().getId());
+                        Map<String, List<String>> headers = lastResponseHeaders.get();
+                        return headers != null ? headers : Collections.emptyMap();
                         }
 
                         /**
@@ -1100,26 +1111,184 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
 
                                                                     protected <T> T processResponse(CloseableHttpResponse response, TypeReference<T> returnType) throws ApiException, IOException, ParseException {
                                                                         int statusCode = response.getCode();
-                                                                        long threadId = Thread.currentThread().getId();
-                                                                        lastStatusCodeByThread.put(threadId, statusCode);
+                                                                        
+                                                                        // Store in ThreadLocal for backward compatibility with PaginationUtil
+                                                                        // ThreadLocal automatically cleans up when thread dies (no memory leak)
+                                                                        lastStatusCode.set(statusCode);
+                                                                        
                                                                         if (statusCode == HttpStatus.SC_NO_CONTENT) {
                                                                         return null;
                                                                         }
 
                                                                         Map<String, List<String>> responseHeaders = transformResponseHeaders(response.getHeaders());
-                                                                            lastResponseHeadersByThread.put(threadId, responseHeaders);
+                                                                        lastResponseHeaders.set(responseHeaders);
 
-                                                                                try {
+                                                                                // Note: We keep headers in ThreadLocal for backward compatibility with PaginationUtil
+                                                                                // ThreadLocal is automatically cleaned up when thread dies
                                                                                 if (isSuccessfulStatus(statusCode)) {
                                                                                 return this.deserialize(response, returnType);
                                                                                 } else {
                                                                                 String message = EntityUtils.toString(response.getEntity());
                                                                                 throw new ApiException(message, statusCode, responseHeaders, message);
                                                                                 }
-                                                                                } finally {
-                                                                                cleanupThreadData(threadId);
-                                                                                }
                                                                               }
+
+                                                                        /**
+                                                                        * NEW STATELESS METHOD: Process response and return full ApiResponse object.
+                                                                        * This method does NOT store state in thread-local maps.
+                                                                        * It returns the complete response including body, headers, and status code.
+                                                                        *
+                                                                        * @param <T> Type
+                                                                        * @param response The HTTP response
+                                                                        * @param returnType The expected return type
+                                                                        * @return ApiResponse object containing body, headers, and status
+                                                                        * @throws ApiException API exception
+                                                                        * @throws IOException IO exception
+                                                                        * @throws ParseException Parse exception
+                                                                        */
+                                                                        protected <T> ApiResponse<T> processResponseWithHttpInfo(CloseableHttpResponse response, TypeReference<T> returnType) throws ApiException, IOException, ParseException {
+                                                                            int statusCode = response.getCode();
+                                                                            Map<String, List<String>> responseHeaders = transformResponseHeaders(response.getHeaders());
+                                                                            
+                                                                            if (statusCode == HttpStatus.SC_NO_CONTENT) {
+                                                                                return new ApiResponse<>(statusCode, responseHeaders, null);
+                                                                            }
+                                                                            
+                                                                            if (isSuccessfulStatus(statusCode)) {
+                                                                                T body = this.deserialize(response, returnType);
+                                                                                return new ApiResponse<>(statusCode, responseHeaders, body);
+                                                                            } else {
+                                                                                String message = EntityUtils.toString(response.getEntity());
+                                                                                throw new ApiException(message, statusCode, responseHeaders, message);
+                                                                            }
+                                                                        }
+
+                                                                        /**
+                                                                        * NEW STATELESS METHOD: Invoke API and return full ApiResponse object.
+                                                                        * This is the thread-safe, stateless version that returns ApiResponse instead of just the body.
+                                                                        * Use this method for paginated APIs to get access to response headers.
+                                                                        *
+                                                                        * @param <T> Type
+                                                                        * @param path The sub-path of the HTTP URL
+                                                                        * @param method The request method, one of "GET", "POST", "PUT", and "DELETE"
+                                                                        * @param queryParams The query parameters
+                                                                        * @param collectionQueryParams The collection query parameters
+                                                                        * @param urlQueryDeepObject A URL query string for deep object parameters
+                                                                        * @param body The request body object - if it is not binary, otherwise null
+                                                                        * @param headerParams The header parameters
+                                                                        * @param cookieParams The cookie parameters
+                                                                        * @param formParams The form parameters
+                                                                        * @param accept The request's Accept header
+                                                                        * @param contentType The request's Content-Type header
+                                                                        * @param authNames The authentications to apply
+                                                                        * @param returnType Return type
+                                                                        * @return ApiResponse object containing body, headers, and status
+                                                                        * @throws ApiException API exception
+                                                                        */
+                                                                        public <T> ApiResponse<T> invokeAPIWithHttpInfoFullURL(
+                                                                            String fullUrl,
+                                                                            String method,
+                                                                            Map<String, String> headerParams,
+                                                                            String accept,
+                                                                            String contentType,
+                                                                            String[] authNames,
+                                                                            TypeReference<T> returnType) throws ApiException {
+                                                                                
+                                                                                updateParamsForAuth(authNames, new ArrayList<>(), headerParams, new HashMap<>());
+
+                                                                                ClassicRequestBuilder builder = ClassicRequestBuilder.create(method);
+                                                                                builder.setUri(fullUrl);
+
+                                                                                if (accept != null) {
+                                                                                    builder.addHeader("Accept", accept);
+                                                                                }
+                                                                                for (Entry<String, String> keyValue : headerParams.entrySet()) {
+                                                                                    builder.addHeader(keyValue.getKey(), keyValue.getValue());
+                                                                                }
+                                                                                for (Map.Entry<String,String> keyValue : defaultHeaderMap.entrySet()) {
+                                                                                    if (!headerParams.containsKey(keyValue.getKey())) {
+                                                                                        builder.addHeader(keyValue.getKey(), keyValue.getValue());
+                                                                                    }
+                                                                                }
+
+                                                                                ContentType contentTypeObj = getContentType(contentType);
+                                                                                builder.setEntity(new StringEntity("", contentTypeObj));
+
+                                                                                try (CloseableHttpResponse response = httpClient.execute(builder.build())) {
+                                                                                    return processResponseWithHttpInfo(response, returnType);
+                                                                                } catch (IOException | ParseException e) {
+                                                                                    throw new ApiException(e);
+                                                                                }
+                                                                        }
+
+                                                                        public <T> ApiResponse<T> invokeAPIWithHttpInfo(
+                                                                            String path,
+                                                                            String method,
+                                                                            List<Pair> queryParams,
+                                                                            List<Pair> collectionQueryParams,
+                                                                            String urlQueryDeepObject,
+                                                                            Object body,
+                                                                            Map<String, String> headerParams,
+                                                                            Map<String, String> cookieParams,
+                                                                            Map<String, Object> formParams,
+                                                                            String accept,
+                                                                            String contentType,
+                                                                            String[] authNames,
+                                                                            TypeReference<T> returnType) throws ApiException {
+                                                                                
+                                                                                if (body != null && !formParams.isEmpty()) {
+                                                                                    throw new ApiException("Cannot have body and form params");
+                                                                                }
+
+                                                                                updateParamsForAuth(authNames, queryParams, headerParams, cookieParams);
+                                                                                final String url = buildUrl(path, queryParams, collectionQueryParams, urlQueryDeepObject);
+
+                                                                                ClassicRequestBuilder builder = ClassicRequestBuilder.create(method);
+                                                                                builder.setUri(url);
+
+                                                                                if (accept != null) {
+                                                                                    builder.addHeader("Accept", accept);
+                                                                                }
+                                                                                for (Entry<String, String> keyValue : headerParams.entrySet()) {
+                                                                                    builder.addHeader(keyValue.getKey(), keyValue.getValue());
+                                                                                }
+                                                                                for (Map.Entry<String,String> keyValue : defaultHeaderMap.entrySet()) {
+                                                                                    if (!headerParams.containsKey(keyValue.getKey())) {
+                                                                                        builder.addHeader(keyValue.getKey(), keyValue.getValue());
+                                                                                    }
+                                                                                }
+
+                                                                                BasicCookieStore store = new BasicCookieStore();
+                                                                                for (Entry<String, String> keyValue : cookieParams.entrySet()) {
+                                                                                    store.addCookie(buildCookie(keyValue.getKey(), keyValue.getValue(), builder.getUri()));
+                                                                                }
+                                                                                for (Entry<String,String> keyValue : defaultCookieMap.entrySet()) {
+                                                                                    if (!cookieParams.containsKey(keyValue.getKey())) {
+                                                                                        store.addCookie(buildCookie(keyValue.getKey(), keyValue.getValue(), builder.getUri()));
+                                                                                    }
+                                                                                }
+
+                                                                                HttpClientContext context = HttpClientContext.create();
+                                                                                context.setCookieStore(store);
+
+                                                                                ContentType contentTypeObj = getContentType(contentType);
+                                                                                if (body != null || !formParams.isEmpty()) {
+                                                                                    if (isBodyAllowed(method)) {
+                                                                                        builder.setEntity(serialize(body, formParams, contentTypeObj));
+                                                                                    } else {
+                                                                                        throw new ApiException("method " + method + " does not support a request body");
+                                                                                    }
+                                                                                } else {
+                                                                                    builder.setEntity(new StringEntity("", contentTypeObj));
+                                                                                }
+
+                                                                                try (CloseableHttpResponse response = httpClient.execute(builder.build(), context)) {
+                                                                                    return processResponseWithHttpInfo(response, returnType);
+                                                                                } catch (IOException | ParseException e) {
+                                                                                    throw new ApiException(e);
+                                                                                }
+                                                                        }
+
                                                                         /**
                                                                         * Invoke API by sending HTTP request with the given options.
                                                                         *
@@ -1285,14 +1454,6 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                                             }
                                                                                             }
                                                                                             }
-
-                                                                                                    /**
-                                                                                                    * Removes thread-specific data from status and response header maps.
-                                                                                                    */
-                                                                                                    private void cleanupThreadData(long threadId) {
-                                                                                                    lastStatusCodeByThread.remove(threadId);
-                                                                                                    lastResponseHeadersByThread.remove(threadId);
-                                                                                                    }
 
                                                                                             /**
                                                                                             * Update query and header parameters based on authentication settings.
