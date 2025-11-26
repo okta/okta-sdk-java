@@ -218,15 +218,20 @@ class PaginationIT extends ITSupport {
             
             println "Fetching group members with PagedIterable (limit=2 per page)..."
             def collectedMembers = []
-            def pageCount = 0
+            def pageCount = 1  // Start at 1 since we'll fetch at least one page
+            def previousSize = 0
             
             // Use listGroupUsersPaged with limit=2
             for (User member : groupApi.listGroupUsersPaged(createdGroup.id, null, 2)) {
                 collectedMembers.add(member)
-                if (collectedMembers.size() % 2 == 0) {
+                // Increment page count when we've fetched a new batch (size increases by more than 0 after hitting limit boundary)
+                if (previousSize > 0 && previousSize % 2 == 0 && collectedMembers.size() > previousSize) {
                     pageCount++
                     println "  Fetched page ${pageCount} (${collectedMembers.size()} total members so far)"
+                } else if (collectedMembers.size() % 2 == 0) {
+                    println "  Fetched page ${pageCount} (${collectedMembers.size()} total members so far)"
                 }
+                previousSize = collectedMembers.size()
             }
             
             println "✓ Collected ${collectedMembers.size()} members across ${pageCount} pages"
