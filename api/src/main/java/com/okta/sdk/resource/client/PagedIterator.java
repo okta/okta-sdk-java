@@ -15,6 +15,8 @@
  */
 package com.okta.sdk.resource.client;
 
+import com.okta.commons.lang.Collections;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +36,7 @@ import java.util.regex.Pattern;
  *
  * @param <T> The type of item in the collection (e.g., User)
  */
-class PagedIterator<T> implements Iterator<T> {
+public class PagedIterator<T> implements Iterator<T> {
 
     // Regex to find the "next" link in a Link header
     private static final Pattern NEXT_LINK_PATTERN = Pattern.compile("<([^>]+)>;\\s*rel=\"next\"");
@@ -114,10 +116,10 @@ class PagedIterator<T> implements Iterator<T> {
         
         // Try both "Link" and "link" as HTTP headers can vary in case
         List<String> linkHeaders = headers.get("Link");
-        if (linkHeaders == null || linkHeaders.isEmpty()) {
+        if (Collections.isEmpty(linkHeaders)) {
             linkHeaders = headers.get("link");
         }
-        if (linkHeaders == null || linkHeaders.isEmpty()) {
+        if (Collections.isEmpty(linkHeaders)) {
             return null;
         }
         

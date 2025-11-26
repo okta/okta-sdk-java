@@ -321,9 +321,12 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                     /**
                     * Gets the status code of the previous request
                     *
+                    * @deprecated Use invokeAPIWithHttpInfo() methods to get ApiResponse with status code.
+                    * This method will be removed in a future version.
+                    *
                     * @return Status code
                     */
-                    @Deprecated
+                    @Deprecated(forRemoval = true, since = "24.1.0")
                     public int getStatusCode() {
                     Integer statusCode = lastStatusCode.get();
                     return statusCode != null ? statusCode : 0;
@@ -340,7 +343,7 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                     * 
                     * @return Response headers (may be null or stale in multi-threaded environments)
                     */
-                    @Deprecated
+                    @Deprecated(forRemoval = true, since = "24.1.0")
                     public Map<String, List<String>> getResponseHeaders() {
                         Map<String, List<String>> headers = lastResponseHeaders.get();
                         return headers != null ? headers : Collections.emptyMap();
@@ -1164,20 +1167,13 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                         }
 
                                                                         /**
-                                                                        * NEW STATELESS METHOD: Invoke API and return full ApiResponse object.
-                                                                        * This is the thread-safe, stateless version that returns ApiResponse instead of just the body.
-                                                                        * Use this method for paginated APIs to get access to response headers.
+                                                                        * NEW STATELESS METHOD: Invoke API with full URL and return ApiResponse object.
+                                                                        * This is used for subsequent pages in pagination where the full URL comes from the Link header.
                                                                         *
                                                                         * @param <T> Type
-                                                                        * @param path The sub-path of the HTTP URL
+                                                                        * @param fullUrl The complete URL to invoke
                                                                         * @param method The request method, one of "GET", "POST", "PUT", and "DELETE"
-                                                                        * @param queryParams The query parameters
-                                                                        * @param collectionQueryParams The collection query parameters
-                                                                        * @param urlQueryDeepObject A URL query string for deep object parameters
-                                                                        * @param body The request body object - if it is not binary, otherwise null
                                                                         * @param headerParams The header parameters
-                                                                        * @param cookieParams The cookie parameters
-                                                                        * @param formParams The form parameters
                                                                         * @param accept The request's Accept header
                                                                         * @param contentType The request's Content-Type header
                                                                         * @param authNames The authentications to apply
@@ -1221,6 +1217,28 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                                 }
                                                                         }
 
+                                                                        /**
+                                                                        * NEW STATELESS METHOD: Invoke API and return full ApiResponse object.
+                                                                        * This is the thread-safe, stateless version that returns ApiResponse instead of just the body.
+                                                                        * Use this method for the first page of paginated APIs to get access to response headers.
+                                                                        *
+                                                                        * @param <T> Type
+                                                                        * @param path The sub-path of the HTTP URL
+                                                                        * @param method The request method, one of "GET", "POST", "PUT", and "DELETE"
+                                                                        * @param queryParams The query parameters
+                                                                        * @param collectionQueryParams The collection query parameters
+                                                                        * @param urlQueryDeepObject A URL query string for deep object parameters
+                                                                        * @param body The request body object - if it is not binary, otherwise null
+                                                                        * @param headerParams The header parameters
+                                                                        * @param cookieParams The cookie parameters
+                                                                        * @param formParams The form parameters
+                                                                        * @param accept The request's Accept header
+                                                                        * @param contentType The request's Content-Type header
+                                                                        * @param authNames The authentications to apply
+                                                                        * @param returnType Return type
+                                                                        * @return ApiResponse object containing body, headers, and status
+                                                                        * @throws ApiException API exception
+                                                                        */
                                                                         public <T> ApiResponse<T> invokeAPIWithHttpInfo(
                                                                             String path,
                                                                             String method,
