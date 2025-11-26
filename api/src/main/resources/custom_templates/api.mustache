@@ -81,11 +81,6 @@ import org.openapitools.jackson.nullable.JsonNullableModule;
         {{#isDeprecated}}
             * @deprecated
         {{/isDeprecated}}
-        {{#returnType}}{{#isArray}}
-            * @deprecated This method may cause thread-safety issues and memory leaks when used
-            * with pagination. Use {@link #{{operationId}}Paged({{#allParams}}{{{dataType}}}{{^-last}}, {{/-last}}{{/allParams}})} instead,
-            * which returns a lazy, thread-safe iterable.
-        {{/isArray}}{{/returnType}}
         {{#externalDocs}}
             * {{description}}
             * @see <a href="{{url}}">{{summary}} Documentation</a>
@@ -94,9 +89,6 @@ import org.openapitools.jackson.nullable.JsonNullableModule;
         {{#isDeprecated}}
             @Deprecated
         {{/isDeprecated}}
-        {{^isDeprecated}}{{#returnType}}{{#isArray}}
-            @Deprecated
-        {{/isArray}}{{/returnType}}{{/isDeprecated}}
         public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#allParams}}{{{dataType}}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) throws ApiException {
         {{#returnType}}return {{/returnType}}this.{{operationId}}({{#allParams}}{{paramName}}, {{/allParams}}Collections.emptyMap());
         }
