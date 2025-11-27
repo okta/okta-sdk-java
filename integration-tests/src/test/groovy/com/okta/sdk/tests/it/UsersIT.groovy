@@ -143,6 +143,10 @@ class UsersIT extends ITSupport {
             .setType(createdUserType.getId())
             .buildAndCreate(userApi)
         registerForCleanup(user)
+        
+        // Wait for user creation to propagate
+        Thread.sleep(Math.max(getTestOperationDelay(), 2000))
+        
         validateUser(user, firstName, lastName, email)
 
         // 3. Assert User Type
@@ -255,7 +259,8 @@ class UsersIT extends ITSupport {
         registerForCleanup(user)
         validateUser(user, firstName, lastName, email)
 
-        Thread.sleep(getTestOperationDelay())
+        // Wait for user to be indexed for search/filter
+        Thread.sleep(Math.max(getTestOperationDelay(), 3000))
 
         List<User> users =
             userApi.listUsers(null, null, null, null, "profile.login eq \"${email}\"", null, null, null)
@@ -765,10 +770,23 @@ class UsersIT extends ITSupport {
 
         // 2. Suspend the user and verify user in list of suspended users
         UserLifecycleApi userLifecycleApi = new UserLifecycleApi(getClient())
-        userLifecycleApi.suspendUser(user.getId())
+        
+        // Add retry logic for transient server errors
+        int maxRetries = 3
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                userLifecycleApi.suspendUser(user.getId())
+                break
+            } catch (Exception e) {
+                if (attempt == maxRetries || !e.getMessage().contains("E0000009")) {
+                    throw e
+                }
+                Thread.sleep(2000 * attempt) // Exponential backoff
+            }
+        }
 
-        // fix flakiness seen in PDV tests
-        Thread.sleep(getTestOperationDelay())
+        // Wait for suspension to propagate
+        Thread.sleep(Math.max(getTestOperationDelay(), 3000))
 
         List<User> users = userApi.listUsers(null, null, null, null, 'status eq \"SUSPENDED\"',null, null, null)
         Optional<User> match = users.stream().filter(u -> u.getId() == user.getId()).findAny()
