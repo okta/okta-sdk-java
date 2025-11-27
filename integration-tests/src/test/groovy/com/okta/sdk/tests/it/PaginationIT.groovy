@@ -214,7 +214,17 @@ class PaginationIT extends ITSupport {
                 groupApi.assignUserToGroup(createdGroup.id, user.id)
             }
             
-            Thread.sleep(getTestOperationDelay())
+            // Wait for eventual consistency - users need time to be added to group
+            println "Waiting for users to be added to group (eventual consistency)..."
+            Thread.sleep(Math.max(getTestOperationDelay(), 5000))
+            
+            // Verify at least some users were added before proceeding
+            def initialCheck = groupApi.listGroupUsers(createdGroup.id, null, null).toList()
+            println "Initial check found ${initialCheck.size()} members in group"
+            if (initialCheck.size() == 0) {
+                println "No members found, waiting additional 5 seconds..."
+                Thread.sleep(5000)
+            }
             
             println "Fetching group members with PagedIterable (limit=2 per page)..."
             def collectedMembers = []

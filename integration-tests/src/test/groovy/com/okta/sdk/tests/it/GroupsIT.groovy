@@ -156,7 +156,8 @@ class GroupsIT extends ITSupport {
 
         // 3. Remove user from group and validate user removed
         groupApi.unassignUserFromGroup(group.getId(), user.getId())
-
-        assertUserNotInGroup(user, group, groupApi,10, getTestOperationDelay())
+        // Wait for eventual consistency after removal
+        sleep(3000)
+        assertUserNotInGroup(user, group, groupApi, 20, getTestOperationDelay())
     }
 }
