@@ -25,7 +25,7 @@
 
     <groupId>com.okta.sdk</groupId>
     <artifactId>okta-sdk-root</artifactId>
-    <version>24.0.1-SNAPSHOT</version>
+    <version>24.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Okta Java SDK</name>
@@ -174,6 +174,11 @@
                 <version>${snakeyaml.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.18.0</version>
+            </dependency>
+            <dependency>
                 <groupId>com.google.auto.service</groupId>
                 <artifactId>auto-service</artifactId>
                 <version>${com.google.auto.service.version}</version>
@@ -232,7 +237,7 @@
                 <plugin>
                     <groupId>org.sonatype.central</groupId>
                     <artifactId>central-publishing-maven-plugin</artifactId>
-                    <version>0.8.0</version>
+                    <version>0.9.0</version>
                     <extensions>true</extensions>
                     <configuration>
                         <publishingServerId>central</publishingServerId>
@@ -333,10 +338,13 @@
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
                     <version>12.1.0</version>
+
                     <configuration>
                         <!-- no js is used in this project -->
                         <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
                         <ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
+                        <ossIndexUsername>${env.OSS_EMAIL}</ossIndexUsername>
+                        <ossIndexPassword>${env.OSS_TOKEN}</ossIndexPassword>
                     </configuration>
                 </plugin>
             </plugins>
@@ -387,7 +395,7 @@
     </profiles>
 
   <scm>
-    <tag>okta-sdk-root-23.0.0</tag>
+    <tag>okta-sdk-root-24.0.1</tag>
   </scm>
 </project>
 
