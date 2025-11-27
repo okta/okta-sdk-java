@@ -204,8 +204,9 @@ class PaginationIT extends ITSupport {
         
         try {
             println "Creating ${usersToAdd} users and adding to group..."
+            def uniqueSuffix = UUID.randomUUID().toString().take(8)
             for (int i = 0; i < usersToAdd; i++) {
-                def email = "pagmem${i}-${uniqueTestName.take(30)}@ex.com"
+                def email = "pagmem${i}-${uniqueSuffix}@example.com"
                 User user = createUser(userApi, email, "MemberTest${i}", "User${i}")
                 createdUsers.add(user)
                 registerForCleanup(user)
@@ -330,7 +331,7 @@ class PaginationIT extends ITSupport {
         println "\n=== Testing Filtered Pagination ==="
         UserApi userApi = new UserApi(getClient())
         
-        def email = "pagfilt-${uniqueTestName.take(30)}@ex.com"
+        def email = "pagfilt-${UUID.randomUUID().toString().take(8)}@example.com"
         println "Creating user: ${email}"
         User createdUser = createUser(userApi, email, "FilterTest", "User")
         registerForCleanup(createdUser)

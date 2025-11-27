@@ -782,6 +782,9 @@ class IdpIT extends ITSupport {
         IdentityProvider createdIdp = identityProviderApi.createIdentityProvider(idp)
         registerForCleanup(createdIdp)
 
+        // Wait for eventual consistency - IDP needs time to be fully created
+        Thread.sleep(Math.max(getTestOperationDelay(), 3000))
+
         // list linked idp users
         assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
@@ -790,17 +793,26 @@ class IdpIT extends ITSupport {
         userIdentityProviderLinkRequest.setExternalId("external-id")
         identityProviderUsersApi.linkUserToIdentityProvider(createdIdp.getId(), createdUser.getId(), userIdentityProviderLinkRequest)
 
+        // Wait for link operation to complete
+        Thread.sleep(Math.max(getTestOperationDelay(), 2000))
+
         // list linked idp users
         assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(1))
 
         // unlink user
         identityProviderUsersApi.unlinkUserFromIdentityProvider(createdIdp.getId(), createdUser.getId())
 
+        // Wait for unlink operation to complete
+        Thread.sleep(Math.max(getTestOperationDelay(), 2000))
+
         // list linked idp users
         assertThat(identityProviderUsersApi.listIdentityProviderApplicationUsers(createdIdp.getId(), null, null, null, null), iterableWithSize(0))
 
         // deactivate
         identityProviderApi.deactivateIdentityProvider(createdIdp.getId())
+
+        // Wait before delete
+        Thread.sleep(Math.max(getTestOperationDelay(), 2000))
 
         // delete
         identityProviderApi.deleteIdentityProvider(createdIdp.getId())
