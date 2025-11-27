@@ -72,7 +72,10 @@ class GroupsIT extends ITSupport {
         registerForCleanup(group)
         validateGroup(group, groupName)
 
-        // 2. Search the group by name
+        // 2. Wait for eventual consistency - group needs to be indexed for search
+        Thread.sleep(Math.max(getTestOperationDelay(), 3000))
+
+        // 3. Search the group by name
         assertGroupPresent(groupApi.listGroups(groupName, null, null, null, null, null, null, null), group)
     }
 
@@ -156,7 +159,8 @@ class GroupsIT extends ITSupport {
 
         // 3. Remove user from group and validate user removed
         groupApi.unassignUserFromGroup(group.getId(), user.getId())
-
-        assertUserNotInGroup(user, group, groupApi,10, getTestOperationDelay())
+        // Wait for eventual consistency after removal
+        sleep(3000)
+        assertUserNotInGroup(user, group, groupApi, 20, getTestOperationDelay())
     }
 }

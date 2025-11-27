@@ -126,8 +126,7 @@ public class PagedIterator<T> implements Iterator<T> {
         for (String linkHeader : linkHeaders) {
             Matcher matcher = NEXT_LINK_PATTERN.matcher(linkHeader);
             if (matcher.find()) {
-                String url = matcher.group(1);
-                return url; // The URL
+                return matcher.group(1); // The URL
             }
         }
         

@@ -204,8 +204,9 @@ class PaginationIT extends ITSupport {
         
         try {
             println "Creating ${usersToAdd} users and adding to group..."
+            def uniqueSuffix = UUID.randomUUID().toString().take(8)
             for (int i = 0; i < usersToAdd; i++) {
-                def email = "pagmem${i}-${uniqueTestName.take(30)}@ex.com"
+                def email = "pagmem${i}-${uniqueSuffix}@example.com"
                 User user = createUser(userApi, email, "MemberTest${i}", "User${i}")
                 createdUsers.add(user)
                 registerForCleanup(user)
@@ -214,19 +215,34 @@ class PaginationIT extends ITSupport {
                 groupApi.assignUserToGroup(createdGroup.id, user.id)
             }
             
-            Thread.sleep(getTestOperationDelay())
+            // Wait for eventual consistency - users need time to be added to group
+            println "Waiting for users to be added to group (eventual consistency)..."
+            Thread.sleep(Math.max(getTestOperationDelay(), 5000))
+            
+            // Verify at least some users were added before proceeding
+            def initialCheck = groupApi.listGroupUsers(createdGroup.id, null, null).toList()
+            println "Initial check found ${initialCheck.size()} members in group"
+            if (initialCheck.size() == 0) {
+                println "No members found, waiting additional 5 seconds..."
+                Thread.sleep(5000)
+            }
             
             println "Fetching group members with PagedIterable (limit=2 per page)..."
             def collectedMembers = []
-            def pageCount = 0
+            def pageCount = 1  // Start at 1 since we'll fetch at least one page
+            def previousSize = 0
             
             // Use listGroupUsersPaged with limit=2
             for (User member : groupApi.listGroupUsersPaged(createdGroup.id, null, 2)) {
                 collectedMembers.add(member)
-                if (collectedMembers.size() % 2 == 0) {
+                // Increment page count when we've fetched a new batch (size increases by more than 0 after hitting limit boundary)
+                if (previousSize > 0 && previousSize % 2 == 0 && collectedMembers.size() > previousSize) {
                     pageCount++
                     println "  Fetched page ${pageCount} (${collectedMembers.size()} total members so far)"
+                } else if (collectedMembers.size() % 2 == 0) {
+                    println "  Fetched page ${pageCount} (${collectedMembers.size()} total members so far)"
                 }
+                previousSize = collectedMembers.size()
             }
             
             println "✓ Collected ${collectedMembers.size()} members across ${pageCount} pages"
@@ -315,13 +331,14 @@ class PaginationIT extends ITSupport {
         println "\n=== Testing Filtered Pagination ==="
         UserApi userApi = new UserApi(getClient())
         
-        def email = "pagfilt-${uniqueTestName.take(30)}@ex.com"
+        def email = "pagfilt-${UUID.randomUUID().toString().take(8)}@example.com"
         println "Creating user: ${email}"
         User createdUser = createUser(userApi, email, "FilterTest", "User")
         registerForCleanup(createdUser)
         
-        // Allow time for indexing
-        Thread.sleep(getTestOperationDelay())
+        // Wait for eventual consistency - user needs to be indexed for search/filter
+        println "Waiting for user to be indexed (eventual consistency)..."
+        Thread.sleep(Math.max(getTestOperationDelay(), 5000))
         
         println "Fetching users with filter: profile.email eq \"${email}\""
         // Use filter with PagedIterable

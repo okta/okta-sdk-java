@@ -133,16 +133,14 @@ public class MultiThreadingWarningUtil {
         log.debug("New thread detected accessing Okta SDK: {} (ID: {}). Total unique threads: {}",
             currentThreadName, currentThreadId, threadCount);
 
-        if (threadCount > THREAD_COUNT_WARNING_THRESHOLD) {
-            if (multiThreadWarningEmitted.compareAndSet(false, true)) {
-                emitMultiThreadingWarning(threadCount);
-            }
+        if (threadCount > THREAD_COUNT_WARNING_THRESHOLD
+                && multiThreadWarningEmitted.compareAndSet(false, true)) {
+            emitMultiThreadingWarning(threadCount);
         }
 
-        if (threadCount > 1 && isLikelyThreadPoolThread(currentThreadName)) {
-            if (threadPoolWarningEmitted.compareAndSet(false, true)) {
-                emitThreadPoolWarning();
-            }
+        if (threadCount > 1 && isLikelyThreadPoolThread(currentThreadName)
+                && threadPoolWarningEmitted.compareAndSet(false, true)) {
+            emitThreadPoolWarning();
         }
     }
     
