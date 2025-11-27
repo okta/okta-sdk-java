@@ -181,13 +181,10 @@ class UsersIT extends ITSupport {
         UserLifecycleApi userLifecycleApi = new UserLifecycleApi(getClient())
         userLifecycleApi.activateUser(user.getId(), false)
 
-        // fix flakiness seen in PDV tests
-        Thread.sleep(getTestOperationDelay())
+        // Wait for eventual consistency - user status needs to propagate
+        Thread.sleep(Math.max(getTestOperationDelay(), 3000))
 
         List<User> users = userApi.listUsers(null, null, null, null, 'status eq \"ACTIVE\"', null, null, null)
-
-        // fix flakiness seen in PDV tests
-        Thread.sleep(getTestOperationDelay())
 
         assertUserPresent(users, user)
     }

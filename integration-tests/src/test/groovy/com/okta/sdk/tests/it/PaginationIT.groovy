@@ -335,8 +335,9 @@ class PaginationIT extends ITSupport {
         User createdUser = createUser(userApi, email, "FilterTest", "User")
         registerForCleanup(createdUser)
         
-        // Allow time for indexing
-        Thread.sleep(getTestOperationDelay())
+        // Wait for eventual consistency - user needs to be indexed for search/filter
+        println "Waiting for user to be indexed (eventual consistency)..."
+        Thread.sleep(Math.max(getTestOperationDelay(), 5000))
         
         println "Fetching users with filter: profile.email eq \"${email}\""
         // Use filter with PagedIterable

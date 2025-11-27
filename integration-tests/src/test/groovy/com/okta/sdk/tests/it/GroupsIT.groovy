@@ -72,7 +72,10 @@ class GroupsIT extends ITSupport {
         registerForCleanup(group)
         validateGroup(group, groupName)
 
-        // 2. Search the group by name
+        // 2. Wait for eventual consistency - group needs to be indexed for search
+        Thread.sleep(Math.max(getTestOperationDelay(), 3000))
+
+        // 3. Search the group by name
         assertGroupPresent(groupApi.listGroups(groupName, null, null, null, null, null, null, null), group)
     }
 
