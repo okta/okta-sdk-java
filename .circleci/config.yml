@@ -61,6 +61,7 @@ jobs:
   reversing-labs:
     docker:
       - image: cimg/openjdk:21.0.2-node
+    resource_class: xlarge
     steps:
       - checkout
       - run: npm install
@@ -95,6 +96,7 @@ jobs:
       # Run the wrapper, do not change anything here
       - run:
           name: Run Reversing Labs Wrapper Scanner
+          no_output_timeout: 45m
           command: |
             echo "Scanning " ${CIRCLE_WORKING_DIRECTORY/#\~/$HOME}/api
             rl-wrapper \
