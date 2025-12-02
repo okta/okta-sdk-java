@@ -15,11 +15,6 @@
  */
 package com.okta.sdk.helper;
 
-import com.okta.commons.lang.Assert;
-import com.okta.sdk.resource.client.ApiClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,6 +23,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.okta.commons.lang.Assert;
+import com.okta.sdk.resource.client.ApiClient;
 
 /**
  * Helper class for Pagination related functions.
@@ -45,7 +46,9 @@ public class PaginationUtil {
      *
      * @param apiClient {@link ApiClient} instance
      * @return the 'after' resource id
+     * @deprecated Use {@link com.okta.sdk.resource.client.PagedIterable} instead for automatic pagination
      */
+    @Deprecated(forRemoval = true, since = "24.1.0")
     public static String getAfter(ApiClient apiClient) {
         return getAfter(getNextPage(apiClient));
     }
@@ -79,6 +82,7 @@ public class PaginationUtil {
      * @param apiClient the {@link ApiClient} instance
      * @return the next page URL string
      */
+    @SuppressWarnings("removal")
     private static String getNextPage(ApiClient apiClient) {
 
         Assert.notNull(apiClient, "apiClient cannot be null");
