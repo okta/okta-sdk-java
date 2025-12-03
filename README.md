@@ -42,15 +42,15 @@ This repository contains the Okta management SDK for Java. This SDK can be used 
 * Manage custom domains with the [Domains API](https://developer.okta.com/docs/reference/api/domains/).
 * Manage network zones with the [Zones API](https://developer.okta.com/docs/reference/api/zones/).
 * Much more!
- 
+
 We also publish these libraries for Java:
- 
+
 * [Spring Boot Integration](https://github.com/okta/okta-spring-boot/)
 * [Okta JWT Verifier for Java](https://github.com/okta/okta-jwt-verifier-java)
 * [Authentication SDK](https://github.com/okta/okta-auth-java)
- 
+
 You can learn more on the [Okta + Java][lang-landing] page in our documentation.
- 
+
 ## Release status
 
 This library uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/).
@@ -74,14 +74,14 @@ This library uses semantic versioning and follows Okta's [library version policy
 | 20.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-20.0.0))                     |
 
 The latest release can always be found on the [releases page][github-releases].
- 
+
 ## Need help?
- 
+
 If you run into problems using the SDK, you can:
- 
+
 * Ask questions on the [Okta Developer Forums][devforum]
 * Post [issues][github-issues] here on GitHub (for code errors)
- 
+
 ## Getting started
 
 ### Prerequisites
@@ -127,11 +127,11 @@ You will also need:
 
 * An Okta account, called an _organization_ (sign up for a free [developer organization](https://developer.okta.com/signup) if you need one)
 * An [API token](https://developer.okta.com/docs/api/getting_started/getting_a_token)
- 
+
 Construct a client instance by passing it your Okta domain name and API token:
- 
+
 [//]: # (NOTE: code snippets in this README are updated automatically via a Maven plugin by running: mvn okta-code-snippet:snip)
- 
+
 [//]: # (method: createClient)
 ```java
 ApiClient client = Clients.builder()
@@ -140,7 +140,7 @@ ApiClient client = Clients.builder()
     .build();
 ```
 [//]: # (end: createClient)
- 
+
 Hard-coding the Okta domain and API token works for quick tests, but for real projects you should use a more secure way of storing these values (such as environment variables). This library supports a few different configuration sources, covered in the [configuration reference](#configuration-reference) section.
 
 ## OAuth 2.0
@@ -170,7 +170,7 @@ ApiClient client = Clients.builder()
     .build();
 ```
 [//]: # (end: createOAuth2Client)
- 
+
 ## Usage guide
 
 These examples will help you understand how to use this library. You can also browse the full [API reference documentation][javadocs].
@@ -180,7 +180,14 @@ You can start using these clients to call management APIs relevant to the chosen
 
 ### Thread safety considerations
 
-**Important:** The SDK stores pagination metadata keyed by thread ID. Sharing a single `ApiClient` across multiple threads may leak some internal state and grow memory usage inside large thread pools. When the SDK detects concurrent access it emits a warning (once per `ApiClient`) through the installed SLF4J logger.
+The SDK provides two approaches for fetching collections:
+
+1. **`*Paged()` methods (Recommended)** - Thread-safe, lazy iteration with automatic pagination
+2. **`list*()` methods** - Single-page fetch, suitable for simple use cases
+
+The `*Paged()` methods (e.g., `listUsersPaged()`) return a `PagedIterable` that handles pagination automatically and is safe to use across multiple threads. Each iterator maintains its own state independently.
+
+**Note:** The legacy `PaginationUtil.getAfter()` approach stores pagination metadata in thread-local state. When the SDK detects that multiple threads (more than 3) are accessing the same `ApiClient` instance, it emits a warning through the installed SLF4J logger. This warning is emitted once per `ApiClient` instance. We recommend migrating to the `*Paged()` methods for better thread safety.
 
 ### Non-Admin users
 
@@ -293,7 +300,7 @@ updateUserRequest.setProfile(userProfile);
 userApi.updateUser(user.getId(), updateUserRequest, true);
 ```
 [//]: # (end: updateUserWithCustomAttributes)
- 
+
 ### Remove a User
 
 [//]: # (method: deleteUser)
@@ -529,7 +536,49 @@ com.okta.sdk.resource.model.User user = client.invokeAPI(
 
 ### Pagination
 
-Collections can be fetched with manually controlled Pagination.
+The SDK provides `*Paged()` methods for all list operations that automatically handle pagination. These methods return a lazy `Iterable` that fetches pages on demand.
+
+**Recommended approach (automatic pagination):**
+
+[//]: # (method: paginateAuto)
+```java
+UserApi userApi = new UserApi(client);
+
+// Iterate through all users - pages are fetched automatically
+for (User user : userApi.listUsersPaged(null, null, null, 200, null, null, null, null)) {
+    System.out.println(user.getProfile().getEmail());
+}
+```
+[//]: # (end: paginateAuto)
+
+**With filters:**
+
+[//]: # (method: paginateFiltered)
+```java
+UserApi userApi = new UserApi(client);
+
+// Iterate through active users only
+for (User user : userApi.listUsersPaged(null, null, null, 200, "status eq \"ACTIVE\"", null, null, null)) {
+    System.out.println(user.getProfile().getEmail());
+}
+```
+[//]: # (end: paginateFiltered)
+
+**Early termination (only fetches pages as needed):**
+
+[//]: # (method: paginateEarlyBreak)
+```java
+UserApi userApi = new UserApi(client);
+
+int count = 0;
+for (User user : userApi.listUsersPaged(null, null, null, 100, null, null, null, null)) {
+    System.out.println(user.getProfile().getEmail());
+    if (++count >= 50) break; // Only fetches pages needed for first 50 users
+}
+```
+[//]: # (end: paginateEarlyBreak)
+
+**Legacy approach (manual pagination - not recommended for new code):**
 
 [//]: # (method: paginate)
 ```java
@@ -537,7 +586,7 @@ UserApi userApi = new UserApi(client);
 List<User> users = new ArrayList<>();
 String after = null;
 do {
-    users.addAll(userApi.listUsers("application/json",null, after, 200, null, null, null, null));
+    users.addAll(userApi.listUsers(null, null, after, 200, null, null, null, null));
     after = PaginationUtil.getAfter(userApi.getApiClient());
 } while (StringUtils.isNotBlank(after));
 ```
@@ -545,7 +594,11 @@ do {
 
 ### Thread Safety
 
-Each instance of the SDK `Client` owns its own HTTP connection pool and cache. It is safe to reuse that instance on the same thread, but sharing it across multiple threads may leak some internal state. Follow the patterns in [Thread safety considerations](#thread-safety-considerations) to scope clients correctly. The underlying resources are released when the instance becomes eligible for garbage collection.
+Each instance of the SDK `Client` owns its own HTTP connection pool and cache. The `*Paged()` methods (e.g., `listUsersPaged()`) are thread-safe - each iterator maintains independent state and can be used concurrently.
+
+For legacy pagination using `PaginationUtil.getAfter()`, sharing an `ApiClient` across multiple threads may cause state leakage between requests handled by the same thread (especially in thread pool environments). The SDK will emit a warning when it detects multi-threaded access patterns. Follow the patterns in [Thread safety considerations](#thread-safety-considerations) to scope clients correctly.
+
+The underlying resources are released when the instance becomes eligible for garbage collection.
 
 <a name="spring-support"></a>
 ## Inject the Okta Java SDK in Spring
