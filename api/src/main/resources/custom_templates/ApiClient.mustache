@@ -166,6 +166,9 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
     private static final ThreadLocal<Integer> lastStatusCode = new ThreadLocal<>();
     private static final ThreadLocal<Map<String, List<String>>> lastResponseHeaders = new ThreadLocal<>();
 
+    // Utility to detect and warn about multi-threaded usage patterns
+    private final MultiThreadingWarningUtil multiThreadingWarningUtil = new MultiThreadingWarningUtil();
+
         private DateFormat dateFormat;
 
         // Methods that can have a request body
@@ -1115,6 +1118,9 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                     protected <T> T processResponse(CloseableHttpResponse response, TypeReference<T> returnType) throws ApiException, IOException, ParseException {
                                                                         int statusCode = response.getCode();
                                                                         
+                                                                        // Record thread access to detect multi-threaded usage patterns
+                                                                        multiThreadingWarningUtil.recordThreadAccess();
+
                                                                         // Store in ThreadLocal for backward compatibility with PaginationUtil
                                                                         // ThreadLocal automatically cleans up when thread dies (no memory leak)
                                                                         lastStatusCode.set(statusCode);
