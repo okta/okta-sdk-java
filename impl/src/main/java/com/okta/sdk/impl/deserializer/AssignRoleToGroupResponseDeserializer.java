@@ -27,6 +27,9 @@ import com.okta.sdk.resource.model.RoleAssignmentType;
 import com.okta.sdk.resource.model.RoleType;
 import com.okta.sdk.resource.model.StandardRoleEmbedded;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.OffsetDateTime;
@@ -42,6 +45,7 @@ import java.time.OffsetDateTime;
 public class AssignRoleToGroupResponseDeserializer extends StdDeserializer<AssignRoleToGroup200Response> {
 
     private static final long serialVersionUID = 1L;
+    private static final Logger logger = LoggerFactory.getLogger(AssignRoleToGroupResponseDeserializer.class);
 
     public AssignRoleToGroupResponseDeserializer() {
         this(null);
@@ -130,7 +134,7 @@ public class AssignRoleToGroupResponseDeserializer extends StdDeserializer<Assig
             field.setAccessible(true);
             field.set(target, value);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            // Ignore - field may not exist in the model
+            logger.trace("Could not set field '{}' on {}: {}", fieldName, target.getClass().getSimpleName(), e.getMessage());
         }
     }
 }
