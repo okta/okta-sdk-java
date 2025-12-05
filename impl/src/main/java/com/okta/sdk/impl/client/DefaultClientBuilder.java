@@ -34,7 +34,11 @@ import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.*;
+import com.okta.sdk.impl.deserializer.AssignRoleToClientResponseDeserializer;
+import com.okta.sdk.impl.deserializer.AssignRoleToGroupResponseDeserializer;
+import com.okta.sdk.impl.deserializer.AssignRoleToUserResponseDeserializer;
 import com.okta.sdk.impl.deserializer.GroupProfileDeserializer;
+import com.okta.sdk.impl.deserializer.IgnoreTypeInfoMixIn;
 import com.okta.sdk.impl.deserializer.JwkResponseDeserializer;
 import com.okta.sdk.impl.deserializer.OktaUserGroupProfileDeserializer;
 import com.okta.sdk.impl.deserializer.RoleAssignmentDeserializer;
@@ -55,6 +59,9 @@ import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 
 import com.okta.sdk.impl.retry.OktaHttpRequestRetryStrategy;
 import com.okta.sdk.resource.client.auth.Authentication;
+import com.okta.sdk.resource.model.AssignRoleToClient200Response;
+import com.okta.sdk.resource.model.AssignRoleToGroup200Response;
+import com.okta.sdk.resource.model.AssignRoleToUser201Response;
 import com.okta.sdk.resource.model.GroupProfile;
 import com.okta.sdk.resource.model.ListGroupAssignedRoles200ResponseInner;
 import com.okta.sdk.resource.model.ListJwk200ResponseInner;
@@ -483,8 +490,26 @@ public class DefaultClientBuilder implements ClientBuilder {
         module.addDeserializer(GroupProfile.class, new GroupProfileDeserializer());
         module.addSerializer(OktaUserGroupProfile.class, new OktaUserGroupProfileSerializer());
         module.addDeserializer(OktaUserGroupProfile.class, new OktaUserGroupProfileDeserializer());
+        
+        // Add mix-ins to disable @JsonTypeInfo annotations on classes with problematic polymorphic types
+        // These classes have @JsonSubTypes that reference types (StandardRole, CustomRole) that don't
+        // actually extend the parent class, causing "not a subtype" errors during deserialization.
+        // By disabling the type info and using custom deserializers, we can properly parse these responses.
+        
+        // Role assignment response types
+        mapper.addMixIn(ListGroupAssignedRoles200ResponseInner.class, IgnoreTypeInfoMixIn.class);
+        mapper.addMixIn(AssignRoleToClient200Response.class, IgnoreTypeInfoMixIn.class);
+        mapper.addMixIn(AssignRoleToGroup200Response.class, IgnoreTypeInfoMixIn.class);
+        mapper.addMixIn(AssignRoleToUser201Response.class, IgnoreTypeInfoMixIn.class);
+        
+        // JWK response types
+        mapper.addMixIn(ListJwk200ResponseInner.class, IgnoreTypeInfoMixIn.class);
+        
         // Add custom deserializers for polymorphic response types
         module.addDeserializer(ListGroupAssignedRoles200ResponseInner.class, new RoleAssignmentDeserializer());
+        module.addDeserializer(AssignRoleToClient200Response.class, new AssignRoleToClientResponseDeserializer());
+        module.addDeserializer(AssignRoleToGroup200Response.class, new AssignRoleToGroupResponseDeserializer());
+        module.addDeserializer(AssignRoleToUser201Response.class, new AssignRoleToUserResponseDeserializer());
         module.addDeserializer(ListJwk200ResponseInner.class, new JwkResponseDeserializer());
         mapper.registerModule(module);
     }

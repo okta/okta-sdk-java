@@ -20,9 +20,9 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.okta.sdk.resource.model.AssignRoleToClient200Response;
 import com.okta.sdk.resource.model.LifecycleStatus;
 import com.okta.sdk.resource.model.LinksCustomRoleResponse;
-import com.okta.sdk.resource.model.ListGroupAssignedRoles200ResponseInner;
 import com.okta.sdk.resource.model.RoleAssignmentType;
 import com.okta.sdk.resource.model.RoleType;
 import com.okta.sdk.resource.model.StandardRoleEmbedded;
@@ -32,34 +32,31 @@ import java.lang.reflect.Field;
 import java.time.OffsetDateTime;
 
 /**
- * Custom JSON deserializer for role assignment responses.
+ * Custom JSON deserializer for AssignRoleToClient200Response.
  * 
  * The Okta API uses the 'type' field as a discriminator for role assignments.
  * Since the generated StandardRole and CustomRole classes don't extend
- * ListGroupAssignedRoles200ResponseInner, Jackson's default polymorphic
+ * AssignRoleToClient200Response, Jackson's default polymorphic
  * deserialization fails with "not a subtype" errors.
- * 
- * This deserializer bypasses the polymorphic handling and directly deserializes
- * into ListGroupAssignedRoles200ResponseInner which has all the fields needed.
  */
-public class RoleAssignmentDeserializer extends StdDeserializer<ListGroupAssignedRoles200ResponseInner> {
+public class AssignRoleToClientResponseDeserializer extends StdDeserializer<AssignRoleToClient200Response> {
 
     private static final long serialVersionUID = 1L;
 
-    public RoleAssignmentDeserializer() {
+    public AssignRoleToClientResponseDeserializer() {
         this(null);
     }
 
-    public RoleAssignmentDeserializer(Class<?> vc) {
+    public AssignRoleToClientResponseDeserializer(Class<?> vc) {
         super(vc);
     }
 
     @Override
-    public ListGroupAssignedRoles200ResponseInner deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+    public AssignRoleToClient200Response deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         JsonNode node = jp.getCodec().readTree(jp);
         ObjectMapper mapper = (ObjectMapper) jp.getCodec();
 
-        ListGroupAssignedRoles200ResponseInner response = new ListGroupAssignedRoles200ResponseInner();
+        AssignRoleToClient200Response response = new AssignRoleToClient200Response();
 
         // Parse id (read-only field, use reflection)
         if (node.has("id") && !node.get("id").isNull()) {

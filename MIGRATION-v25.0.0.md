@@ -1,11 +1,22 @@
+# Migration Guide: Okta Java SDK v25.0.0
 
 -----
 
 ## 🚨 Migration Alert: Okta Admin Management API Update
 
-This document outlines the changes for the Okta Admin Management API. This update includes **significant breaking changes** that require your immediate attention, as well as new features and deprecations.
+This document outlines the changes for the Okta Java SDK v25.0.0, which is based on the latest Okta Admin Management API. This update includes **significant breaking changes** that require your immediate attention, as well as new features, custom deserializers, and deprecations.
 
 The API changes **broke backward compatibility**. Please review the "Breaking Changes" section carefully to update your integration.
+
+-----
+
+## Table of Contents
+
+1. [Breaking Changes (Action Required)](#1--breaking-changes-action-required)
+2. [SDK-Specific Changes](#2--sdk-specific-changes)
+3. [Deprecated Endpoints](#3--deprecated-endpoints)
+4. [New Endpoints & Features](#4--new-endpoints--features)
+5. [Other Backward-Compatible Changes](#5--other-backward-compatible-changes)
 
 -----
 
@@ -207,7 +218,112 @@ Below are other endpoints with breaking changes, grouped by resource.
 
 -----
 
-### 2\. ⚠️ Deprecated Endpoints
+### 2\. 🔧 SDK-Specific Changes
+
+This section describes changes specific to the Java SDK implementation.
+
+#### Custom Deserializers for Polymorphic Types
+
+The SDK includes custom Jackson deserializers to handle polymorphic API responses where the OpenAPI specification uses `oneOf` with discriminators. These deserializers ensure proper JSON parsing without requiring manual intervention.
+
+**New Deserializers Added:**
+
+| Deserializer | Target Class | Purpose |
+|-------------|--------------|---------|
+| `RoleAssignmentDeserializer` | `ListGroupAssignedRoles200ResponseInner` | Handles role assignment responses (StandardRole/CustomRole) |
+| `JwkResponseDeserializer` | `ListJwk200ResponseInner` | Handles JWK responses (signing/encryption keys) |
+| `GroupProfileDeserializer` | `GroupProfile` | Handles group profile polymorphism |
+| `UserProfileDeserializer` | `UserProfile` | Handles user profile polymorphism |
+| `OktaUserGroupProfileDeserializer` | `OktaUserGroupProfile` | Handles Okta user group profiles |
+
+These deserializers are automatically registered when using the `DefaultClientBuilder`. No additional configuration is required.
+
+#### Custom Serializers
+
+| Serializer | Target Class | Purpose |
+|-----------|--------------|---------|
+| `GroupProfileSerializer` | `GroupProfile` | Proper serialization of group profiles |
+| `UserProfileSerializer` | `UserProfile` | Proper serialization of user profiles |
+| `OktaUserGroupProfileSerializer` | `OktaUserGroupProfile` | Proper serialization of Okta user group profiles |
+
+#### Code Examples
+
+**Listing Group Assigned Roles (v25.0.0):**
+
+```java
+import com.okta.sdk.resource.api.RoleAssignmentApi;
+import com.okta.sdk.resource.model.ListGroupAssignedRoles200ResponseInner;
+
+// Get roles assigned to a group
+RoleAssignmentApi roleApi = new RoleAssignmentApi(client);
+List<ListGroupAssignedRoles200ResponseInner> roles = roleApi.listGroupAssignedRoles(groupId, null);
+
+for (ListGroupAssignedRoles200ResponseInner role : roles) {
+    System.out.println("Role Type: " + role.getType());
+    System.out.println("Assignment Type: " + role.getAssignmentType());
+    System.out.println("Status: " + role.getStatus());
+}
+```
+
+**Listing Application JWKs (v25.0.0):**
+
+```java
+import com.okta.sdk.resource.api.ApplicationCredentialsApi;
+import com.okta.sdk.resource.model.ListJwk200ResponseInner;
+
+// List JWKs for an application
+ApplicationCredentialsApi credApi = new ApplicationCredentialsApi(client);
+List<ListJwk200ResponseInner> jwks = credApi.listJwks(appId);
+
+for (ListJwk200ResponseInner jwk : jwks) {
+    System.out.println("Key ID: " + jwk.getKid());
+    System.out.println("Key Type: " + jwk.getKty());
+    System.out.println("Use: " + jwk.getUse()); // "sig" or "enc"
+    System.out.println("Status: " + jwk.getStatus());
+}
+```
+
+**Working with User Risk (New in v25.0.0):**
+
+```java
+import com.okta.sdk.resource.api.UserRiskApi;
+import com.okta.sdk.resource.model.UserRisk;
+import com.okta.sdk.resource.model.RiskLevel;
+
+// Get user risk level
+UserRiskApi riskApi = new UserRiskApi(client);
+UserRisk risk = riskApi.getUserRisk(userId);
+System.out.println("Risk Level: " + risk.getLevel());
+
+// Update user risk level
+UserRisk updateRequest = new UserRisk();
+updateRequest.setLevel(RiskLevel.LOW);
+UserRisk updated = riskApi.updateUserRisk(userId, updateRequest);
+```
+
+**Working with Group Owners (New in v25.0.0):**
+
+```java
+import com.okta.sdk.resource.api.GroupOwnerApi;
+import com.okta.sdk.resource.model.GroupOwner;
+import com.okta.sdk.resource.model.AssignGroupOwnerRequestBody;
+import com.okta.sdk.resource.model.GroupOwnerType;
+
+// Assign a user as group owner
+GroupOwnerApi ownerApi = new GroupOwnerApi(client);
+AssignGroupOwnerRequestBody request = new AssignGroupOwnerRequestBody();
+request.setId(userId);
+request.setType(GroupOwnerType.USER);
+
+GroupOwner owner = ownerApi.assignGroupOwner(groupId, request);
+
+// List group owners
+List<GroupOwner> owners = ownerApi.listGroupOwners(groupId, null, null, null);
+```
+
+-----
+
+### 3\. ⚠️ Deprecated Endpoints
 
 The following endpoints are now deprecated and will be removed in a future release.
 
@@ -226,7 +342,7 @@ The following endpoints are now deprecated and will be removed in a future relea
 
 -----
 
-### 3\. ✨ New Endpoints & Features
+### 4\. ✨ New Endpoints & Features
 
 A large number of new endpoints have been added to the API.
 
@@ -328,7 +444,7 @@ A large number of new endpoints have been added to the API.
 
 -----
 
-### 4\. 🔄 Other Backward-Compatible Changes
+### 5\. 🔄 Other Backward-Compatible Changes
 
 In addition to the changes listed above, **over 200 endpoints** received backward-compatible updates. These changes typically include:
 
@@ -338,3 +454,14 @@ In addition to the changes listed above, **over 200 endpoints** received backwar
 * Marking path or query parameters as changed (e.g., `poolId` in `GET /api/v1/agentPools/{poolId}/updates/settings`).
 
 These changes are non-breaking, and your existing integrations will continue to work. However, we recommend reviewing the updated API specification for any endpoints you use to take advantage of new features or properties.
+
+-----
+
+## Need Help?
+
+If you encounter issues during migration:
+
+1. **Check the API documentation**: Review the [Okta API Reference](https://developer.okta.com/docs/reference/) for the latest endpoint specifications.
+2. **Review the examples**: Check the `examples/quickstart` directory in this repository for working code samples.
+3. **File an issue**: If you find a bug or have questions, please [open an issue](https://github.com/okta/okta-sdk-java/issues) on GitHub.
+4. **Join the community**: Visit the [Okta Developer Forum](https://devforum.okta.com/) for community support.
