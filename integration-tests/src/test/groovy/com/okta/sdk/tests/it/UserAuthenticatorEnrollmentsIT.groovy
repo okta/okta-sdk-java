@@ -162,7 +162,7 @@ class UserAuthenticatorEnrollmentsIT extends ITSupport {
             if (phoneEnrollmentId != null) {
                 log.info("Getting specific phone enrollment: {}", phoneEnrollmentId)
                 try {
-                    def retrievedEnrollment = userAuthenticatorEnrollmentsApi.getAuthenticatorEnrollment(user.getId(), phoneEnrollmentId)
+                    def retrievedEnrollment = userAuthenticatorEnrollmentsApi.getAuthenticatorEnrollment(user.getId(), phoneEnrollmentId, null)
                     
                     assertThat("Retrieved enrollment should not be null", retrievedEnrollment, notNullValue())
                     assertThat("Retrieved enrollment ID should match", retrievedEnrollment.getId(), equalTo(phoneEnrollmentId))
@@ -185,7 +185,7 @@ class UserAuthenticatorEnrollmentsIT extends ITSupport {
                     
                     // Verify deletion - should get 404
                     try {
-                        userAuthenticatorEnrollmentsApi.getAuthenticatorEnrollment(user.getId(), phoneEnrollmentId)
+                        userAuthenticatorEnrollmentsApi.getAuthenticatorEnrollment(user.getId(), phoneEnrollmentId, null)
                         assertThat("Should have thrown exception for deleted enrollment", false)
                     } catch (ApiException notFoundEx) {
                         assertThat("Deleted enrollment should return 404", notFoundEx.getCode(), equalTo(404))
@@ -297,7 +297,7 @@ class UserAuthenticatorEnrollmentsIT extends ITSupport {
                 log.info("Testing getAuthenticatorEnrollmentWithHttpInfo")
                 try {
                     def getResponse = 
-                        userAuthenticatorEnrollmentsApi.getAuthenticatorEnrollmentWithHttpInfo(user.getId(), tacEnrollmentId)
+                        userAuthenticatorEnrollmentsApi.getAuthenticatorEnrollmentWithHttpInfo(user.getId(), tacEnrollmentId, null)
                     
                     assertThat("Get response should not be null", getResponse, notNullValue())
                     assertThat("Get status code should be 200", getResponse.getStatusCode(), equalTo(200))
@@ -354,7 +354,7 @@ class UserAuthenticatorEnrollmentsIT extends ITSupport {
         // Test 1: Get authenticator enrollment with invalid user ID
         log.info("Test 1: Get enrollment with invalid user ID")
         try {
-            userAuthenticatorEnrollmentsApi.getAuthenticatorEnrollment(invalidUserId, invalidEnrollmentId)
+            userAuthenticatorEnrollmentsApi.getAuthenticatorEnrollment(invalidUserId, invalidEnrollmentId, null)
             assertThat("Should have thrown exception for invalid user ID", false)
         } catch (ApiException e) {
             log.info("Correctly threw exception for invalid user ID: code={}, message={}", e.getCode(), e.getMessage())
@@ -364,7 +364,7 @@ class UserAuthenticatorEnrollmentsIT extends ITSupport {
         // Test 2: List enrollments with invalid user ID
         log.info("Test 2: List enrollments with invalid user ID")
         try {
-            userAuthenticatorEnrollmentsApi.listAuthenticatorEnrollments(invalidUserId)
+            userAuthenticatorEnrollmentsApi.listAuthenticatorEnrollments(invalidUserId, null)
             assertThat("Should have thrown exception for invalid user ID", false)
         } catch (ApiException e) {
             log.info("Correctly threw exception for invalid user ID: code={}, message={}", e.getCode(), e.getMessage())
@@ -392,7 +392,7 @@ class UserAuthenticatorEnrollmentsIT extends ITSupport {
 
         log.info("Test 4: Get enrollment with valid user but invalid enrollment ID")
         try {
-            userAuthenticatorEnrollmentsApi.getAuthenticatorEnrollment(user.getId(), invalidEnrollmentId)
+            userAuthenticatorEnrollmentsApi.getAuthenticatorEnrollment(user.getId(), invalidEnrollmentId, null)
             assertThat("Should have thrown exception for invalid enrollment ID", false)
         } catch (ApiException e) {
             log.info("Correctly threw exception for invalid enrollment ID: code={}, message={}", e.getCode(), e.getMessage())

@@ -33,7 +33,6 @@ import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.client.Pair;
 import com.okta.sdk.resource.api.*;
 import com.okta.sdk.resource.model.*;
-import com.okta.sdk.resource.model.SortOrderParameter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -88,7 +87,7 @@ public class ReadmeSnippets {
 
     private void listAllUsers() throws ApiException {
         UserApi userApi = new UserApi(client);
-        List<User> users = userApi.listUsers(null, null, null, null, null, null, null, null, null);
+        List<User> users = userApi.listUsers(null, null, null, null, null, null, null, null, null, null);
 
         // stream
         users.stream()
@@ -100,10 +99,10 @@ public class ReadmeSnippets {
     private void userSearch() throws ApiException {
         UserApi userApi = new UserApi(client);
         // search by email
-        List<User> users = userApi.listUsers(null, null, "profile.email eq \"jcoder@example.com\"", null, null, null, null, null, null);
+        List<User> users = userApi.listUsers(null, null, "profile.email eq \"jcoder@example.com\"", null, null, null, null, null, null, null);
 
         // filter parameter
-        userApi.listUsers(null, null, null, null, "status eq \"ACTIVE\"", null, null, null, null);
+        userApi.listUsers(null, null, null, null, "status eq \"ACTIVE\"", null, null, null, null, null);
     }
 
     private void createUser() throws ApiException {
@@ -249,7 +248,7 @@ public class ReadmeSnippets {
     private void listApplications() throws ApiException {
         ApplicationApi applicationApi = new ApplicationApi(client);
 
-        List<Application> applications = applicationApi.listApplications(null, null, true, null, null, null, true);
+        List<Application> applications = applicationApi.listApplications(null, null, true, null, null, null, null, true);
     }
 
     private void getApplication() throws ApiException {
@@ -281,7 +280,7 @@ public class ReadmeSnippets {
     private void listPolicies() throws ApiException {
         PolicyApi policyApi = new PolicyApi(client);
 
-        List<Policy> policies = policyApi.listPolicies(PolicyTypeParameter.fromValue(PolicyType.PASSWORD.name()), LifecycleStatus.ACTIVE.name(), null, null, null, null, null, null);
+        List<Policy> policies = policyApi.listPolicies(PolicyType.PASSWORD.name(), LifecycleStatus.ACTIVE.name(), null, null, null, null, null, null);
     }
 
     private void getPolicy() throws ApiException {
@@ -296,7 +295,7 @@ public class ReadmeSnippets {
 
         // use a filter (start date, end date, filter, or query, sort order) all options are nullable
         List<LogEvent> logEvents =
-            systemLogApi.listLogEvents(null, null, null, "interestingURI.com", null, 100, SortOrderParameter.ASCENDING);
+            systemLogApi.listLogEvents(null, null, null, "interestingURI.com", null, 100, "ASCENDING");
     }
 
     private void callAnotherEndpoint() throws ApiException {
@@ -354,7 +353,7 @@ public class ReadmeSnippets {
         String after = null;
 
         do {
-            users.addAll(userApi.listUsers(null, null, null, null, null, null, null, after, null));
+            users.addAll(userApi.listUsers(null, null, null, null, null, null, null, after, null, null));
             after = PaginationUtil.getAfter(userApi.getApiClient());
         } while (StringUtils.isNotBlank(after));
     }

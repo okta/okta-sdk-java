@@ -237,8 +237,8 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
         if (!Collections.isEmpty(groupIds)) {
             GroupCondition groupCondition = new GroupCondition();
             groupCondition.setInclude(groupIds);
-            OktaSignOnPolicyConditionsAllOfPeople policyPeopleCondition = new OktaSignOnPolicyConditionsAllOfPeople();
-            OktaSignOnPolicyConditionsAllOfPeopleGroups peopleGroups = new OktaSignOnPolicyConditionsAllOfPeopleGroups();
+            AuthenticatorEnrollmentPolicyConditionsAllOfPeople policyPeopleCondition = new AuthenticatorEnrollmentPolicyConditionsAllOfPeople();
+            AuthenticatorEnrollmentPolicyConditionsAllOfPeopleGroups peopleGroups = new AuthenticatorEnrollmentPolicyConditionsAllOfPeopleGroups();
             peopleGroups.setInclude(groupIds);
             policyPeopleCondition.setGroups(peopleGroups);
             passwordPolicyConditions.setPeople(policyPeopleCondition);
@@ -247,8 +247,8 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
         if (!Collections.isEmpty(userIds)) {
             UserCondition userCondition = new UserCondition();
             userCondition.setInclude(userIds);
-            OktaSignOnPolicyConditionsAllOfPeople policyPeopleCondition = new OktaSignOnPolicyConditionsAllOfPeople();
-            // Note: OktaSignOnPolicyConditionsAllOfPeople may not have setUsers method
+            AuthenticatorEnrollmentPolicyConditionsAllOfPeople policyPeopleCondition = new AuthenticatorEnrollmentPolicyConditionsAllOfPeople();
+            // Note: AuthenticatorEnrollmentPolicyConditionsAllOfPeople may not have setUsers method
             // This needs to be checked against the actual API model
             passwordPolicyConditions.setPeople(policyPeopleCondition);
         }

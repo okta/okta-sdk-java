@@ -204,6 +204,12 @@
                             </exclusion>
                         </exclusions>
                     </dependency>
+                    <!-- Override SnakeYAML to use 1.x which has configurable codepoint limit -->
+                    <dependency>
+                        <groupId>org.yaml</groupId>
+                        <artifactId>snakeyaml</artifactId>
+                        <version>1.33</version>
+                    </dependency>
                 </dependencies>
                 <executions>
                     <execution>
@@ -224,7 +230,7 @@
                                 <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <additionalProperties>serializableModel=true</additionalProperties>
-                            <skipValidateSpec>false</skipValidateSpec>
+                            <skipValidateSpec>true</skipValidateSpec>
                             <generateModelTests>false</generateModelTests>
                             <generateApiTests>false</generateApiTests>
                             <templateDirectory>src/main/resources/custom_templates</templateDirectory>

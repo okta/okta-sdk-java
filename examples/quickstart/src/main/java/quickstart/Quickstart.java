@@ -92,13 +92,13 @@ public class Quickstart {
             println("User lookup by ID: "+ Objects.requireNonNull(userApi.getUser(userId, null, null).getProfile()).getLogin());
 
             // or by Email (using filter to search)
-            List<User> usersByEmail = userApi.listUsers(null, null, "profile.email eq \"" + email + "\"", null, null, null, null, null, null);
+            List<User> usersByEmail = userApi.listUsers(null, null, "profile.email eq \"" + email + "\"", null, null, null, null, null, null, null);
             if (!usersByEmail.isEmpty()) {
                 println("User lookup by Email: " + Objects.requireNonNull(usersByEmail.get(0).getProfile()).getLogin());
             }
 
             // get the list of users
-            List<User> users = userApi.listUsers(null, null, "status eq \"ACTIVE\"", null, null, null, null, null, null);
+            List<User> users = userApi.listUsers(null, null, "status eq \"ACTIVE\"", null, null, null, null, null, null, null);
 
             // get the first user in the collection
             println("First user in collection: " + Objects.requireNonNull(Objects.requireNonNull(users.stream().findFirst().orElse(null)).getProfile()).getEmail());

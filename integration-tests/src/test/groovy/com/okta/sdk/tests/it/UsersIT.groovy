@@ -559,7 +559,7 @@ class UsersIT extends ITSupport {
         assertThat(foundUser2.getProfile().getEmail(), equalTo(email2))
         
         // Also verify listUsers works (returns non-empty list)
-        List<User> users = userApi.listUsers(null, null, null, null, null, 10, null, null, null)
+        List<User> users = userApi.listUsers(null, null, null, null, null, 10, null, null, null, null)
         assertThat(users, notNullValue())
         assertThat(users.size(), greaterThan(0))
     }
@@ -582,7 +582,7 @@ class UsersIT extends ITSupport {
 
         // Search for the user by email
         String searchQuery = "profile.email eq \"${email}\""
-        List<User> users = userApi.listUsers(null, searchQuery, null, null, null, 100, null, null, null)
+        List<User> users = userApi.listUsers(null, searchQuery, null, null, null, 100, null, null, null, null)
 
         // Verify search results - if empty, the user might not be indexed yet
         assertThat(users, notNullValue())
@@ -623,7 +623,7 @@ class UsersIT extends ITSupport {
 
         // Filter for active users
         String filter = "status eq \"ACTIVE\""
-        List<User> users = userApi.listUsers(null, null, filter, null, null, 200, null, null, null)
+        List<User> users = userApi.listUsers(null, null, filter, null, null, 200, null, null, null, null)
 
         // Verify filter results
         assertThat(users, notNullValue())
@@ -649,7 +649,7 @@ class UsersIT extends ITSupport {
     @Test
     void listUsersCallsCorrectEndpointTest() {
         // Simply list users
-        List<User> users = userApi.listUsers(null, null, null, null, null, 5, null, null, null)
+        List<User> users = userApi.listUsers(null, null, null, null, null, 5, null, null, null, null)
 
         // Verify list is returned
         assertThat(users, notNullValue())
@@ -758,7 +758,7 @@ class UsersIT extends ITSupport {
         Thread.sleep(getTestOperationDelay())
 
         // 4. Verify user in list of active users
-        List<User> users = userApi.listUsers(null, null, null, 200, 'status eq \"ACTIVE\"', null, null, null)
+        List<User> users = userApi.listUsers(null, null, 'status eq \"ACTIVE\"', null, null, 200, null, null, null, null)
         assertThat(users, hasSize(greaterThan(0)))
         */
     }
@@ -874,24 +874,31 @@ class UsersIT extends ITSupport {
 
         // 2. Assign USER_ADMIN role to the user
         AssignRoleToUserRequest assignRoleToUserRequest = new AssignRoleToUserRequest()
-        assignRoleToUserRequest.setType(RoleType.USER_ADMIN.name())
+        assignRoleToUserRequest.setType(AssignRoleToUserRequest.TypeEnum.USER_ADMIN)
 
-        AssignRoleToUser201Response role = roleAssignmentApi.assignRoleToUser(user.getId(), assignRoleToUserRequest, true)
+        roleAssignmentApi.assignRoleToUser(user.getId(), assignRoleToUserRequest, true)
 
         // 3. List roles for the user and verify added role
         List<ListGroupAssignedRoles200ResponseInner> roles = roleAssignmentApi.listAssignedRolesForUser(user.getId(), null)
-        Optional<ListGroupAssignedRoles200ResponseInner> match = roles.stream().filter(r -> r.getId() == role.getId()).findAny()
+        assertThat(roles, not(empty()))
+        
+        // Find the USER_ADMIN role we just assigned
+        Optional<ListGroupAssignedRoles200ResponseInner> match = roles.stream()
+            .filter(r -> r.getType() == RoleType.USER_ADMIN)
+            .findAny()
         assertThat(match.isPresent(), is(true))
+        
+        String roleId = match.get().getId()
 
         // 4. Verify added role
-        assertThat(roleAssignmentApi.getUserAssignedRole(user.getId(), role.getId()).getId(), equalTo(role.getId()))
+        assertThat(roleAssignmentApi.getUserAssignedRole(user.getId(), roleId).getId(), equalTo(roleId))
 
         // 5. Remove role for the user
-        roleAssignmentApi.unassignRoleFromUser(user.getId(), role.getId())
+        roleAssignmentApi.unassignRoleFromUser(user.getId(), roleId)
 
         // 6. List roles for user and verify role was removed
         roles = roleAssignmentApi.listAssignedRolesForUser(user.getId(), null)
-        match = roles.stream().filter(r -> r.getId() != role.getId()).findAny()
+        match = roles.stream().filter(r -> r.getType() == RoleType.USER_ADMIN).findAny()
         assertThat(match.isPresent(), is(false))
     }
 
@@ -1281,15 +1288,23 @@ class UsersIT extends ITSupport {
 
         // 2. Assign USER_ADMIN role to the user
         AssignRoleToUserRequest assignRoleRequest = new AssignRoleToUserRequest()
-        assignRoleRequest.setType(RoleType.USER_ADMIN.name())
+        assignRoleRequest.setType(AssignRoleToUserRequest.TypeEnum.USER_ADMIN)
 
-        AssignRoleToUser201Response role = roleAssignmentApi.assignRoleToUser(user.getId(), assignRoleRequest, true)
+        roleAssignmentApi.assignRoleToUser(user.getId(), assignRoleRequest, true)
+
+        // Get the role ID by listing assigned roles
+        List<ListGroupAssignedRoles200ResponseInner> roles = roleAssignmentApi.listAssignedRolesForUser(user.getId(), null)
+        Optional<ListGroupAssignedRoles200ResponseInner> roleMatch = roles.stream()
+            .filter(r -> r.getType() == RoleType.USER_ADMIN)
+            .findAny()
+        assertThat(roleMatch.isPresent(), is(true))
+        String roleId = roleMatch.get().getId()
 
         // 3. Add Group Target to User Admin Role
-        roleTargetApi.assignGroupTargetToUserRole(user.getId(), role.getId(), group.getId())
+        roleTargetApi.assignGroupTargetToUserRole(user.getId(), roleId, group.getId())
 
         // 4. List Group Targets for Role
-        List<Group> groupTargets = roleTargetApi.listGroupTargetsForRole(user.getId(), role.getId(), null, null)
+        List<Group> groupTargets = roleTargetApi.listGroupTargetsForRole(user.getId(), roleId, null, null)
         Optional<Group> match = groupTargets.stream().filter(g -> g.getProfile().getName() == group.getProfile().getName()).findAny()
         assertThat(match.isPresent(), is(true))
 
@@ -1302,10 +1317,10 @@ class UsersIT extends ITSupport {
         registerForCleanup(adminGroup)
         validateGroup(adminGroup, adminGroupName)
 
-        roleTargetApi.assignGroupTargetToUserRole(user.getId(), role.getId(), adminGroup.getId())
-        roleTargetApi.unassignGroupTargetFromUserAdminRole(user.getId(), role.getId(), adminGroup.getId())
+        roleTargetApi.assignGroupTargetToUserRole(user.getId(), roleId, adminGroup.getId())
+        roleTargetApi.unassignGroupTargetFromUserAdminRole(user.getId(), roleId, adminGroup.getId())
 
-        groupTargets = roleTargetApi.listGroupTargetsForRole(user.getId(), role.getId(), null, null)
+        groupTargets = roleTargetApi.listGroupTargetsForRole(user.getId(), roleId, null, null)
         match = groupTargets.stream().filter(g -> g.getProfile().getName() == group.getProfile().getName()).findAny()
         assertThat(match.isPresent(), is(true))
     }
@@ -1519,7 +1534,7 @@ class UsersIT extends ITSupport {
         def expandParameter = "group"
 
         List<Application> applicationList =
-            applicationApi.listApplications(null, null, null, null, null, null, null)
+            applicationApi.listApplications(null, null, null, null, null, null, null, null)
 
         Application application = applicationList.first()
 

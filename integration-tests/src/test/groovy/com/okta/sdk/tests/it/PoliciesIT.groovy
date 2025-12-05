@@ -43,7 +43,6 @@ import com.okta.sdk.resource.model.PolicyRule
 import com.okta.sdk.resource.model.PolicyRuleType
 import com.okta.sdk.resource.model.PolicyRuleVerificationMethodType
 import com.okta.sdk.resource.model.PolicyType
-import com.okta.sdk.resource.model.PolicyTypeParameter
 import com.okta.sdk.resource.model.ProfileEnrollmentPolicy
 import com.okta.sdk.resource.model.CreateOrUpdatePolicy
 import com.okta.sdk.resource.model.VerificationMethod
@@ -436,7 +435,7 @@ class PoliciesIT extends ITSupport {
         Policy policy;
 
         // List all OKTA_SIGN_ON policies
-        List<Policy> policies = policyApi.listPolicies(PolicyType.OKTA_SIGN_ON.name() as PolicyTypeParameter, null, null, null, null, null, null, null)
+        List<Policy> policies = policyApi.listPolicies(PolicyType.OKTA_SIGN_ON.name(), null, null, null, null, null, null, null)
 
         assertThat(policies, notNullValue())
         assertThat(policies, not(empty()))

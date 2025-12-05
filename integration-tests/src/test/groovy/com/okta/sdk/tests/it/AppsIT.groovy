@@ -448,7 +448,7 @@ class AppsIT extends ITSupport {
 
         // Search by query parameter (searches name and label)
         // Use the full label with prefix for better search results
-        List<Application> apps = applicationApi.listApplications(prefix + uniqueLabel, null, false, 10, null, null, false)
+        List<Application> apps = applicationApi.listApplications(prefix + uniqueLabel, null, false, null, 10, null, null, false)
         
         assertThat(apps, notNullValue())
         assertThat(apps.size(), greaterThanOrEqualTo(1))
@@ -487,7 +487,7 @@ class AppsIT extends ITSupport {
         // Use query parameter to search for the specific app by label
         // This avoids pagination issues with 200+ apps in the org
         String uniqueLabel = createdApp.getLabel()
-        List<Application> apps = applicationApi.listApplications(uniqueLabel, null, false, 10, null, null, false)
+        List<Application> apps = applicationApi.listApplications(uniqueLabel, null, false, null, 10, null, null, false)
         
         assertThat(apps, notNullValue())
         assertThat(apps.size(), greaterThanOrEqualTo(1))

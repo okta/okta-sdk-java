@@ -58,8 +58,8 @@ class PaginationIT extends ITSupport {
             def pageCount = 0
             
             // Use listUsersPaged with limit=2 to force pagination
-            // Signature: listUsersPaged(String contentType, String search, String filter, String q, String after, Integer limit, String sortBy, String sortOrder, String expand)
-            for (User user : userApi.listUsersPaged(null, null, null, null, null, 2, null, null, null)) {
+            // Signature: listUsersPaged(String contentType, String search, String filter, String q, String after, Integer limit, String sortBy, String sortOrder, String fields, String expand)
+            for (User user : userApi.listUsersPaged(null, null, null, null, null, 2, null, null, null, null)) {
                 collectedUsers.add(user)
                 if (collectedUsers.size() % 2 == 0) {
                     pageCount++
@@ -177,8 +177,8 @@ class PaginationIT extends ITSupport {
         def pageCount = 0
         
         // Use listApplicationsPaged
-        // Signature: listApplicationsPaged(String q, String after, Boolean useOptimization, Integer limit, String filter, String expand, Boolean includeNonDeleted)
-        for (Application app : appApi.listApplicationsPaged(null, null, null, 5, null, null, null)) {
+        // Signature: listApplicationsPaged(String q, String after, Boolean useOptimization, Boolean alwaysIncludeVpnSettings, Integer limit, String filter, String expand, Boolean includeNonDeleted)
+        for (Application app : appApi.listApplicationsPaged(null, null, null, null, 5, null, null, null)) {
             collectedApps.add(app)
             if (collectedApps.size() % 5 == 0) {
                 pageCount++
@@ -286,7 +286,7 @@ class PaginationIT extends ITSupport {
             def thread = Thread.start {
                 try {
                     def count = 0
-                    for (User user : userApi.listUsersPaged(null, null, null, null, null, 10, null, null, null)) {
+                    for (User user : userApi.listUsersPaged(null, null, null, null, null, 10, null, null, null, null)) {
                         count++
                         if (count >= 10) break // Limit to avoid long test
                     }
@@ -324,7 +324,7 @@ class PaginationIT extends ITSupport {
         def collectedCount = 0
         def limit = 5
         
-        for (User user : userApi.listUsersPaged(null, null, null, null, null, 10, null, null, null)) {
+        for (User user : userApi.listUsersPaged(null, null, null, null, null, 10, null, null, null, null)) {
             collectedCount++
             if (collectedCount >= limit) {
                 println "  Breaking at ${collectedCount} users"
@@ -356,11 +356,11 @@ class PaginationIT extends ITSupport {
         
         println "Fetching users with filter: profile.email eq \"${email}\""
         // Use filter with PagedIterable
-        // Signature: listUsersPaged(String contentType, String search, String filter, String q, String after, Integer limit, String sortBy, String sortOrder, String expand)
+        // Signature: listUsersPaged(String contentType, String search, String filter, String q, String after, Integer limit, String sortBy, String sortOrder, String fields, String expand)
         def found = false
         def count = 0
         for (User user : userApi.listUsersPaged(null, null, 
-                "profile.email eq \"${email}\"", null, null, 10, null, null, null)) {
+                "profile.email eq \"${email}\"", null, null, 10, null, null, null, null)) {
             count++
             println "  Found user: ${user.profile.email}"
             if (user.profile.email == email) {
@@ -381,8 +381,8 @@ class PaginationIT extends ITSupport {
         
         println "Creating PagedIterable for users..."
         // Test that we can iterate multiple times on the same iterable
-        // Signature: listUsersPaged(String contentType, String search, String filter, String q, String after, Integer limit, String sortBy, String sortOrder, String expand)
-        def iterable = userApi.listUsersPaged(null, null, null, null, null, 5, null, null, null)
+        // Signature: listUsersPaged(String contentType, String search, String filter, String q, String after, Integer limit, String sortBy, String sortOrder, String fields, String expand)
+        def iterable = userApi.listUsersPaged(null, null, null, null, null, 5, null, null, null, null)
         
         // Use a fixed limit to ensure consistent comparison
         def limit = 4
