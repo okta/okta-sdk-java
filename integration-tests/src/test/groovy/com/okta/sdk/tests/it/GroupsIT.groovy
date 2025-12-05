@@ -883,7 +883,7 @@ class GroupsIT extends ITSupport {
     // Test 18: Assign User as Group Owner (POST)
     // NOTE: Temporarily disabled due to API date format incompatibility (non-ISO-8601 dates in response)
     // ========================================
-    @Test(enabled = false)
+    @Test
     @Scenario("assign-user-as-group-owner")
     void testAssignUserAsGroupOwner() {
         String password = 'Passw0rd!2@3#'
@@ -941,7 +941,7 @@ class GroupsIT extends ITSupport {
     // Test 19: Assign Group as Group Owner (POST)
     // NOTE: Temporarily disabled due to API date format incompatibility (non-ISO-8601 dates in response)
     // ========================================
-    @Test(enabled = false)
+    @Test
     @Scenario("assign-group-as-group-owner")
     void testAssignGroupAsGroupOwner() {
         String groupName = "IT-OwnedGroup-${uniqueTestName}"
@@ -984,7 +984,7 @@ class GroupsIT extends ITSupport {
     // Test 20: List Group Owners (GET)
     // NOTE: Temporarily disabled due to API date format incompatibility (non-ISO-8601 dates in response)
     // ========================================
-    @Test(enabled = false)
+    @Test
     @Scenario("list-group-owners")
     void testListGroupOwners() {
         String password = 'Passw0rd!2@3#'
@@ -1044,7 +1044,7 @@ class GroupsIT extends ITSupport {
     // Test 21: List Group Owners with Filter (GET with search)
     // NOTE: Temporarily disabled due to API date format incompatibility (non-ISO-8601 dates in response)
     // ========================================
-    @Test(enabled = false)
+    @Test
     @Scenario("list-group-owners-with-filter")
     void testListGroupOwnersWithFilter() {
         String password = 'Passw0rd!2@3#'
@@ -1111,7 +1111,7 @@ class GroupsIT extends ITSupport {
     // Test 22: Delete Group Owner (DELETE)
     // NOTE: Temporarily disabled due to API date format incompatibility (non-ISO-8601 dates in response)
     // ========================================
-    @Test(enabled = false)
+    @Test
     @Scenario("delete-group-owner")
     void testDeleteGroupOwner() {
         String password = 'Passw0rd!2@3#'
@@ -1168,7 +1168,7 @@ class GroupsIT extends ITSupport {
     // Test 23: Complete Group Owner Lifecycle
     // NOTE: Temporarily disabled due to API date format incompatibility (non-ISO-8601 dates in response)
     // ========================================
-    @Test(enabled = false)
+    @Test
     @Scenario("complete-group-owner-lifecycle")
     void testCompleteGroupOwnerLifecycle() {
         String password = 'Passw0rd!2@3#'
@@ -1299,7 +1299,7 @@ class GroupsIT extends ITSupport {
     // Test 26: Pagination with 'after' Cursor
     // NOTE: Temporarily disabled due to API date format incompatibility (non-ISO-8601 dates in response)
     // ========================================
-    @Test(enabled = false)
+    @Test
     @Scenario("pagination-with-after-cursor")
     void testListGroupOwnersWithPaginationCursor() {
         String groupName = "IT-PaginationGroup-${uniqueTestName}"
@@ -1357,7 +1357,7 @@ class GroupsIT extends ITSupport {
     // Test 27: WithHttpInfo Variants
     // NOTE: Temporarily disabled due to API date format incompatibility (non-ISO-8601 dates in response)
     // ========================================
-    @Test(enabled = false)
+    @Test
     @Scenario("with-http-info-variants")
     void testGroupOwnerApiWithHttpInfo() {
         String groupName = "IT-HttpInfoGroup-${uniqueTestName}"
@@ -1432,7 +1432,7 @@ class GroupsIT extends ITSupport {
     // Test 28: Idempotent Assignment
     // NOTE: Temporarily disabled due to API date format incompatibility (non-ISO-8601 dates in response)
     // ========================================
-    @Test(enabled = false)
+    @Test
     @Scenario("idempotent-assignment")
     void testIdempotentGroupOwnerAssignment() {
         String groupName = "IT-IdempotentGroup-${uniqueTestName}"
@@ -1485,7 +1485,7 @@ class GroupsIT extends ITSupport {
     // Test 29: Double Deletion
     // NOTE: Temporarily disabled due to API date format incompatibility (non-ISO-8601 dates in response)
     // ========================================
-    @Test(enabled = false)
+    @Test
     @Scenario("double-deletion")
     void testDoubleGroupOwnerDeletion() {
         String groupName = "IT-DoubleDeletionGroup-${uniqueTestName}"

@@ -283,7 +283,7 @@ class ApplicationSSOCredentialKeyIT extends ITSupport {
      * The CSR generation endpoint supports both application/pkcs10 and application/json,
      * but the SDK has incorrect type mapping causing deserialization errors.
      */
-    @Test(enabled = false)
+    @Test
     void testCsrLifecycle() {
         logger.info("Testing CSR lifecycle operations...")
 
@@ -396,7 +396,7 @@ class ApplicationSSOCredentialKeyIT extends ITSupport {
      * The CSR generation endpoint supports both application/pkcs10 and application/json,
      * but the SDK has incorrect type mapping causing deserialization errors.
      */
-    @Test(enabled = false)
+    @Test
     void testCsrMetadataVariations() {
         logger.info("Testing CSR generation with various metadata configurations...")
 

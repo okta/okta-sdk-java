@@ -35,7 +35,9 @@ import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.*;
 import com.okta.sdk.impl.deserializer.GroupProfileDeserializer;
+import com.okta.sdk.impl.deserializer.JwkResponseDeserializer;
 import com.okta.sdk.impl.deserializer.OktaUserGroupProfileDeserializer;
+import com.okta.sdk.impl.deserializer.RoleAssignmentDeserializer;
 import com.okta.sdk.impl.deserializer.UserProfileDeserializer;
 import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
@@ -54,6 +56,8 @@ import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 import com.okta.sdk.impl.retry.OktaHttpRequestRetryStrategy;
 import com.okta.sdk.resource.client.auth.Authentication;
 import com.okta.sdk.resource.model.GroupProfile;
+import com.okta.sdk.resource.model.ListGroupAssignedRoles200ResponseInner;
+import com.okta.sdk.resource.model.ListJwk200ResponseInner;
 import com.okta.sdk.resource.model.OktaUserGroupProfile;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
@@ -479,6 +483,9 @@ public class DefaultClientBuilder implements ClientBuilder {
         module.addDeserializer(GroupProfile.class, new GroupProfileDeserializer());
         module.addSerializer(OktaUserGroupProfile.class, new OktaUserGroupProfileSerializer());
         module.addDeserializer(OktaUserGroupProfile.class, new OktaUserGroupProfileDeserializer());
+        // Add custom deserializers for polymorphic response types
+        module.addDeserializer(ListGroupAssignedRoles200ResponseInner.class, new RoleAssignmentDeserializer());
+        module.addDeserializer(ListJwk200ResponseInner.class, new JwkResponseDeserializer());
         mapper.registerModule(module);
     }
 

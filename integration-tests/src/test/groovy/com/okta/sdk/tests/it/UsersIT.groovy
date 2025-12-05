@@ -662,7 +662,7 @@ class UsersIT extends ITSupport {
      * Should return block information for a user.
      * Note: This feature requires specific permissions that may not be available in all orgs.
      */
-    @Test(enabled = false, description = "Requires UserBlocks permission not available in test org")
+    @Test(description = "Requires UserBlocks permission not available in test org")
     void listUserBlocksTest() {
         // Create a user
         String email = uniqueEmail("blocks.test")
@@ -681,7 +681,7 @@ class UsersIT extends ITSupport {
      * Tests that listUserBlocks calls the correct endpoint.
      * Note: This feature requires specific permissions that may not be available in all orgs.
      */
-    @Test(enabled = false, description = "Requires UserBlocks permission not available in test org")
+    @Test(description = "Requires UserBlocks permission not available in test org")
     void listUserBlocksCallsCorrectEndpointTest() {
         // Create a user
         String email = uniqueEmail("blocks.endpoint")
@@ -718,7 +718,7 @@ class UsersIT extends ITSupport {
      * Tests creating a user with a specific User Type
      * NOTE: Temporarily disabled - CreateUserTypeRequest and UserType classes not found in generated code
      */
-    @Test(enabled = false, groups = "group2")
+    @Test(groups = "group2")
     @Scenario("create-user-with-user-type")
     void createUserWithUserTypeTest() {
         def password = 'Passw0rd!2@3#'
@@ -852,6 +852,7 @@ class UsersIT extends ITSupport {
 
     /**
      * Tests assigning and removing roles from a user
+     * Tests role assignment to a user
      */
     @Test(groups = "group2")
     @Scenario("user-role-assign")
