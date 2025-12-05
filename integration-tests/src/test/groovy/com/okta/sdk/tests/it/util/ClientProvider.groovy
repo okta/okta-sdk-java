@@ -35,7 +35,6 @@ import com.okta.sdk.resource.model.InlineHookStatus
 import com.okta.sdk.resource.model.LifecycleStatus
 import com.okta.sdk.resource.model.Policy
 import com.okta.sdk.resource.model.User
-import com.okta.sdk.resource.model.UserGetSingleton
 import com.okta.sdk.resource.model.UserStatus
 import com.okta.sdk.resource.model.UserType
 import com.okta.sdk.tests.Scenario
@@ -161,7 +160,7 @@ trait ClientProvider implements IHookable {
     void deleteUser(String id, ApiClient client) {
 
         UserApi userApi = new UserApi(client)
-        UserGetSingleton userToDelete = userApi.getUser(id, null, "false")
+        User userToDelete = userApi.getUser(id, null, "false")
 
         if (userToDelete != null) {
             log.info("Deleting User: {} (id - {})", userToDelete.getProfile().getEmail(), id)
