@@ -96,7 +96,6 @@ jobs:
       # Run the wrapper, do not change anything here
       - run:
           name: Run Reversing Labs Wrapper Scanner
-          no_output_timeout: 45m
           command: |
             echo "Scanning " ${CIRCLE_WORKING_DIRECTORY/#\~/$HOME}/api
             rl-wrapper \

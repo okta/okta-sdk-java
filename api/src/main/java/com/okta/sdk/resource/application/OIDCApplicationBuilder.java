@@ -17,7 +17,6 @@ package com.okta.sdk.resource.application;
 
 import com.okta.commons.lang.Classes;
 import com.okta.sdk.resource.model.OAuthEndpointAuthenticationMethod;
-import com.okta.sdk.resource.model.OAuthGrantType;
 import com.okta.sdk.resource.model.OAuthResponseType;
 import com.okta.sdk.resource.model.OpenIdConnectApplicationConsentMethod;
 import com.okta.sdk.resource.model.OpenIdConnectApplicationType;
@@ -36,9 +35,9 @@ public interface OIDCApplicationBuilder extends ApplicationBuilder<OIDCApplicati
 
     OIDCApplicationBuilder setConsentMethod(OpenIdConnectApplicationConsentMethod consentMethod);
 
-    OIDCApplicationBuilder setGrantTypes(List<OAuthGrantType> grantTypes);
+    OIDCApplicationBuilder setGrantTypes(List<com.okta.sdk.resource.model.GrantType> grantTypes);
 
-    OIDCApplicationBuilder addGrantTypes(OAuthGrantType grantType);
+    OIDCApplicationBuilder addGrantTypes(com.okta.sdk.resource.model.GrantType grantType);
 
     OIDCApplicationBuilder setLogoUri(String logoUri);
 
@@ -68,7 +67,7 @@ public interface OIDCApplicationBuilder extends ApplicationBuilder<OIDCApplicati
 
     OIDCApplicationBuilder setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod);
 
-    OIDCApplicationBuilder setJwks(List<com.okta.sdk.resource.model.SchemasJsonWebKey> jsonWebKeyList);
+    OIDCApplicationBuilder setJwks(List<com.okta.sdk.resource.model.ListJwk200ResponseInner> schemasJsonWebKeys);
 
     OIDCApplicationBuilder setImplicitAssignment(Boolean isImplicitAssignment);
 

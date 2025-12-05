@@ -35,7 +35,6 @@ import com.okta.sdk.resource.model.InlineHookStatus
 import com.okta.sdk.resource.model.LifecycleStatus
 import com.okta.sdk.resource.model.Policy
 import com.okta.sdk.resource.model.User
-import com.okta.sdk.resource.model.UserGetSingleton
 import com.okta.sdk.resource.model.UserStatus
 import com.okta.sdk.resource.model.UserType
 import com.okta.sdk.tests.Scenario
@@ -49,19 +48,17 @@ import org.testng.IHookCallBack
 import org.testng.IHookable
 import org.testng.ITestResult
 import org.testng.annotations.AfterMethod
-import org.testng.annotations.Listeners
 
 /**
  * Creates a thread local client for a test method to use. The client may be connected to an actual Okta instance or a Test Server.
  */
-@Listeners(ClientProvider)
 trait ClientProvider implements IHookable {
 
-    private Logger log = LoggerFactory.getLogger(ClientProvider)
+    Logger log = LoggerFactory.getLogger(ClientProvider)
 
-    private ThreadLocal<ApiClient> threadLocal = new ThreadLocal<>()
-    private ThreadLocal<String> testName = new ThreadLocal<>()
-    private List<Object> toBeDeleted = []
+    ThreadLocal<ApiClient> threadLocal = new ThreadLocal<>()
+    ThreadLocal<String> testName = new ThreadLocal<>()
+    List<Object> toBeDeleted = []
 
     ApiClient getClient(String scenarioId = null) {
         ApiClient client = threadLocal.get()
@@ -77,7 +74,10 @@ trait ClientProvider implements IHookable {
 
     private ApiClient buildClient() {
 
-        ApiClient apiClient = Clients.builder().build()
+        ApiClient apiClient = Clients.builder()
+            .setConnectionTimeout(120)
+            .setRetryMaxAttempts(3)
+            .build()
         //apiClient.setDebugging(true)
         return apiClient
     }
@@ -130,7 +130,7 @@ trait ClientProvider implements IHookable {
     }
 
     def getUniqueTestName() {
-        return "${getTestName()}-${UUID.randomUUID()}"
+        return "${UUID.randomUUID()}"
     }
 
     /**
@@ -160,7 +160,7 @@ trait ClientProvider implements IHookable {
     void deleteUser(String id, ApiClient client) {
 
         UserApi userApi = new UserApi(client)
-        UserGetSingleton userToDelete = userApi.getUser(id, null, "false")
+        User userToDelete = userApi.getUser(id, null, "false")
 
         if (userToDelete != null) {
             log.info("Deleting User: {} (id - {})", userToDelete.getProfile().getEmail(), id)

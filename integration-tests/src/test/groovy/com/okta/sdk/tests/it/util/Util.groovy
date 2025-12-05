@@ -77,6 +77,14 @@ class Util {
         assertThat(groupsFound, hasSize(1))
     }
 
+    static boolean isGroupPresent(List<Group> results, Group expectedGroup) {
+        List<Group> groupsFound = StreamSupport.stream(results.spliterator(), false)
+                .filter {group -> group.id == expectedGroup.id}
+                .collect(Collectors.toList())
+
+        return !groupsFound.isEmpty()
+    }
+
     static void assertGroupAbsent(List<Group> results, Group expectedGroup) {
 
         List<Group> groupsFound = StreamSupport.stream(results.spliterator(), false)

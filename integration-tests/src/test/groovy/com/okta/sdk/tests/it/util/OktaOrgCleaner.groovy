@@ -50,7 +50,7 @@ class OktaOrgCleaner {
         UserApi userApi = new UserApi(client)
 
         log.info("Deleting Active Users:")
-        userApi.listUsers(null, null, null, null,'status eq \"ACTIVE\"', null, null, null)
+        userApi.listUsers(null, null, null, null,'status eq \"ACTIVE\"', null, null, null, null, null)
             .stream()
             .filter { it.getProfile().getEmail().endsWith("@example.com") }
             .forEach {
@@ -63,7 +63,7 @@ class OktaOrgCleaner {
                 userApi.deleteUser(it.getId(), false, null)
             }
 
-        userApi.listUsers(null, null, null, null, 'status eq \"DEPROVISIONED\"', null, null, null)
+        userApi.listUsers(null, null, null, null, 'status eq \"DEPROVISIONED\"', null, null, null, null, null)
             .forEach {
                 log.info("Deleting deactivated user: ${it.getProfile().getEmail()}")
                 userApi.deleteUser(it.getId(), false, null)
@@ -72,7 +72,7 @@ class OktaOrgCleaner {
         ApplicationApi applicationApi = new ApplicationApi(client)
 
         log.info("Deleting Applications:")
-        applicationApi.listApplications(null, null, true, 100, null, null, true).stream()
+        applicationApi.listApplications(null, null, true, null, 100, null, null, true).stream()
             .filter { it.getLabel().startsWith(prefix) && it.getLabel().matches(".*-${uuidRegex}.*") }
             .forEach {
                 log.info("\t ${it.getLabel()}")
