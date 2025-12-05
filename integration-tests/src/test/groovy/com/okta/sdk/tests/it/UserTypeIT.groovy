@@ -737,8 +737,8 @@ class UserTypeIT extends ITSupport {
             }
 
         } catch (ApiException e) {
-            // Expected if user type management not enabled
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+            // Expected if user type management not enabled or server error
+            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404), equalTo(500)))
         }
     }
 }

@@ -33,6 +33,7 @@ import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.client.Pair;
 import com.okta.sdk.resource.api.*;
 import com.okta.sdk.resource.model.*;
+import com.okta.sdk.resource.model.SortOrderParameter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -295,7 +296,7 @@ public class ReadmeSnippets {
 
         // use a filter (start date, end date, filter, or query, sort order) all options are nullable
         List<LogEvent> logEvents =
-            systemLogApi.listLogEvents(null, null, null, "interestingURI.com", null, 100, "ASCENDING");
+            systemLogApi.listLogEvents(null, null, null, "interestingURI.com", null, 100, SortOrderParameter.ASCENDING);
     }
 
     private void callAnotherEndpoint() throws ApiException {

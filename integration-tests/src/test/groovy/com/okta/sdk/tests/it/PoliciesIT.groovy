@@ -826,7 +826,8 @@ class PoliciesIT extends ITSupport {
             assertThat(clonedPolicy, notNullValue())
             assertThat(clonedPolicy.getId(), notNullValue())
             assertThat(clonedPolicy.getId(), not(originalPolicy.getId()))
-            assertThat(clonedPolicy.getName(), containsString("Copy of"))
+            // API may use "Copy of" or "[cloned]" naming pattern
+            assertThat(clonedPolicy.getName(), anyOf(containsString("Copy of"), containsString("[cloned")))
             assertThat(clonedPolicy.getType(), is(originalPolicy.getType()))
 
             // Verify cloned policy exists by retrieving it
@@ -1100,7 +1101,8 @@ class PoliciesIT extends ITSupport {
             registerForCleanup(clonedPolicy)
             assertThat(clonedPolicy, notNullValue())
             assertThat(clonedPolicy.getId(), not(originalPolicy.getId()))
-            assertThat(clonedPolicy.getName(), containsString("Copy of"))
+            // API may use "Copy of" or "[cloned]" naming pattern
+            assertThat(clonedPolicy.getName(), anyOf(containsString("Copy of"), containsString("[cloned")))
 
             // Verify cloned policy exists
             Policy verifyClone = policyApi.getPolicy(clonedPolicy.getId(), null)
