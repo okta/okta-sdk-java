@@ -19,6 +19,7 @@ import com.okta.sdk.resource.client.ApiClient;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
@@ -151,8 +152,8 @@ public class PaginationUtilTest {
         Method splitQueryMethod = PaginationUtil.class.getDeclaredMethod("splitQuery", URL.class);
         splitQueryMethod.setAccessible(true);
 
-        // Test with valid URL
-        URL url = new URL("https://example.okta.com/api/v1/users?after=100uekbsy586JToqdQ1d7&limit=100");
+        // Test with valid URL - using URI.create().toURL() to avoid deprecated URL(String) constructor
+        URL url = URI.create("https://example.okta.com/api/v1/users?after=100uekbsy586JToqdQ1d7&limit=100").toURL();
         @SuppressWarnings("unchecked")
         Map<String, String> result = (Map<String, String>) splitQueryMethod.invoke(null, url);
 
@@ -167,8 +168,8 @@ public class PaginationUtilTest {
         Method splitQueryMethod = PaginationUtil.class.getDeclaredMethod("splitQuery", URL.class);
         splitQueryMethod.setAccessible(true);
 
-        // Test with encoded parameters
-        URL url = new URL("https://example.okta.com/api/v1/users?filter=status%20eq%20%22ACTIVE%22&after=100uekbsy586JToqdQ1d7");
+        // Test with encoded parameters - using URI.create().toURL() to avoid deprecated URL(String) constructor
+        URL url = URI.create("https://example.okta.com/api/v1/users?filter=status%20eq%20%22ACTIVE%22&after=100uekbsy586JToqdQ1d7").toURL();
         @SuppressWarnings("unchecked")
         Map<String, String> result = (Map<String, String>) splitQueryMethod.invoke(null, url);
 

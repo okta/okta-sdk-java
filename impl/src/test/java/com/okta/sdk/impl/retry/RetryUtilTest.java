@@ -86,13 +86,14 @@ public class RetryUtilTest {
     }
 
 
-    @Test(expectedExceptions = RuntimeException.class)
+    @Test
     public void testDateFromHeaderException() throws ProtocolException {
-        // Test behavior when header causes exception
+        // Test behavior when header causes exception - should return null (graceful handling)
         HttpResponse response = mock(HttpResponse.class);
         when(response.getHeader("Date")).thenThrow(new ProtocolException("Test exception"));
 
-        RetryUtil.dateFromHeader(response);
+        Date result = RetryUtil.dateFromHeader(response);
+        assertNull(result, "Should return null when ProtocolException occurs");
     }
 
     @Test

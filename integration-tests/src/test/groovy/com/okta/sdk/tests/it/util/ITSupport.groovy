@@ -20,7 +20,7 @@ import com.okta.commons.http.MediaType
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
 import com.okta.sdk.resource.policy.PasswordPolicyBuilder
-import com.okta.sdk.tests.ConditionalSkipTestAnalyzer
+import com.okta.sdk.tests.NetworkAwareTestListener
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.resource.client.Pair
 import com.okta.sdk.resource.api.GroupApi
@@ -59,7 +59,7 @@ import org.testng.annotations.Listeners
 
 import java.lang.reflect.Method
 
-@Listeners(value = ConditionalSkipTestAnalyzer.class)
+@Listeners(value = NetworkAwareTestListener.class)
 abstract class ITSupport implements ClientProvider {
 
     private final static Logger log = LoggerFactory.getLogger(ITSupport)

@@ -43,6 +43,29 @@ class UserLifecycleIT extends ITSupport {
         this.userLifecycleApi = new UserLifecycleApi(getClient())
     }
 
+    /**
+     * Helper method to handle API exceptions in lifecycle tests.
+     * 
+     * For lifecycle operations, 403 means the feature is disabled in the test org
+     * (e.g., suspend/unsuspend may not be available). In this case, we skip gracefully.
+     * Other errors should fail the test.
+     * 
+     * @param e The ApiException caught
+     * @param operation Description of the operation being performed
+     * @throws ApiException if the error is not a known skippable condition
+     */
+    private void handleLifecycleApiException(ApiException e, String operation) {
+        log.error("ApiException during {}: Code={}, Message={}", operation, e.getCode(), e.getMessage())
+        
+        // 403 = feature disabled in test org - skip gracefully
+        if (e.getCode() == 403) {
+            log.info("Feature '{}' not available in test org (403), skipping", operation)
+            return
+        }
+        // All other errors should fail the test
+        throw e
+    }
+
     private User createTestUser(String uniqueId, boolean activate = false) {
         log.info("Creating test user, uniqueId: {}, activate: {}", uniqueId, activate)
         
@@ -82,7 +105,13 @@ class UserLifecycleIT extends ITSupport {
 
         } catch (ApiException e) {
             log.error("ApiException: Code={}, Message={}", e.getCode(), e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+            // 403 = feature disabled in test org, skip test instead of false pass
+            if (e.getCode() == 403) {
+                log.info("Suspension feature not available in test org, skipping")
+                return // Feature not available, don't fail
+            }
+            // Any other error should fail the test
+            throw e
         }
     }
 
@@ -107,7 +136,12 @@ class UserLifecycleIT extends ITSupport {
 
         } catch (ApiException e) {
             log.error("ApiException during suspend: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+            // 403 = feature disabled in test org
+            if (e.getCode() == 403) {
+                log.info("Suspension feature not available in test org, skipping")
+                return
+            }
+            throw e
         }
     }
 
@@ -133,7 +167,12 @@ class UserLifecycleIT extends ITSupport {
 
         } catch (ApiException e) {
             log.error("ApiException: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+            // 403 = feature disabled in test org
+            if (e.getCode() == 403) {
+                log.info("Suspend/unsuspend feature not available in test org, skipping")
+                return
+            }
+            throw e
         }
     }
 
@@ -160,7 +199,12 @@ class UserLifecycleIT extends ITSupport {
 
         } catch (ApiException e) {
             log.error("ApiException: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+            // 403 = feature disabled in test org
+            if (e.getCode() == 403) {
+                log.info("Suspend/unsuspend feature not available in test org, skipping")
+                return
+            }
+            throw e
         }
     }
 
@@ -180,8 +224,7 @@ class UserLifecycleIT extends ITSupport {
             log.info("User activation successful")
 
         } catch (ApiException e) {
-            log.error("ApiException: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+            handleLifecycleApiException(e, "activateUser")
         }
     }
 
@@ -200,8 +243,7 @@ class UserLifecycleIT extends ITSupport {
             log.info("User activated with email sent")
 
         } catch (ApiException e) {
-            log.error("ApiException: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+            handleLifecycleApiException(e, "activateUser with sendEmail=true")
         }
     }
 
@@ -220,8 +262,7 @@ class UserLifecycleIT extends ITSupport {
             log.info("User activated without email")
 
         } catch (ApiException e) {
-            log.error("ApiException: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+            handleLifecycleApiException(e, "activateUser with sendEmail=false")
         }
     }
 
@@ -243,8 +284,7 @@ class UserLifecycleIT extends ITSupport {
             log.info("User deactivated successfully")
 
         } catch (ApiException e) {
-            log.error("ApiException: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+            handleLifecycleApiException(e, "deactivateUser")
         }
     }
 
@@ -266,8 +306,7 @@ class UserLifecycleIT extends ITSupport {
             log.info("User deactivated with email")
 
         } catch (ApiException e) {
-            log.error("ApiException: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+            handleLifecycleApiException(e, "deactivateUser with sendEmail=true")
         }
     }
 
@@ -289,8 +328,7 @@ class UserLifecycleIT extends ITSupport {
             log.info("User deactivated without email")
 
         } catch (ApiException e) {
-            log.error("ApiException: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+            handleLifecycleApiException(e, "deactivateUser with sendEmail=false")
         }
     }
 
@@ -315,8 +353,7 @@ class UserLifecycleIT extends ITSupport {
             log.info("User reactivated successfully")
 
         } catch (ApiException e) {
-            log.error("ApiException: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+            handleLifecycleApiException(e, "reactivateUser")
         }
     }
 
@@ -341,8 +378,7 @@ class UserLifecycleIT extends ITSupport {
             log.info("User reactivated with email")
 
         } catch (ApiException e) {
-            log.error("ApiException: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+            handleLifecycleApiException(e, "reactivateUser with sendEmail=true")
         }
     }
 
@@ -367,8 +403,7 @@ class UserLifecycleIT extends ITSupport {
             log.info("User reactivated without email")
 
         } catch (ApiException e) {
-            log.error("ApiException: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+            handleLifecycleApiException(e, "reactivateUser with sendEmail=false")
         }
     }
 
@@ -387,8 +422,7 @@ class UserLifecycleIT extends ITSupport {
             log.info("User unlock called successfully")
 
         } catch (ApiException e) {
-            log.error("ApiException: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+            handleLifecycleApiException(e, "unlockUser")
         }
     }
 
@@ -408,8 +442,7 @@ class UserLifecycleIT extends ITSupport {
             log.info("User unlocked with valid userId")
 
         } catch (ApiException e) {
-            log.error("ApiException: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+            handleLifecycleApiException(e, "unlockUser with valid userId")
         }
     }
 
@@ -426,8 +459,7 @@ class UserLifecycleIT extends ITSupport {
             log.info("Reset factors called successfully")
 
         } catch (ApiException e) {
-            log.error("ApiException: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
+            handleLifecycleApiException(e, "resetFactors")
         }
     }
 
@@ -448,8 +480,7 @@ class UserLifecycleIT extends ITSupport {
             log.info("Factors reset for valid userId")
 
         } catch (ApiException e) {
-            log.error("ApiException: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+            handleLifecycleApiException(e, "resetFactors with valid userId")
         }
     }
 
@@ -484,8 +515,7 @@ class UserLifecycleIT extends ITSupport {
             log.info("Step 3: User unsuspended - status: {}", unsuspendedUser.getStatus())
 
         } catch (ApiException e) {
-            log.error("ApiException during lifecycle: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+            handleLifecycleApiException(e, "activate-suspend-unsuspend lifecycle")
         }
     }
 
@@ -513,11 +543,15 @@ class UserLifecycleIT extends ITSupport {
             log.info("Step 2: User reactivated - status: {}", reactivatedUser.getStatus())
 
         } catch (ApiException e) {
-            log.error("ApiException during lifecycle: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403)))
+            handleLifecycleApiException(e, "deactivate-reactivate lifecycle")
         }
     }
 
+    // ==================== ERROR HANDLING TESTS ====================
+    // These tests verify that invalid inputs produce expected error codes
+    // Here, accepting multiple codes (400, 404, etc.) is intentional since
+    // the exact error code may vary by API version or org configuration.
+    
     @Test(groups = "group3")
     void errorHandling_emptyUserId() {
         log.info("=== Test: Error handling with empty userId ===")
@@ -527,8 +561,10 @@ class UserLifecycleIT extends ITSupport {
             throw new AssertionError("Expected ApiException for empty userId")
 
         } catch (ApiException e) {
-            log.info("Expected ApiException caught: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(404), equalTo(405)))
+            log.info("Expected ApiException caught: Code={}, Message={}", e.getCode(), e.getMessage())
+            // Empty userId should return 400 (bad request), 404 (not found), or 405 (method not allowed)
+            assertThat("Should return 400, 404, or 405 for empty userId", 
+                e.getCode(), anyOf(equalTo(400), equalTo(404), equalTo(405)))
         }
     }
 
@@ -543,8 +579,10 @@ class UserLifecycleIT extends ITSupport {
             throw new AssertionError("Expected ApiException for invalid userId")
 
         } catch (ApiException e) {
-            log.info("Expected ApiException caught: {}", e.getMessage())
-            assertThat(e.getCode(), anyOf(equalTo(400), equalTo(404)))
+            log.info("Expected ApiException caught: Code={}, Message={}", e.getCode(), e.getMessage())
+            // Invalid userId should return 400 (bad request) or 404 (not found)
+            assertThat("Should return 400 or 404 for invalid userId", 
+                e.getCode(), anyOf(equalTo(400), equalTo(404)))
         }
     }
 }

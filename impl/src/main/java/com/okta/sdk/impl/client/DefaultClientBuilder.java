@@ -37,6 +37,8 @@ import com.okta.sdk.impl.config.*;
 import com.okta.sdk.impl.deserializer.AssignRoleToClientResponseDeserializer;
 import com.okta.sdk.impl.deserializer.AssignRoleToGroupResponseDeserializer;
 import com.okta.sdk.impl.deserializer.AssignRoleToUserResponseDeserializer;
+import com.okta.sdk.impl.deserializer.FlexibleOffsetDateTimeDeserializer;
+import com.okta.sdk.impl.deserializer.GroupOwnerDeserializer;
 import com.okta.sdk.impl.deserializer.GroupProfileDeserializer;
 import com.okta.sdk.impl.deserializer.IgnoreTypeInfoMixIn;
 import com.okta.sdk.impl.deserializer.JwkResponseDeserializer;
@@ -62,6 +64,7 @@ import com.okta.sdk.resource.client.auth.Authentication;
 import com.okta.sdk.resource.model.AssignRoleToClient200Response;
 import com.okta.sdk.resource.model.AssignRoleToGroup200Response;
 import com.okta.sdk.resource.model.AssignRoleToUser201Response;
+import com.okta.sdk.resource.model.GroupOwner;
 import com.okta.sdk.resource.model.GroupProfile;
 import com.okta.sdk.resource.model.ListGroupAssignedRoles200ResponseInner;
 import com.okta.sdk.resource.model.ListJwk200ResponseInner;
@@ -94,6 +97,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.security.PrivateKey;
+import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.UnaryOperator;
@@ -511,6 +515,14 @@ public class DefaultClientBuilder implements ClientBuilder {
         module.addDeserializer(AssignRoleToGroup200Response.class, new AssignRoleToGroupResponseDeserializer());
         module.addDeserializer(AssignRoleToUser201Response.class, new AssignRoleToUserResponseDeserializer());
         module.addDeserializer(ListJwk200ResponseInner.class, new JwkResponseDeserializer());
+        
+        // Add custom deserializer for GroupOwner to handle non-ISO-8601 date format
+        // The Okta Group Owner API returns dates like "Wed Dec 10 19:57:11 UTC 2025"
+        module.addDeserializer(GroupOwner.class, new GroupOwnerDeserializer());
+        
+        // Add flexible OffsetDateTime deserializer to handle non-ISO-8601 date formats globally
+        // This overrides the default JavaTimeModule deserializer and supports both formats
+        module.addDeserializer(OffsetDateTime.class, new FlexibleOffsetDateTimeDeserializer());
         mapper.registerModule(module);
     }
 
