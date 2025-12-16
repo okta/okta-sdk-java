@@ -49,7 +49,7 @@ class UserFactorIT extends ITSupport {
             .setEmail(email)
             .setFirstName("Factor")
             .setLastName("TestUser${uniqueId}")
-            .setPassword("Abcd1234!@#%".toCharArray())
+            .setPassword("Passw0rd!2024#Secure".toCharArray())
             .buildAndCreate(userApi)
         
         registerForCleanup(user)
