@@ -16,7 +16,11 @@
  */
 package com.okta.sdk.impl.io
 
+import org.testng.SkipException
 import org.testng.annotations.Test
+
+import javax.net.ssl.SSLException
+import java.net.UnknownHostException
 
 import static org.testng.Assert.assertEquals
 import static org.testng.Assert.assertNotNull
@@ -40,6 +44,11 @@ class UrlResourceTest {
     void testInputStream() {
         def resource = new UrlResource("url:https://www.google.com")
 
-        assertNotNull resource.inputStream
+        try {
+            assertNotNull resource.inputStream
+        } catch (SSLException | UnknownHostException | javax.net.ssl.SSLHandshakeException e) {
+            // Skip test if network/SSL issues prevent connection
+            throw new SkipException("Skipping test due to network/SSL issues: " + e.getMessage())
+        }
     }
 }
