@@ -102,9 +102,12 @@ class Util {
     }
 
     static void assertUserInGroup(User user, Group group, GroupApi groupApi, int times, long delayInMilliseconds, boolean present=true) {
+        // Ensure a minimum delay between checks for eventual consistency
+        long effectiveDelay = Math.max(delayInMilliseconds, 500)
+        
         for (int ii=0; ii<times; ii++) {
 
-            sleep(delayInMilliseconds)
+            sleep(effectiveDelay)
 
             if (present == StreamSupport.stream(groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false)
                     .filter{ listUser -> listUser.id == user.id}
@@ -124,8 +127,11 @@ class Util {
     }
 
     static void assertUserNotInGroup(User user, Group group, GroupApi groupApi, int times, long delayInMilliseconds) {
+        // Ensure a minimum delay between checks for eventual consistency
+        long effectiveDelay = Math.max(delayInMilliseconds, 500)
+        
         for (int ii = 0; ii < times; ii++) {
-            sleep(delayInMilliseconds)
+            sleep(effectiveDelay)
 
             boolean userIsPresent = StreamSupport.stream(
                 groupApi.listGroupUsers(group.getId(), null, null).spliterator(), false

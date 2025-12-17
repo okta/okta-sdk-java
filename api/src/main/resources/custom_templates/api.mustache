@@ -14,12 +14,15 @@
     limitations under the License.
 }}
 {{>licenseInfo}}
+// CUSTOM TEMPLATE VERSION - PAGINATION ENABLED
 package {{package}};
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import {{invokerPackage}}.ApiException;
 import {{invokerPackage}}.ApiClient;
+import {{invokerPackage}}.ApiResponse;
+import {{invokerPackage}}.PagedIterable;
 import {{invokerPackage}}.Configuration;
 import {{modelPackage}}.*;
 import {{invokerPackage}}.Pair;
@@ -219,6 +222,120 @@ import org.openapitools.jackson.nullable.JsonNullableModule;
         {{#returnType}}localVarReturnType{{/returnType}}{{^returnType}}null{{/returnType}}
             );
             }
+
+        {{#returnType}}
+        {{#isArray}}
+
+        /**
+        * {{summary}} (Paginated)
+        * {{notes}}
+        * 
+        * This method returns a lazy, paginated iterable that automatically handles pagination.
+        * It is thread-safe and does not cause memory leaks. Use this method in a for-each loop
+        * to automatically fetch all pages without manual cursor management.
+        {{#allParams}}
+            * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{^isContainer}}{{#defaultValue}}, default to {{.}}{{/defaultValue}}){{/isContainer}}{{/required}}
+        {{/allParams}}
+            * @return Iterable&lt;{{returnBaseType}}&gt; lazy iterable over all pages
+        {{#externalDocs}}
+            * @see <a href="{{url}}">{{summary}} Documentation</a>
+        {{/externalDocs}}
+        */
+        public Iterable<{{{returnBaseType}}}> {{operationId}}Paged({{#allParams}}{{{dataType}}} {{paramName}}{{^-last}}, {{/-last}}{{/allParams}}) {
+            return this.{{operationId}}Paged({{#allParams}}{{paramName}}, {{/allParams}}Collections.emptyMap());
+        }
+
+        /**
+        * {{summary}} (Paginated with additional headers)
+        * {{notes}}
+        * 
+        * This method returns a lazy, paginated iterable that automatically handles pagination.
+        * It is thread-safe and does not cause memory leaks.
+        {{#allParams}}
+            * @param {{paramName}} {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{^isContainer}}{{#defaultValue}}, default to {{.}}{{/defaultValue}}){{/isContainer}}{{/required}}
+        {{/allParams}}
+            * @param additionalHeaders additional headers for this call
+            * @return Iterable&lt;{{returnBaseType}}&gt; lazy iterable over all pages
+        */
+        public Iterable<{{{returnBaseType}}}> {{operationId}}Paged({{#allParams}}{{{dataType}}} {{paramName}}, {{/allParams}}Map<String, String> additionalHeaders) {
+            return new PagedIterable<>(nextUrl -> {
+                try {
+                    if (nextUrl == null) {
+                        // First page
+                        Object localVarPostBody = {{#bodyParam}}{{paramName}}{{/bodyParam}}{{^bodyParam}}null{{/bodyParam}};
+                        String localVarPath = "{{{path}}}"{{#pathParams}}.replaceAll("\\{" + "{{baseName}}" + "\\}", apiClient.escapeString({{{paramName}}}.toString())){{/pathParams}};
+                        
+                        StringJoiner localVarQueryStringJoiner = new StringJoiner("&");
+                        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+                        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+                        {{#queryParams}}
+                        {{#collectionFormat}}localVarCollectionQueryParams.addAll(apiClient.parameterToPairs("{{{collectionFormat}}}", {{/collectionFormat}}{{^collectionFormat}}localVarQueryParams.addAll(apiClient.parameterToPair({{/collectionFormat}}"{{baseName}}", {{paramName}}));
+                        {{/queryParams}}
+                        
+                        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+                        {{#headerParams}}if ({{paramName}} != null)
+                            localVarHeaderParams.put("{{baseName}}", apiClient.parameterToString({{paramName}}));
+                        {{/headerParams}}
+                        localVarHeaderParams.putAll(additionalHeaders);
+                        
+                        final String[] localVarAccepts = {
+                            {{#produces}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/produces}}
+                        };
+                        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts, localVarPath);
+                        final String[] localVarContentTypes = {"text/xml", "application/json"{{#consumes}}, "{{{mediaType}}}"{{/consumes}}};
+                        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+                        String[] localVarAuthNames = new String[] { {{#authMethods}}"{{name}}"{{^-last}}, {{/-last}}{{/authMethods}} };
+                        
+                        TypeReference<List<{{{returnBaseType}}}>> localVarReturnType = new TypeReference<List<{{{returnBaseType}}}>>() {};
+                        return apiClient.invokeAPIWithHttpInfo(
+                            localVarPath,
+                            "{{httpMethod}}",
+                            localVarQueryParams,
+                            localVarCollectionQueryParams,
+                            localVarQueryStringJoiner.toString(),
+                            localVarPostBody,
+                            localVarHeaderParams,
+                            new HashMap<>(),
+                            new HashMap<>(),
+                            localVarAccept,
+                            localVarContentType,
+                            localVarAuthNames,
+                            localVarReturnType
+                        );
+                    } else {
+                        // Subsequent pages - use full URL from Link header
+                        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+                        {{#headerParams}}if ({{paramName}} != null)
+                            localVarHeaderParams.put("{{baseName}}", apiClient.parameterToString({{paramName}}));
+                        {{/headerParams}}
+                        localVarHeaderParams.putAll(additionalHeaders);
+                        
+                        final String[] localVarAccepts = {
+                            {{#produces}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/produces}}
+                        };
+                        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts, nextUrl);
+                        final String[] localVarContentTypes = {"text/xml", "application/json"{{#consumes}}, "{{{mediaType}}}"{{/consumes}}};
+                        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+                        String[] localVarAuthNames = new String[] { {{#authMethods}}"{{name}}"{{^-last}}, {{/-last}}{{/authMethods}} };
+                        
+                        TypeReference<List<{{{returnBaseType}}}>> localVarReturnType = new TypeReference<List<{{{returnBaseType}}}>>() {};
+                        return apiClient.invokeAPIWithHttpInfoFullURL(
+                            nextUrl,
+                            "{{httpMethod}}",
+                            localVarHeaderParams,
+                            localVarAccept,
+                            localVarContentType,
+                            localVarAuthNames,
+                            localVarReturnType
+                        );
+                    }
+                } catch (ApiException e) {
+                    throw new RuntimeException("Failed to fetch page", e);
+                }
+            });
+        }
+        {{/isArray}}
+        {{/returnType}}
 
     {{/operation}}
 

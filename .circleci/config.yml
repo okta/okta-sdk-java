@@ -34,8 +34,7 @@ jobs:
       - image: cimg/openjdk:11.0.22-node
     environment:
       JVM_OPTS: -Xmx3200m
-    resource_class: large
-    parallelism: 3
+    resource_class: xlarge
     steps: *build_steps
 
   jdk21:
@@ -43,8 +42,7 @@ jobs:
       - image: cimg/openjdk:21.0.2-node
     environment:
       JVM_OPTS: -Xmx3200m
-    resource_class: large
-    parallelism: 3
+    resource_class: xlarge
     steps: *build_steps
 
   snyk-scan:
@@ -63,6 +61,7 @@ jobs:
   reversing-labs:
     docker:
       - image: cimg/openjdk:21.0.2-node
+    resource_class: xlarge
     steps:
       - checkout
       - run: npm install
@@ -97,6 +96,7 @@ jobs:
       # Run the wrapper, do not change anything here
       - run:
           name: Run Reversing Labs Wrapper Scanner
+          no_output_timeout: 45m
           command: |
             echo "Scanning " ${CIRCLE_WORKING_DIRECTORY/#\~/$HOME}/api
             rl-wrapper \
