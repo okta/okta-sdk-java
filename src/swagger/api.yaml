@@ -64850,13 +64850,9 @@ components:
               description: The list of geolocations to include or exclude for an Enhanced Dynamic Network Zone
               properties:
                 include:
-                  allOf:
                     - $ref: '#/components/schemas/NetworkZoneLocationArray'
-                    - description: An array of geolocations to include for an Enhanced Dynamic Network Zone
                 exclude:
-                  allOf:
                     - $ref: '#/components/schemas/NetworkZoneLocationArray'
-                    - description: An array of geolocations to exclude for an Enhanced Dynamic Network Zone
             ipServiceCategories:
               x-okta-lifecycle:
                 lifecycle: GA
@@ -69848,6 +69844,7 @@ components:
           IP: '#/components/schemas/IPNetworkZone'
           DYNAMIC: '#/components/schemas/DynamicNetworkZone'
           DYNAMIC_V2: '#/components/schemas/EnhancedDynamicNetworkZone'
+          UNKNOWN: '#/components/schemas/NetworkZone'
     NetworkZoneAddress:
       description: Specifies the value of an IP address expressed using either `range` or `CIDR` form.
       type: object
@@ -69904,6 +69901,7 @@ components:
         - DYNAMIC
         - IP
         - DYNAMIC_V2
+        - UNKNOWN
     NetworkZoneUsage:
       description: The usage of the Network Zone
       type: string
