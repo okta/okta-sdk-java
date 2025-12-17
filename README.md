@@ -41,6 +41,10 @@ This repository contains the Okta management SDK for Java. This SDK can be used 
 * Manage user types with the [User Types API](https://developer.okta.com/docs/reference/api/user-types/).
 * Manage custom domains with the [Domains API](https://developer.okta.com/docs/reference/api/domains/).
 * Manage network zones with the [Zones API](https://developer.okta.com/docs/reference/api/zones/).
+* Manage user risk levels with the User Risk API (New in v25.0.0)
+* Manage user classification with the User Classification API (New in v25.0.0)
+* Manage authenticator enrollments with the User Authenticator Enrollments API (New in v25.0.0)
+* Manage group owners with the Group Owner API (New in v25.0.0)
 * Much more!
  
 We also publish these libraries for Java:
@@ -55,7 +59,7 @@ You can learn more on the [Okta + Java][lang-landing] page in our documentation.
 
 This library uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/).
 
-:heavy_check_mark: The latest stable major version series is: 20.x.x
+:heavy_check_mark: The latest stable major version series is: 25.x.x
 
 | Version                                                     | Status                                                                                                                                   |
 |-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
@@ -71,9 +75,29 @@ This library uses semantic versioning and follows Okta's [library version policy
 | 17.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-17.0.0))                       |
 | 18.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-18.0.0))                       |
 | 19.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-19.0.0))                       |
-| 20.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-20.0.0))                     |
+| 20.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-20.0.0))                       |
+| 25.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-25.0.0), [migration guide](MIGRATION-v25.0.0.md)) |
 
 The latest release can always be found on the [releases page][github-releases].
+
+## Migration Guides
+
+If you're upgrading from a previous version, please review the appropriate migration guide:
+
+| From Version | To Version | Migration Guide |
+|--------------|------------|-----------------|
+| 24.x | 25.x | [MIGRATION-v25.0.0.md](MIGRATION-v25.0.0.md) |
+| 8.x | 10.x | [MIGRATING.md](MIGRATING.md#migrating-from-8xx-to-10xx) |
+
+### Key Changes in v25.0.0
+
+- **OpenAPI Spec Update**: Upgraded to v5.1.0 with 70+ new endpoints
+- **Breaking Changes**: User object schema, Authenticator APIs, Factor APIs, Policy APIs
+- **Custom Deserializers**: 9 new deserializers for proper polymorphic type handling
+- **Enhanced Test Coverage**: 35 integration test suites
+- **PagedIterable**: New thread-safe pagination (deprecates PaginationUtil)
+
+For detailed information, see the [full changelog](CHANGELOG-v25.0.0.md).
  
 ## Need help?
  
@@ -529,16 +553,46 @@ com.okta.sdk.resource.model.User user = client.invokeAPI(
 
 ### Pagination
 
-Collections can be fetched with manually controlled Pagination.
+#### Recommended Approach (v25.0.0+)
+
+Collections can be fetched with the new `PagedIterable` for automatic, thread-safe pagination:
+
+[//]: # (method: paginateNew)
+```java
+UserApi userApi = new UserApi(client);
+
+// Lazy iteration - memory efficient
+PagedIterable<User> users = userApi.listUsersPagedIterable(null, null, 200, null, null, null, null);
+for (User user : users) {
+    System.out.println("User: " + user.getProfile().getLogin());
+}
+
+// Or collect all users
+List<User> allUsers = new ArrayList<>();
+for (User user : userApi.listUsersPagedIterable(null, null, 200, null, null, null, null)) {
+    allUsers.add(user);
+}
+```
+[//]: # (end: paginateNew)
+
+**Benefits of PagedIterable:**
+- ✅ Thread-safe: Each iterator has isolated pagination state
+- ✅ Memory efficient: Pages loaded lazily on demand
+- ✅ Simple API: Works with Java for-each loops and streams
+
+#### Legacy Approach (Deprecated)
+
+The `PaginationUtil.getAfter()` method is deprecated and will be removed in a future release:
 
 [//]: # (method: paginate)
 ```java
+// DEPRECATED - Use PagedIterable instead
 UserApi userApi = new UserApi(client);
 List<User> users = new ArrayList<>();
 String after = null;
 do {
     users.addAll(userApi.listUsers("application/json",null, after, 200, null, null, null, null));
-    after = PaginationUtil.getAfter(userApi.getApiClient());
+    after = PaginationUtil.getAfter(userApi.getApiClient()); // Deprecated!
 } while (StringUtils.isNotBlank(after));
 ```
 [//]: # (end: paginate)
@@ -718,6 +772,19 @@ ApiClient client = Clients.builder()
 ## Building the SDK
 
 In most cases, you won't need to build the SDK from source. If you want to build it yourself, take a look at the [build instructions wiki](https://github.com/okta/okta-sdk-java/wiki/Build-It) (though just cloning the repo and running `mvn install` should get you going).
+
+> **Note**: The SDK uses a large OpenAPI specification file (~84,000 lines). If you encounter memory issues during build:
+> 
+> 1. Ensure `.mvn/jvm.config` is present with appropriate settings:
+>    ```
+>    -Xmx2g
+>    -DmaxYamlCodePoints=10000000
+>    ```
+> 
+> 2. Ensure `.mvn/maven.config` has SnakeYAML limits:
+>    ```
+>    -Dsnakeyaml.codepoint.limit=10000000
+>    ```
  
 ## Contributing
  
