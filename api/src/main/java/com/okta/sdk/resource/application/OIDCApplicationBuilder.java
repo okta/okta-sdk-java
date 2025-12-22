@@ -21,7 +21,7 @@ import com.okta.sdk.resource.model.OAuthResponseType;
 import com.okta.sdk.resource.model.OpenIdConnectApplicationConsentMethod;
 import com.okta.sdk.resource.model.OpenIdConnectApplicationType;
 import com.okta.sdk.resource.model.ListJwk200ResponseInner;
-import com.okta.sdk.resource.model.GrantTypel;
+import com.okta.sdk.resource.model.GrantType;
 
 import java.util.List;
 
@@ -37,9 +37,9 @@ public interface OIDCApplicationBuilder extends ApplicationBuilder<OIDCApplicati
 
     OIDCApplicationBuilder setConsentMethod(OpenIdConnectApplicationConsentMethod consentMethod);
 
-    OIDCApplicationBuilder setGrantTypes(List<com.okta.sdk.resource.model.GrantType> grantTypes);
+    OIDCApplicationBuilder setGrantTypes(List<GrantType> grantTypes);
 
-    OIDCApplicationBuilder addGrantTypes(com.okta.sdk.resource.model.GrantType grantType);
+    OIDCApplicationBuilder addGrantTypes(GrantType grantType);
 
     OIDCApplicationBuilder setLogoUri(String logoUri);
 
