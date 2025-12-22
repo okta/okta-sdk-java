@@ -53,7 +53,7 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     private String inlineHookId;
 
     @Override
-    public OIDCApplicationBuilder setApplicationType(com.okta.sdk.resource.model.OpenIdConnectApplicationType applicationType) {
+    public OIDCApplicationBuilder setApplicationType(OpenIdConnectApplicationType applicationType) {
         this.applicationType = applicationType;
         return this;
     }
@@ -186,16 +186,16 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
 
     @Override
     public OpenIdConnectApplication buildAndCreate(ApplicationApi client) throws ApiException {
-        return (com.okta.sdk.resource.model.OpenIdConnectApplication) new ApplicationApi(client.getApiClient())
+        return (OpenIdConnectApplication) new ApplicationApi(client.getApiClient())
                 .createApplication(build(), false, null);
     }
 
-    private com.okta.sdk.resource.model.OpenIdConnectApplication build() {
-        com.okta.sdk.resource.model.OpenIdConnectApplication application = new com.okta.sdk.resource.model.OpenIdConnectApplication();
+    private OpenIdConnectApplication build() {
+        OpenIdConnectApplication application = new OpenIdConnectApplication();
 
         if (Strings.hasText(label)) application.setLabel(label);
 
-        if (Strings.hasText(name)) application.setName(com.okta.sdk.resource.model.OpenIdConnectApplication.NameEnum.valueOf(name));
+        if (Strings.hasText(name)) application.setName(OpenIdConnectApplication.NameEnum.valueOf(name));
 
         application.setSignOnMode(com.okta.sdk.resource.model.ApplicationSignOnMode.OPENID_CONNECT);
 
