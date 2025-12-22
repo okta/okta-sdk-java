@@ -25,7 +25,9 @@ import com.okta.sdk.resource.user.UserBuilder;
 
 import com.okta.sdk.resource.api.UserApi;
 import com.okta.sdk.resource.api.GroupApi;
-import com.okta.sdk.resource.model.*;
+import com.okta.sdk.resource.model.User;
+import com.okta.sdk.resource.model.Group;
+import com.okta.sdk.resource.model.UserStatus;
 
 import java.util.List;
 import java.util.Objects;
@@ -47,8 +49,8 @@ public class Quickstart {
 
         ClientBuilder builder;
         ApiClient client;
-        com.okta.sdk.resource.model.Group group = null;
-        com.okta.sdk.resource.model.User user = null;
+        Group group = null;
+        User user = null;
 
         UserApi userApi = null;
         GroupApi groupApi = null;
@@ -115,7 +117,7 @@ public class Quickstart {
 
             // deactivate (if de-provisioned) and delete user
             if (user != null) {
-                if (!Objects.equals(user.getStatus(), com.okta.sdk.resource.model.UserStatus.DEPROVISIONED)) {
+                if (!Objects.equals(user.getStatus(),UserStatus.DEPROVISIONED)) {
                     // This operation on a User that has not been deactivated/deprovisioned causes that User to be deactivated.
                     userApi.deleteUser(user.getId(), false, null);
                 }

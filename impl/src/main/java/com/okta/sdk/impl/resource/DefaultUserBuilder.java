@@ -29,6 +29,8 @@ import com.okta.sdk.resource.model.PasswordCredentialHash;
 import com.okta.sdk.resource.model.PasswordCredentialHashAlgorithm;
 import com.okta.sdk.resource.model.PasswordCredentialHook;
 import com.okta.sdk.resource.model.RecoveryQuestionCredential;
+import com.okta.sdk.resource.model.AuthenticationProviderWritable;
+import com.okta.sdk.resource.model.AuthenticationProviderTypeWritable;
 import com.okta.sdk.resource.model.User;
 import com.okta.sdk.resource.model.UserNextLogin;
 import com.okta.sdk.resource.model.UserProfile;
@@ -371,9 +373,9 @@ public class DefaultUserBuilder implements UserBuilder {
 
         // authentication provider
         if (provider != null) {
-            com.okta.sdk.resource.model.AuthenticationProviderWritable providerWritable = new com.okta.sdk.resource.model.AuthenticationProviderWritable();
+            AuthenticationProviderWritable providerWritable = new AuthenticationProviderWritable();
             // Convert enum by name since they have the same values
-            providerWritable.setType(com.okta.sdk.resource.model.AuthenticationProviderTypeWritable.valueOf(provider.getType().name()));
+            providerWritable.setType(AuthenticationProviderTypeWritable.valueOf(provider.getType().name()));
             createCredentialsIfNeeded(createUserRequest).setProvider(providerWritable);
         }
 

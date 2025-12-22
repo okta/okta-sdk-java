@@ -20,6 +20,8 @@ import com.okta.sdk.resource.model.OAuthEndpointAuthenticationMethod;
 import com.okta.sdk.resource.model.OAuthResponseType;
 import com.okta.sdk.resource.model.OpenIdConnectApplicationConsentMethod;
 import com.okta.sdk.resource.model.OpenIdConnectApplicationType;
+import com.okta.sdk.resource.model.ListJwk200ResponseInner;
+import com.okta.sdk.resource.model.GrantTypel;
 
 import java.util.List;
 
@@ -67,7 +69,7 @@ public interface OIDCApplicationBuilder extends ApplicationBuilder<OIDCApplicati
 
     OIDCApplicationBuilder setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod);
 
-    OIDCApplicationBuilder setJwks(List<com.okta.sdk.resource.model.ListJwk200ResponseInner> schemasJsonWebKeys);
+    OIDCApplicationBuilder setJwks(List<ListJwk200ResponseInner> schemasJsonWebKeys);
 
     OIDCApplicationBuilder setImplicitAssignment(Boolean isImplicitAssignment);
 

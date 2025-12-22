@@ -20,29 +20,35 @@ import com.okta.sdk.resource.application.OIDCApplicationBuilder;
 import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.api.ApplicationApi;
 import com.okta.sdk.resource.model.AutoLoginApplicationSettingsSignOn;
-
+import com.okta.sdk.resource.model.GrantType;
+import com.okta.sdk.resource.model.OpenIdConnectApplicationType;
+import com.okta.sdk.resource.model.ListJwk200ResponseInner;
+import com.okta.sdk.resource.model.OpenIdConnectApplicationConsentMethod;
+import com.okta.sdk.resource.model.OAuthResponseType;
+import com.okta.sdk.resource.model.OAuthEndpointAuthenticationMethod;
+import com.okta.sdk.resource.model.OpenIdConnectApplication;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OIDCApplicationBuilder> implements OIDCApplicationBuilder {
-    private com.okta.sdk.resource.model.OpenIdConnectApplicationType applicationType;
+    private OpenIdConnectApplicationType applicationType;
     private String clientUri;
-    private com.okta.sdk.resource.model.OpenIdConnectApplicationConsentMethod consentMethod;
-    private List<com.okta.sdk.resource.model.GrantType> grantTypes = new ArrayList<>();
+    private OpenIdConnectApplicationConsentMethod consentMethod;
+    private List<GrantType> grantTypes = new ArrayList<>();
     private String logoUri;
     private String policyUri;
     private String loginUrl;
     private String redirectUrl;
     private List<String> postLogoutRedirectUris = new ArrayList<>();
     private List<String> redirectUris = new ArrayList<>();
-    private List<com.okta.sdk.resource.model.OAuthResponseType> responseTypes = new ArrayList<>();
+    private List<OAuthResponseType> responseTypes = new ArrayList<>();
     private String tosUri;
     private String clientId;
     private String clientSecret;
     private Boolean autoKeyRotation;
-    private com.okta.sdk.resource.model.OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod;
-    private List<com.okta.sdk.resource.model.ListJwk200ResponseInner> schemasJsonWebKeys = new ArrayList<>();
+    private OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod;
+    private List<ListJwk200ResponseInner> schemasJsonWebKeys = new ArrayList<>();
     private Boolean isImplicitAssignment;
     private String inlineHookId;
 
@@ -59,19 +65,19 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
-    public OIDCApplicationBuilder setConsentMethod(com.okta.sdk.resource.model.OpenIdConnectApplicationConsentMethod consentMethod) {
+    public OIDCApplicationBuilder setConsentMethod(OpenIdConnectApplicationConsentMethod consentMethod) {
         this.consentMethod = consentMethod;
         return this;
     }
 
     @Override
-    public OIDCApplicationBuilder setGrantTypes(List<com.okta.sdk.resource.model.GrantType> grantTypes) {
+    public OIDCApplicationBuilder setGrantTypes(List<GrantType> grantTypes) {
         this.grantTypes = grantTypes;
         return this;
     }
 
     @Override
-    public OIDCApplicationBuilder addGrantTypes(com.okta.sdk.resource.model.GrantType grantType) {
+    public OIDCApplicationBuilder addGrantTypes(GrantType grantType) {
         this.grantTypes.add(grantType);
         return this;
     }
@@ -107,13 +113,13 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
-    public OIDCApplicationBuilder setResponseTypes(List<com.okta.sdk.resource.model.OAuthResponseType> responseTypes) {
+    public OIDCApplicationBuilder setResponseTypes(List<OAuthResponseType> responseTypes) {
         this.responseTypes = responseTypes;
         return this;
     }
 
     @Override
-    public OIDCApplicationBuilder addResponseTypes(com.okta.sdk.resource.model.OAuthResponseType responseType) {
+    public OIDCApplicationBuilder addResponseTypes(OAuthResponseType responseType) {
         this.responseTypes.add(responseType);
         return this;
     }
@@ -155,13 +161,13 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
-    public OIDCApplicationBuilder setTokenEndpointAuthMethod(com.okta.sdk.resource.model.OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod) {
+    public OIDCApplicationBuilder setTokenEndpointAuthMethod(OAuthEndpointAuthenticationMethod tokenEndpointAuthMethod) {
         this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
         return this;
     }
 
     @Override
-    public OIDCApplicationBuilder setJwks(List<com.okta.sdk.resource.model.ListJwk200ResponseInner> schemasJsonWebKeys) {
+    public OIDCApplicationBuilder setJwks(List<ListJwk200ResponseInner> schemasJsonWebKeys) {
         this.schemasJsonWebKeys = schemasJsonWebKeys;
         return this;
     }
@@ -179,7 +185,7 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
     }
 
     @Override
-    public com.okta.sdk.resource.model.OpenIdConnectApplication buildAndCreate(ApplicationApi client) throws ApiException {
+    public OpenIdConnectApplication buildAndCreate(ApplicationApi client) throws ApiException {
         return (com.okta.sdk.resource.model.OpenIdConnectApplication) new ApplicationApi(client.getApiClient())
                 .createApplication(build(), false, null);
     }

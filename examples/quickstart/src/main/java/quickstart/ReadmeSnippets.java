@@ -27,6 +27,8 @@ import com.okta.sdk.resource.api.GroupApi;
 import com.okta.sdk.resource.api.UserApi;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
+import com.okta.sdk.resource.model.UserProfile;
+import com.okta.sdk.resource.model.CreateUserRequest;
 
 import com.okta.sdk.resource.client.ApiClient;
 import com.okta.sdk.resource.client.ApiException;
@@ -305,14 +307,14 @@ public class ReadmeSnippets {
         // Create a User
         String email = "joe.coder+" + UUID.randomUUID() + "@example.com";
 
-        UserProfile userProfile = new com.okta.sdk.resource.model.UserProfile()
+        UserProfile userProfile = new UserProfile()
             .firstName("Joe")
             .lastName("Coder")
             .email(email)
             .mobilePhone("1234567890")
             .login(email);
 
-        com.okta.sdk.resource.model.CreateUserRequest createUserRequest = new com.okta.sdk.resource.model.CreateUserRequest();
+        CreateUserRequest createUserRequest = new CreateUserRequest();
         createUserRequest.setProfile(userProfile);
 
         List<com.okta.sdk.resource.client.Pair> queryParams = new ArrayList<com.okta.sdk.resource.client.Pair>();
