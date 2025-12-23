@@ -16,7 +16,11 @@
  */
 package com.okta.sdk.impl.io
 
+import org.testng.SkipException
 import org.testng.annotations.Test
+
+import javax.net.ssl.SSLException
+import java.net.UnknownHostException
 
 import static org.testng.Assert.assertEquals
 import static org.testng.Assert.assertNotNull

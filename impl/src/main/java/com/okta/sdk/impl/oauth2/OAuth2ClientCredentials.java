@@ -41,6 +41,9 @@ public class OAuth2ClientCredentials extends OAuth implements ClientCredentials<
 
     private OAuth2AccessToken oAuth2AccessToken;
     private final AccessTokenRetrieverService accessTokenRetrieverService;
+    
+    // Flag to prevent recursive refresh attempts during token retrieval
+    private volatile boolean isRefreshing = false;
 
     public OAuth2ClientCredentials(AccessTokenRetrieverService accessTokenRetrieverService) {
         Assert.notNull(accessTokenRetrieverService, "accessTokenRetrieverService must not be null");
@@ -49,12 +52,28 @@ public class OAuth2ClientCredentials extends OAuth implements ClientCredentials<
 
     @Override
     public synchronized void applyToParams(List<Pair> queryParams, Map<String, String> headerParams, Map<String, String> cookieParams) {
-        if (oAuth2AccessToken != null &&
-            // refresh 5 minutes before token expiration
-            oAuth2AccessToken.getExpiresAt().minus(5, ChronoUnit.MINUTES).isBefore(Instant.now())) {
-            oAuth2AccessToken = null;
-            setAccessToken(null);
-            refreshOAuth2AccessToken();
+        // Skip refresh check if we're already in the middle of refreshing (prevents recursive calls)
+        if (!isRefreshing) {
+            // Determine if token refresh is needed:
+            // 1. Token exists but is about to expire (within 5 minutes) - original behavior
+            // 2. Token is null but was previously set (stuck state after failed refresh) - fix for GFS customer issue
+            boolean tokenExpiring = oAuth2AccessToken != null && 
+                oAuth2AccessToken.getExpiresAt().minus(5, ChronoUnit.MINUTES).isBefore(Instant.now());
+            boolean tokenMissingButWasSet = oAuth2AccessToken == null && getAccessToken() == null;
+            
+            if (tokenExpiring || tokenMissingButWasSet) {
+                // Clear existing token state before refresh attempt
+                oAuth2AccessToken = null;
+                setAccessToken(null);
+                
+                try {
+                    refreshOAuth2AccessToken();
+                } catch (Exception e) {
+                    log.error("Failed to refresh OAuth2 access token. Will retry on next API call.", e);
+                    // Don't rethrow - let the API call proceed and fail with 401/403
+                    // The next API call will trigger another refresh attempt
+                }
+            }
         }
         super.applyToParams(queryParams, headerParams, cookieParams);
     }
@@ -62,14 +81,17 @@ public class OAuth2ClientCredentials extends OAuth implements ClientCredentials<
     public void refreshOAuth2AccessToken() {
         log.debug("Attempting to refresh OAuth2 access token...");
 
+        isRefreshing = true;
         try {
             oAuth2AccessToken = accessTokenRetrieverService.getOAuth2AccessToken();
+            
+            if (oAuth2AccessToken == null) {
+                throw new OAuth2TokenRetrieverException("Failed to get OAuth2 access token");
+            }
         } catch (IOException | InvalidKeyException e) {
             throw new OAuth2TokenRetrieverException("Failed to get OAuth2 access token", e);
-        }
-
-        if (oAuth2AccessToken == null) {
-            throw new OAuth2TokenRetrieverException("Failed to get OAuth2 access token");
+        } finally {
+            isRefreshing = false;
         }
     }
 
