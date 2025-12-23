@@ -20,7 +20,7 @@
 
     <properties>
         <jackson.version>2.18.2</jackson.version>
-        <snakeyaml.version>2.4</snakeyaml.version>
+        <snakeyaml.version>2.0</snakeyaml.version>
         <bouncycastle.version>1.78.1</bouncycastle.version>
         <jjwt.version>0.12.6</jjwt.version>
         <org.apache.httpcomponents.client5.version>5.3.1</org.apache.httpcomponents.client5.version>
