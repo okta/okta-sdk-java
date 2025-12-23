@@ -97,6 +97,13 @@
                 <version>1.3.2</version>
             </dependency>
 
+            <!-- Force commons-lang3 to 3.18.0 to fix CVE-2025-48924 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.18.0</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.okta.sdk</groupId>
                 <artifactId>okta-sdk-integration-tests</artifactId>
