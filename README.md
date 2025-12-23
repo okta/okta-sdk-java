@@ -41,10 +41,10 @@ This repository contains the Okta management SDK for Java. This SDK can be used 
 * Manage user types with the [User Types API](https://developer.okta.com/docs/reference/api/user-types/).
 * Manage custom domains with the [Domains API](https://developer.okta.com/docs/reference/api/domains/).
 * Manage network zones with the [Zones API](https://developer.okta.com/docs/reference/api/zones/).
-* Manage user risk levels with the User Risk API
-* Manage user classification with the User Classification API
-* Manage authenticator enrollments with the User Authenticator Enrollments API
-* Manage group owners with the Group Owner API 
+* Manage user risk levels with the [User Risk API](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/UserRisk/)
+* Manage user classification with the [User Classification API](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/UserClassification/)
+* Manage authenticator enrollments with the [User Authenticator Enrollments API](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/UserAuthenticatorEnrollments/)
+* Manage group owners with the [Group Owner API](https://developer.okta.com/docs/api/openapi/okta-management/management/tag/GroupOwner/)
 * Much more!
 
 We also publish these libraries for Java:
@@ -80,7 +80,7 @@ This library uses semantic versioning and follows Okta's [library version policy
 | 22.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-22.0.0))                       |
 | 23.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-23.0.0))                       |
 | 24.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-24.0.0))                       |
-| 25.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-25.0.0), [migration guide](MIGRATION-v25.0.0.md)) |
+| 25.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-25.0.0), [migration guide](MIGRATING.md#migrating-from-24xx-to-2500)) |
 
 The latest release can always be found on the [releases page][github-releases].
 
@@ -90,7 +90,8 @@ If you're upgrading from a previous version, please review the migration guide:
 
 | From Version | To Version | Migration Guide |
 |--------------|------------|-----------------|
-| 24.x | 25.x | [MIGRATING.md](MIGRATING.md) |
+| 24.x | 25.x | [MIGRATING.md](MIGRATING.md#migrating-from-24xx-to-2500) |
+| 8.x | 10.x | [MIGRATING.md](MIGRATING.md#migrating-from-8xx-to-10xx) |
 
 ### Key Changes in v25.0.0
 
@@ -630,7 +631,7 @@ do {
 
 Each instance of the SDK `Client` owns its own HTTP connection pool and cache. The `*Paged()` methods (e.g., `listUsersPaged()`) are thread-safe - each iterator maintains independent state and can be used concurrently.
 
-For legacy pagination using `PaginationUtil.getAfter()`, sharing an `ApiClient` across multiple threads may cause state leakage between requests handled by the same thread (especially in thread pool environments). The SDK will emit a warning when it detects multi-threaded access patterns. See the [Pagination Changes](MIGRATION-v25.0.0.md#pagination-changes) section in the migration guide for details on migrating to the thread-safe `PagedIterable` approach.
+For legacy pagination using `PaginationUtil.getAfter()`, sharing an `ApiClient` across multiple threads may cause state leakage between requests handled by the same thread (especially in thread pool environments). The SDK will emit a warning when it detects multi-threaded access patterns. See the [Pagination Changes](MIGRATING.md#pagination-changes) section in the migration guide for details on migrating to the thread-safe `PagedIterable` approach.
 
 The underlying resources are released when the instance becomes eligible for garbage collection.
 

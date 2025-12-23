@@ -206,11 +206,10 @@ The structure of the `User` object has changed significantly. The `type` object 
 
 ### Migration Guides
 
-| Document | Lines | Purpose |
-|----------|-------|---------|
-| [MIGRATION-v25.0.0.md](MIGRATION-v25.0.0.md) | 467 | Comprehensive breaking change documentation |
-| [MIGRATING.md](MIGRATING.md) | Updated | General migration patterns |
-| [README.md](README.md) | Updated | Release status, code examples |
+| Document | Purpose |
+|----------|---------|
+| [MIGRATING.md](MIGRATING.md) | Comprehensive breaking change documentation and migration patterns |
+| [README.md](README.md) | Release status, code examples |
 
 ---
 
@@ -317,7 +316,7 @@ for (User user : users) {
 
 ## 🔄 Migration Path
 
-1. **Review** the [detailed migration guide](MIGRATION-v25.0.0.md)
+1. **Review** the [detailed migration guide](MIGRATING.md)
 2. **Identify** code using changed endpoints (User, Authenticator, Factor, Policy, IdP)
 3. **Update** any dependencies on removed `user.type` properties
 4. **Test** thoroughly with the new SDK version
@@ -340,7 +339,7 @@ for (User user : users) {
 
 | Component | Old Version | New Version |
 |-----------|-------------|-------------|
-| SDK Version | 24.x | **25.0.0-SNAPSHOT** |
+| SDK Version | 24.x | **25.0.0** |
 | OpenAPI Spec | 2024.08.3 | **5.1.0** |
 | API YAML | 66,987 lines | **83,953 lines** |
 
@@ -348,8 +347,7 @@ for (User user : users) {
 
 ## 🔗 Related Links
 
-- [Migration Guide](MIGRATION-v25.0.0.md) - Breaking change details
-- [Migrating Documentation](MIGRATING.md) - General migration patterns
+- [Migration Guide](MIGRATING.md) - Breaking change details and migration patterns
 - [Developer Forum](https://devforum.okta.com) - Community support
 - [GitHub Issues](https://github.com/okta/okta-sdk-java/issues) - Report issues
 - [API Reference](https://developer.okta.com/docs/api/) - Official API documentation
@@ -359,3 +357,111 @@ for (User user : users) {
 ## 🙏 Acknowledgments
 
 This release represents a significant effort to improve the Okta Java SDK's quality and maintainability. Special thanks to all contributors who helped with testing, documentation, and code reviews.
+
+---
+
+# Historical Releases
+
+## v24.0.0 - v24.0.1
+- OpenAPI spec version 2024.08.3
+- Bug fixes and maintenance updates
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-24.0.0)
+
+## v23.0.0 - v23.0.1
+- API enhancements and bug fixes
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-23.0.0)
+
+## v22.0.0 - v22.0.1
+- API enhancements and bug fixes
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-22.0.0)
+
+## v21.0.0
+- API enhancements
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-21.0.0)
+
+## v20.0.0 - v20.0.1
+- API enhancements and bug fixes
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-20.0.0)
+
+## v19.0.0 - v19.0.1
+- API enhancements and bug fixes
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-19.0.0)
+
+## v18.0.0
+- API enhancements
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-18.0.0)
+
+## v17.0.0
+- API enhancements
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-17.0.0)
+
+## v16.0.0
+- API enhancements
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-16.0.0)
+
+## v15.0.0
+- API enhancements
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-15.0.0)
+
+## v14.0.0
+- API enhancements
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-14.0.0)
+
+## v13.0.0 - v13.0.3
+- API enhancements and bug fixes
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-13.0.0)
+
+## v12.0.0 - v12.0.2
+- API enhancements and bug fixes
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-12.0.0)
+
+## v11.0.0 - v11.0.3
+- Breaking changes with japicmp comparison available
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-11.0.0)
+- [API Changes](https://github.com/okta/okta-sdk-java/blob/master/japicmp-11_0_0_vs_10_3_0.html)
+
+## v10.0.0 - v10.3.0
+- Major release with OpenAPI v3 specification
+- New openapi-generator based code generation
+- API client restructuring (see [Migration Guide](MIGRATING.md#migrating-from-8xx-to-10xx))
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-10.0.0)
+
+## v8.0.0 - v8.2.5
+- Bug fixes for Theme and OrgSetting file uploads
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-8.0.0)
+
+## v7.0.0
+- Added Brands and Themes API support
+- New policy interfaces
+- Identity Provider enhancements
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-7.0.0)
+
+## v6.0.0
+- Added Authenticator API support
+- GroupSchema API
+- Org settings enhancements
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-6.0.0)
+
+## v5.0.0
+- SAML application settings changes
+- Authorization server policy changes
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-5.0.0)
+
+## v4.0.0
+- Added Roles and Domains API
+- OpenIdConnect application settings changes
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-4.0.0)
+
+## v3.0.0
+- Configuration key updates
+- Package reorganization
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-3.0.0)
+
+## v2.0.0
+- Minimum Java 8 requirement
+- Package changes
+- [Release Notes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-2.0.0)
+
+## v1.x and earlier
+- Initial releases
+- See [GitHub Releases](https://github.com/okta/okta-sdk-java/releases) for full history
