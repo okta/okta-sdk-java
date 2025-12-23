@@ -21,7 +21,8 @@
     <parent>
         <groupId>com.okta.sdk</groupId>
         <artifactId>okta-sdk-root</artifactId>
-        <version>24.0.2-SNAPSHOT</version>
+        <version>25.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>okta-sdk-api</artifactId>
@@ -36,12 +37,13 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <swagger-annotations.version>1.6.8</swagger-annotations.version>
-        <openapi-generator.version>7.11.0</openapi-generator.version>
+        <openapi-generator.version>7.15.0</openapi-generator.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
         <jakarta-annotation.version>2.1.1</jakarta-annotation.version>
         <jsr305.version>3.0.2</jsr305.version>
         <junit.version>4.13.2</junit.version>
         <com.github.jknack.handlebars.version>4.4.0</com.github.jknack.handlebars.version>
+        <junit-version>5.10.2</junit-version>
     </properties>
 
     <dependencies>
@@ -129,10 +131,42 @@
             <artifactId>handlebars-jackson2</artifactId>
             <version>4.3.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit-version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${project.build.directory}/generated-sources/openapi</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                    <failOnError>false</failOnError>
+                    <retryOnError>true</retryOnError>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>net.revelc.code.formatter</groupId>
                 <artifactId>formatter-maven-plugin</artifactId>
@@ -169,6 +203,12 @@
                                 <artifactId>httpclient</artifactId>
                             </exclusion>
                         </exclusions>
+                    </dependency>
+                    <!-- Override SnakeYAML to use 1.x which has configurable codepoint limit -->
+                    <dependency>
+                        <groupId>org.yaml</groupId>
+                        <artifactId>snakeyaml</artifactId>
+                        <version>1.33</version>
                     </dependency>
                 </dependencies>
                 <executions>
@@ -238,6 +278,33 @@
                     </tags>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>9</source>
+                    <target>9</target>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -245,7 +312,7 @@
         <profile>
             <id>ci</id>
             <build>
-                <plugins>
+        <plugins>
                     <plugin>
                         <groupId>com.github.siom79.japicmp</groupId>
                         <artifactId>japicmp-maven-plugin</artifactId>

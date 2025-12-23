@@ -17,6 +17,7 @@ package com.okta.sdk.impl.serializer;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.okta.commons.lang.Strings;
 import com.okta.sdk.resource.model.GroupProfile;
@@ -49,5 +50,11 @@ public class GroupProfileSerializer extends StdSerializer<GroupProfile> {
         }
 
         jgen.writeEndObject();
+    }
+
+    @Override
+    public void serializeWithType(GroupProfile groupProfile, JsonGenerator jgen, SerializerProvider provider, TypeSerializer typeSer) throws IOException {
+        // Delegate to the regular serialize method - GroupProfile doesn't need type info
+        serialize(groupProfile, jgen, provider);
     }
 }

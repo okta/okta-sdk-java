@@ -801,6 +801,13 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                         if (contentTypes.length == 0 || contentTypes[0].equals("*/*")) {
                                         return "application/json";
                                         }
+                                        // Prioritize multipart/form-data for file uploads
+                                        for (String contentType : contentTypes) {
+                                        if (contentType.contains("multipart/form-data")) {
+                                        return contentType;
+                                        }
+                                        }
+                                        // Then check for JSON
                                         for (String contentType : contentTypes) {
                                         if (isJsonMime(contentType)) {
                                         return contentType;

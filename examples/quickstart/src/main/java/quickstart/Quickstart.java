@@ -25,7 +25,9 @@ import com.okta.sdk.resource.user.UserBuilder;
 
 import com.okta.sdk.resource.api.UserApi;
 import com.okta.sdk.resource.api.GroupApi;
-import com.okta.sdk.resource.model.*;
+import com.okta.sdk.resource.model.User;
+import com.okta.sdk.resource.model.Group;
+import com.okta.sdk.resource.model.UserStatus;
 
 import java.util.List;
 import java.util.Objects;
@@ -47,8 +49,8 @@ public class Quickstart {
 
         ClientBuilder builder;
         ApiClient client;
-        com.okta.sdk.resource.model.Group group = null;
-        com.okta.sdk.resource.model.User user = null;
+        Group group = null;
+        User user = null;
 
         UserApi userApi = null;
         GroupApi groupApi = null;
@@ -89,13 +91,16 @@ public class Quickstart {
             println("User created with ID: " + userId);
 
             // You can look up user by ID
-            println("User lookup by ID: "+ Objects.requireNonNull(userApi.getUser(userId, null,"false").getProfile()).getLogin());
+            println("User lookup by ID: "+ Objects.requireNonNull(userApi.getUser(userId, null, null).getProfile()).getLogin());
 
-            // or by Email
-            println("User lookup by Email: "+ Objects.requireNonNull(userApi.getUser(email, null,"false").getProfile()).getLogin());
+            // or by Email (using filter to search)
+            List<User> usersByEmail = userApi.listUsers(null, null, "profile.email eq \"" + email + "\"", null, null, null, null, null, null, null);
+            if (!usersByEmail.isEmpty()) {
+                println("User lookup by Email: " + Objects.requireNonNull(usersByEmail.get(0).getProfile()).getLogin());
+            }
 
             // get the list of users
-            List<com.okta.sdk.resource.model.User> users = userApi.listUsers(null, null, null, null, "status eq \"ACTIVE\"", null, null, null);
+            List<User> users = userApi.listUsers(null, null, "status eq \"ACTIVE\"", null, null, null, null, null, null, null);
 
             // get the first user in the collection
             println("First user in collection: " + Objects.requireNonNull(Objects.requireNonNull(users.stream().findFirst().orElse(null)).getProfile()).getEmail());
@@ -112,7 +117,7 @@ public class Quickstart {
 
             // deactivate (if de-provisioned) and delete user
             if (user != null) {
-                if (!Objects.equals(user.getStatus(), com.okta.sdk.resource.model.UserStatus.DEPROVISIONED)) {
+                if (!Objects.equals(user.getStatus(),UserStatus.DEPROVISIONED)) {
                     // This operation on a User that has not been deactivated/deprovisioned causes that User to be deactivated.
                     userApi.deleteUser(user.getId(), false, null);
                 }

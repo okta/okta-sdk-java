@@ -20,12 +20,18 @@ import com.okta.commons.http.MediaType
 import com.okta.sdk.resource.group.GroupBuilder
 import com.okta.sdk.resource.policy.OktaSignOnPolicyBuilder
 import com.okta.sdk.resource.policy.PasswordPolicyBuilder
-import com.okta.sdk.tests.ConditionalSkipTestAnalyzer
+import com.okta.sdk.tests.NetworkAwareTestListener
 import com.okta.sdk.tests.Scenario
 import com.okta.sdk.resource.client.Pair
 import com.okta.sdk.resource.api.GroupApi
 import com.okta.sdk.resource.api.PolicyApi
 import com.okta.sdk.resource.api.UserApi
+import com.okta.sdk.resource.api.UserLifecycleApi
+import com.okta.sdk.resource.api.ApplicationApi
+import com.okta.sdk.resource.api.InlineHookApi
+import com.okta.sdk.resource.api.RealmApi
+import com.okta.sdk.resource.api.UserTypeApi
+import com.okta.sdk.resource.client.ApiException
 import com.okta.sdk.resource.model.CreateUserRequest
 import com.okta.sdk.resource.model.Group
 import com.okta.sdk.resource.model.HttpMethod
@@ -35,6 +41,10 @@ import com.okta.sdk.resource.model.PasswordPolicy
 import com.okta.sdk.resource.model.PolicyType
 import com.okta.sdk.resource.model.User
 import com.okta.sdk.resource.model.UserProfile
+import com.okta.sdk.resource.model.Application
+import com.okta.sdk.resource.model.InlineHook
+import com.okta.sdk.resource.model.Realm
+import com.okta.sdk.resource.model.UserType
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -49,7 +59,7 @@ import org.testng.annotations.Listeners
 
 import java.lang.reflect.Method
 
-@Listeners(value = ConditionalSkipTestAnalyzer.class)
+@Listeners(value = NetworkAwareTestListener.class)
 abstract class ITSupport implements ClientProvider {
 
     private final static Logger log = LoggerFactory.getLogger(ITSupport)
@@ -60,6 +70,9 @@ abstract class ITSupport implements ClientProvider {
 
     public static boolean isOIEEnvironment
     private TestServer testServer
+
+    // Thread-safe collection to track resources for cleanup
+    private List<Object> resourcesToCleanup = Collections.synchronizedList(new ArrayList<>())
 
     @BeforeSuite
     void start(ITestContext context) {
@@ -95,13 +108,121 @@ abstract class ITSupport implements ClientProvider {
     @AfterMethod
     void afterMethod(ITestResult result) {
         log.info("Finished " + result.getInstanceName() + " - " + result.getName())
+        // Cleanup moved to @AfterSuite - resources will be cleaned up after all tests complete
     }
 
     @AfterSuite()
     void stop() {
+        // Clean up all registered resources after all tests complete
+        cleanupResources()
+        
+
         if (testServer != null) {
             testServer.verify()
             testServer.stop()
+        }
+    }
+
+    /**
+     * Register a resource for cleanup after the test method completes.
+     * Supports User, Group, Application, InlineHook, Realm, UserType, and Policy objects.
+     * @param resource The resource to be cleaned up
+     */
+    public void registerForCleanup(Object resource) {
+        if (resource != null) {
+            resourcesToCleanup.add(resource)
+            log.debug("Registered {} for cleanup", resource.getClass().getSimpleName())
+        }
+    }
+
+    /**
+     * Cleanup all registered resources. Called automatically after each test method.
+     */
+    private void cleanupResources() {
+        if (resourcesToCleanup.isEmpty()) {
+            return
+        }
+
+        log.info("Cleaning up {} registered resource(s)", resourcesToCleanup.size())
+
+        // Process cleanup in reverse order (LIFO - Last In First Out)
+        // This helps with dependencies (e.g., delete apps before groups)
+        List<Object> reversedList = new ArrayList<>(resourcesToCleanup)
+        Collections.reverse(reversedList)
+
+        for (Object resource : reversedList) {
+            try {
+                deleteResource(resource)
+            } catch (Exception e) {
+                log.warn("Failed to cleanup resource {}: {}", resource.getClass().getSimpleName(), e.getMessage())
+            }
+        }
+
+        resourcesToCleanup.clear()
+    }
+
+    /**
+     * Delete a resource based on its type.
+     * @param resource The resource to delete
+     */
+    private void deleteResource(Object resource) {
+        try {
+            if (resource instanceof User) {
+                UserApi userApi = new UserApi(getClient())
+                UserLifecycleApi userLifecycleApi = new UserLifecycleApi(getClient())
+                User user = (User) resource
+                log.debug("Deleting user: {}", user.getId())
+                userLifecycleApi.deactivateUser(user.getId(), false, null)
+                userApi.deleteUser(user.getId(), false, null)
+            } else if (resource instanceof Group) {
+                GroupApi groupApi = new GroupApi(getClient())
+                Group group = (Group) resource
+                log.debug("Deleting group: {}", group.getId())
+                groupApi.deleteGroup(group.getId())
+            } else if (resource instanceof Application) {
+                ApplicationApi applicationApi = new ApplicationApi(getClient())
+                Application app = (Application) resource
+                log.debug("Deleting application: {}", app.getId())
+                applicationApi.deactivateApplication(app.getId())
+                applicationApi.deleteApplication(app.getId())
+            } else if (resource instanceof InlineHook) {
+                InlineHookApi inlineHookApi = new InlineHookApi(getClient())
+                InlineHook hook = (InlineHook) resource
+                log.debug("Deleting inline hook: {}", hook.getId())
+                inlineHookApi.deactivateInlineHook(hook.getId())
+                inlineHookApi.deleteInlineHook(hook.getId())
+            } else if (resource instanceof Realm) {
+                RealmApi realmApi = new RealmApi(getClient())
+                Realm realm = (Realm) resource
+                log.debug("Deleting realm: {}", realm.getId())
+                realmApi.deleteRealm(realm.getId())
+            } else if (resource instanceof UserType) {
+                UserTypeApi userTypeApi = new UserTypeApi(getClient())
+                UserType userType = (UserType) resource
+                log.debug("Deleting user type: {}", userType.getId())
+                userTypeApi.deleteUserType(userType.getId())
+            } else if (resource instanceof PasswordPolicy || resource instanceof OktaSignOnPolicy) {
+                PolicyApi policyApi = new PolicyApi(getClient())
+                if (resource instanceof PasswordPolicy) {
+                    PasswordPolicy policy = (PasswordPolicy) resource
+                    log.debug("Deleting password policy: {}", policy.getId())
+                    policyApi.deactivatePolicy(policy.getId())
+                    policyApi.deletePolicy(policy.getId())
+                } else {
+                    OktaSignOnPolicy policy = (OktaSignOnPolicy) resource
+                    log.debug("Deleting sign-on policy: {}", policy.getId())
+                    policyApi.deactivatePolicy(policy.getId())
+                    policyApi.deletePolicy(policy.getId())
+                }
+            } else {
+                log.warn("Unknown resource type for cleanup: {}", resource.getClass().getName())
+            }
+        } catch (ApiException e) {
+            if (e.getCode() == 404) {
+                log.debug("Resource already deleted: {}", resource.getClass().getSimpleName())
+            } else {
+                throw e
+            }
         }
     }
 
@@ -218,3 +339,4 @@ abstract class ITSupport implements ClientProvider {
         return false
     }
 }
+

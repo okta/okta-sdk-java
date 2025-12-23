@@ -27,6 +27,8 @@ import com.okta.sdk.resource.api.GroupApi;
 import com.okta.sdk.resource.api.UserApi;
 import com.okta.sdk.resource.group.GroupBuilder;
 import com.okta.sdk.resource.user.UserBuilder;
+import com.okta.sdk.resource.model.UserProfile;
+import com.okta.sdk.resource.model.CreateUserRequest;
 
 import com.okta.sdk.resource.client.ApiClient;
 import com.okta.sdk.resource.client.ApiException;
@@ -87,7 +89,7 @@ public class ReadmeSnippets {
 
     private void listAllUsers() throws ApiException {
         UserApi userApi = new UserApi(client);
-        List<User> users = userApi.listUsers("application/json", null, null, 5, null, null, null, null);
+        List<User> users = userApi.listUsers(null, null, null, null, null, null, null, null, null, null);
 
         // stream
         users.stream()
@@ -99,10 +101,10 @@ public class ReadmeSnippets {
     private void userSearch() throws ApiException {
         UserApi userApi = new UserApi(client);
         // search by email
-        List<User> users = userApi.listUsers("application/json", null, null, 5, null, "profile.email eq \"jcoder@example.com\"", null, null);
+        List<User> users = userApi.listUsers(null, null, "profile.email eq \"jcoder@example.com\"", null, null, null, null, null, null, null);
 
         // filter parameter
-        userApi.listUsers("application/json",null, null, null, "status eq \"ACTIVE\"",null, null, null);
+        userApi.listUsers(null, null, null, null, "status eq \"ACTIVE\"", null, null, null, null, null);
     }
 
     private void createUser() throws ApiException {
@@ -134,7 +136,7 @@ public class ReadmeSnippets {
         userProfile.setNickName("Batman");
         updateUserRequest.setProfile(userProfile);
 
-        userApi.updateUser(user.getId(), updateUserRequest, true);
+        userApi.updateUser(user.getId(), updateUserRequest, true, null);
     }
 
     private void updateUserWithCustomAttributes() throws ApiException {
@@ -147,7 +149,7 @@ public class ReadmeSnippets {
 
         updateUserRequest.setProfile(userProfile);
 
-        userApi.updateUser(user.getId(), updateUserRequest, true);
+        userApi.updateUser(user.getId(), updateUserRequest, true, null);
     }
 
     private void deleteUser() throws ApiException {
@@ -164,7 +166,7 @@ public class ReadmeSnippets {
     private void listGroups() throws ApiException {
         GroupApi groupApi = new GroupApi(client);
 
-        List<Group> groups = groupApi.listGroups(null, null, null, 10, null, null, null, null);
+        List<Group> groups = groupApi.listGroups(null, null, null, null, null, null, null, null);
     }
 
     private void createGroup() throws ApiException {
@@ -217,7 +219,7 @@ public class ReadmeSnippets {
         UserFactorSMSProfile.setPhoneNumber("555 867 5309");
 
         UserFactorSMS UserFactorSMS = new UserFactorSMS();
-        UserFactorSMS.setProvider(UserFactorProvider.OKTA);
+        UserFactorSMS.setProvider(UserFactorProvider.OKTA.name());
         UserFactorSMS.setFactorType(UserFactorType.SMS);
         UserFactorSMS.setProfile(UserFactorSMSProfile);
 
@@ -248,7 +250,7 @@ public class ReadmeSnippets {
     private void listApplications() throws ApiException {
         ApplicationApi applicationApi = new ApplicationApi(client);
 
-        List<Application> applications = applicationApi.listApplications(null, null, true, null, null, null, true);
+        List<Application> applications = applicationApi.listApplications(null, null, true, null, null, null, null, true);
     }
 
     private void getApplication() throws ApiException {
@@ -305,14 +307,14 @@ public class ReadmeSnippets {
         // Create a User
         String email = "joe.coder+" + UUID.randomUUID() + "@example.com";
 
-        UserProfile userProfile = new com.okta.sdk.resource.model.UserProfile()
+        UserProfile userProfile = new UserProfile()
             .firstName("Joe")
             .lastName("Coder")
             .email(email)
             .mobilePhone("1234567890")
             .login(email);
 
-        com.okta.sdk.resource.model.CreateUserRequest createUserRequest = new com.okta.sdk.resource.model.CreateUserRequest();
+        CreateUserRequest createUserRequest = new CreateUserRequest();
         createUserRequest.setProfile(userProfile);
 
         List<com.okta.sdk.resource.client.Pair> queryParams = new ArrayList<com.okta.sdk.resource.client.Pair>();
@@ -353,7 +355,7 @@ public class ReadmeSnippets {
         String after = null;
 
         do {
-            users.addAll(userApi.listUsers("application/json",null, after, 200, null, null, null, null));
+            users.addAll(userApi.listUsers(null, null, null, null, null, null, null, after, null, null));
             after = PaginationUtil.getAfter(userApi.getApiClient());
         } while (StringUtils.isNotBlank(after));
     }
