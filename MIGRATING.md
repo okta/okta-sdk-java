@@ -1,29 +1,29 @@
 # Okta Java Management SDK Migration Guide
- 
+
 This SDK uses semantic versioning and follows Okta's [library version policy](https://developer.okta.com/code/library-versions/). In short, we do not make breaking changes unless the major version changes!
 
 ## Migrating from 8.x.x to 10.x.x
 
-In previous versions we use an Open API v2 specification for the management APIs, and an Okta custom client generator to generate the SDK components. 
+In previous versions we use an Open API v2 specification for the management APIs, and an Okta custom client generator to generate the SDK components.
 A new version of the Open API specification v3 has been released, and new well-known open source generators are now available to automatically generate code from this specification.
 
 This revision will embrace the Open Source [openapi-generator](https://github.com/OpenAPITools/openapi-generator) to auto generate the code from Okta's reference specification (v3) of the Management APIs.
 
 `ExtensibleResource` is removed as the individual models no longer extend from this class. This is also partly due to the way the code generator tooling works when it generates the model classes. Client can directly serialize/deserialize API responses into the respective model classes. There should ideally be no need
-for a workaround or replacement of `ExtensibleResource`. 
+for a workaround or replacement of `ExtensibleResource`.
 
 ### Okta client vs API clients
 
-In older version, you would instantiate a global `Client` and access the Okta resources using the Management APIs. 
+In older version, you would instantiate a global `Client` and access the Okta resources using the Management APIs.
 Now, each API area (such as Users, Groups, Applications etc.)  would have its own specific client, so you will only instantiate those clients you are interested in:
 
 Note that the below `okta-sdk-httpclient` dependency we used in previous versions is no longer needed:
 
 ```xml
 <dependency>
-   <groupId>com.okta.sdk</groupId>
-   <artifactId>okta-sdk-httpclient</artifactId>
-   <scope>runtime</scope>
+    <groupId>com.okta.sdk</groupId>
+    <artifactId>okta-sdk-httpclient</artifactId>
+    <scope>runtime</scope>
 </dependency>
 ```
 
@@ -62,12 +62,12 @@ Version 8.0.0 of this SDK introduces few breaking changes from previous versions
 ### Package `com.okta.sdk.resource.brand.Theme`
 
 Below methods will now take `file` object as additional param. This was missing from earlier release (bug) and this release fixes it.
-- `updateBrandThemeBackgroundImage` 
+- `updateBrandThemeBackgroundImage`
 - `updateBrandThemeFavicon`
 - `uploadBrandThemeLogo`
 
 ### Package `com.okta.sdk.resource.org.OrgSetting`
-- `updateOrgLogo` will now take `file` object as a parameter. This was missing from earlier release (bug) and this release fixes it. 
+- `updateOrgLogo` will now take `file` object as a parameter. This was missing from earlier release (bug) and this release fixes it.
 
 ## Migrating from 6.x.x to 7.0.0
 
@@ -88,7 +88,7 @@ Below methods have been moved to `com.okta.sdk.resource.org.OrgSetting`.
 
 ### Package `com.okta.sdk.resource.user.User`
 
-- `assignRole(AssignRoleRequest request, String disableNotifications)` changed signature to 
+- `assignRole(AssignRoleRequest request, String disableNotifications)` changed signature to
   `assignRole(AssignRoleRequest request, Boolean disableNotifications)`
 
 ### Package `com.okta.sdk.resource.policy`
@@ -122,7 +122,7 @@ Identity Provider of type String can be constructed with the new method introduc
 
 ### Package `com.okta.sdk.resource.identity.provider.IdentityProvider`
 
-- `setType(com.okta.sdk.resource.identity.provider.IdentityProvider$TypeEnum)` has changed signature to 
+- `setType(com.okta.sdk.resource.identity.provider.IdentityProvider$TypeEnum)` has changed signature to
   `setType(String identityProvider)`.
 - `getType()` would now return `String` instead of `com.okta.sdk.resource.identity.provider.IdentityProvider$TypeEnum` type.
 
@@ -507,7 +507,7 @@ This is a newly created interface with methods listed below.
 - `ApplicationSettingsNotes setAdmin(String admin)`
 - `ApplicationSettingsNotes setEnduser(String enduser)`
 
-### Package `com.okta.sdk.resource.application.OpenIdConnectApplicationSettingsClient` 
+### Package `com.okta.sdk.resource.application.OpenIdConnectApplicationSettingsClient`
 
 Below methods have been added.
 - `void activate()`
@@ -934,7 +934,7 @@ One of below listed methods could be used instead:
 - `User.forgotPasswordGenerateOneTimeToken()`
 - `User.forgotPasswordSetNewPassword(UserCredentials userCredentials, Boolean sendEmail)`
 - `User.forgotPasswordSetNewPassword(UserCredentials userCredentials)`
-    
+
 ### Package `com.okta.sdk.resource.user.type.UserType`
 
 Class `com.okta.sdk.resource.user.UserType` moved to `com.okta.sdk.resource.user.type.UserType`
@@ -1045,9 +1045,9 @@ Below methods have been added.
 
 Below methods have been removed.
 - `String getName()`
-  - `LinkedObject.getPrimary().getName()` should be used instead
+    - `LinkedObject.getPrimary().getName()` should be used instead
 - `LinkedObject setName(String name)`
-  - `LinkedObject.getPrimary().setName()` should be used instead
+    - `LinkedObject.getPrimary().setName()` should be used instead
 
 ### Package `com.okta.sdk.resource.log.LogCredentialProvider`
 
@@ -1062,7 +1062,7 @@ Interface `com.okta.sdk.resource.policy.MDMFrameworks` moved to `com.okta.sdk.re
 
 Interface `com.okta.sdk.resource.policy.Platforms` moved to `com.okta.sdk.resource.policy.DevicePolicyRuleConditionPlatform$TypesEnum`
 
-### Package `com.okta.sdk.resource.user.factor.PushUserFactor` 
+### Package `com.okta.sdk.resource.user.factor.PushUserFactor`
 
 Below method has been added
 - `PushUserFactor setExpiresAt(Date expiresAt)`
@@ -1241,7 +1241,7 @@ Below method has undergone a signature change.
 
 ## Migrating from 2.x.x to 3.0.0
 
-Version 3.0.0 of this SDK introduces a number of breaking changes from previous versions. 
+Version 3.0.0 of this SDK introduces a number of breaking changes from previous versions.
 In addition to many new classes/interfaces, some existing classes/interfaces are no longer backward compatible due to method renaming and signature changes.
 
 [Custom HOTP Factor](https://developer.okta.com/docs/reference/api/factors/#enroll-custom-hotp-factor) is supported now.
@@ -1253,10 +1253,10 @@ Define a separate Policy Rule model for Authorization Servers.
 
 Below method has been added.
 - `void deleteIdentityProviderKey(String keyId)`
-   
+
 Below methods have undergone a signature change.
 - `listGroups(String groupName, String filter)` signature changed to `listGroups(String groupName, String filter, String expand)`
-    - New param `expand` has been added. It is `optional` and would need to be specified only while using search queries. 
+    - New param `expand` has been added. It is `optional` and would need to be specified only while using search queries.
 
 - `listPolicies(String type)` return type changed from `com.okta.sdk.resource.policy.PolicyList` to `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicyList`
 
@@ -1277,7 +1277,7 @@ This is a newly created interface with methods listed below.
 - `String getUrl()`
 - `AcsEndpoint setUrl(String url)`
 
-### Package `com.okta.sdk.resource.application.Application` 
+### Package `com.okta.sdk.resource.application.Application`
 
 - Added `ApplicationGroupAssignment createApplicationGroupAssignment(String groupId)` method.
     - This method allows assigning a group to an Application.
@@ -1289,7 +1289,7 @@ Below methods have been added.
 - `OpenIdConnectApplicationSettingsRefreshToken setRefreshToken(OpenIdConnectApplicationSettingsRefreshToken refreshToken)`
 - `OpenIdConnectApplicationSettingsClientKeys getJwks()`
 - `OpenIdConnectApplicationSettingsClient setJwks(OpenIdConnectApplicationSettingsClientKeys jwks)`
-   
+
 ### Package `com.okta.sdk.resource.application.OpenIdConnectApplicationSettingsClientKeys`
 
 This is a newly created interface with methods listed below.
@@ -1304,13 +1304,13 @@ This is a newly created interface with methods listed below.
 - `OpenIdConnectApplicationSettingsRefreshToken setLeeway(Integer leeway)`
 - `OpenIdConnectApplicationSettingsRefreshToken setRotationType(OpenIdConnectRefreshTokenRotationType rotationType)`
 
-With the introduction of enum type `OpenIdConnectRefreshTokenRotationType`, 
+With the introduction of enum type `OpenIdConnectRefreshTokenRotationType`,
 operations `getRotationType()` and `setRotationType(OpenIdConnectRefreshTokenRotationType rotationType)` will use this new enum type.
 
 Enum `OpenIdConnectRefreshTokenRotationType` has the below fields defined:
 - `ROTATE("rotate")`
 - `STATIC("static")`
-   
+
 ### Package `com.okta.sdk.resource.application.SamlApplicationSettingsSignOn`
 
 Below methods have been added.
@@ -1318,25 +1318,25 @@ Below methods have been added.
 - `Boolean getAllowMultipleAcsEndpoints()`
 - `SamlApplicationSettingsSignOn setAcsEndpoints(List<AcsEndpoint> acsEndpoints)`
 - `SamlApplicationSettingsSignOn setAllowMultipleAcsEndpoints(Boolean allowMultipleAcsEndpoints)`
-   
+
 ### Package `com.okta.sdk.resource.application.SamlApplicationV1`
 
 This is a newly created interface with methods listed below.
 - `SamlApplicationSettings getSettings()`
 - `SamlApplicationV1 setSettings(SamlApplicationSettings settings)`
-   
-### Package `com.okta.sdk.resource.application.SamlAttributeStatement` 
-  
+
+### Package `com.okta.sdk.resource.application.SamlAttributeStatement`
+
 Below methods have been added.
 - `String getFilterType()`
 - `String getFilterValue()`
 - `SamlAttributeStatement setFilterType(String filterType)`
 - `SamlAttributeStatement setFilterValue(String filterValue)`
 
-### Package `com.okta.sdk.resource.authorization.server.AuthorizationServer` 
-  
+### Package `com.okta.sdk.resource.authorization.server.AuthorizationServer`
+
 Below methods have undergone a signature change.
-- `createPolicy(com.okta.sdk.resource.policy.Policy policy)` signature changed to `createPolicy(com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy policy)`, return value type changed from `com.okta.sdk.resource.policy.Policy` to `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy` 
+- `createPolicy(com.okta.sdk.resource.policy.Policy policy)` signature changed to `createPolicy(com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy policy)`, return value type changed from `com.okta.sdk.resource.policy.Policy` to `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy`
 - `getPolicy(String policyId)` return type changed from `com.okta.sdk.resource.policy.Policy` to `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy`
 - `listPolicies()` return type changed from `com.okta.sdk.resource.policy.PolicyList` to `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicyList`
 - `updatePolicy(String policyId, com.okta.sdk.resource.policy.Policy policy)` signature changed to `updatePolicy(String policyId, com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy policy)`, return value type changed from `com.okta.sdk.resource.policy.Policy` to `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicy`
@@ -1369,7 +1369,7 @@ This is a newly created interface with methods listed below.
 - `AuthorizationServerPolicy setType(PolicyType type)`
 - `AuthorizationServerPolicy updatePolicy(String policyId, AuthorizationServerPolicy policy)`
 
-With the introduction of enum type `AuthorizationServerPolicy$StatusEnum`, 
+With the introduction of enum type `AuthorizationServerPolicy$StatusEnum`,
 operations `getStatus()` and `setStatus(StatusEnum status)` will use this new enum type.
 
 Enum `StatusEnum` has below fields defined:
@@ -1401,7 +1401,7 @@ This is a newly created interface with methods listed below.
 - `AuthorizationServerPolicyRule setType(TypeEnum type)`
 - `AuthorizationServerPolicyRule update(String authServerId)`
 
-With the introduction of enum type `AuthorizationServerPolicyRule$StatusEnum`, operations `getStatus()` and `setStatus(StatusEnum status)` 
+With the introduction of enum type `AuthorizationServerPolicyRule$StatusEnum`, operations `getStatus()` and `setStatus(StatusEnum status)`
 will use this new enum type.
 
 Enum `StatusEnum` has below fields defined:
@@ -1425,7 +1425,7 @@ This is a newly created interface with methods listed below.
 - `AuthorizationServerPolicyRuleConditions setGrantTypes(GrantTypePolicyRuleCondition grantTypes)`
 - `AuthorizationServerPolicyRuleConditions setPeople(PolicyPeopleCondition people)`
 - `AuthorizationServerPolicyRuleConditions setScopes(OAuth2ScopesMediationPolicyRuleCondition scopes)`
-   
+
 ### Package `com.okta.sdk.resource.authorization.server.policy.TokenAuthorizationServerPolicyRuleAction`
 
 This is a newly created interface with methods listed below.
@@ -1441,7 +1441,7 @@ This is a newly created interface with methods listed below.
 Below method has been removed.
 - `deleteSigningKey(String keyId)`
 
-### Package `com.okta.sdk.resource.policy.PolicyList` 
+### Package `com.okta.sdk.resource.policy.PolicyList`
 
 The Interface has been removed.
 The Interface `com.okta.sdk.resource.authorization.server.AuthorizationServerPolicyList` should be used instead.
@@ -1464,8 +1464,8 @@ This is a newly created interface with methods listed below.
 
 Below method has undergone a signature change.
 - `getExpiresAt()` return type changed from `String` to `Date`
-   - The property's `expiresAt` type is a date-time string, so it becomes convenient to use `Date` type
-   
+    - The property's `expiresAt` type is a date-time string, so it becomes convenient to use `Date` type
+
 ### Package `com.okta.sdk.resource.user.PasswordCredentialHash`
 
 Below methods have been renamed for the sake of clarity.
@@ -1483,7 +1483,7 @@ Below methods have been added.
 
 ## Migrating from 1.x.x to 2.0.0
 
-Version 2.0.0 of this SDK introduces a number of breaking changes from previous versions. 
+Version 2.0.0 of this SDK introduces a number of breaking changes from previous versions.
 In addition to many new classes/interfaces, some existing classes/interfaces are no longer backward compatible due to method renaming and signature changes.
 
 #### All `*Factor` classes Renamed to `*UserFactor`
@@ -1492,116 +1492,116 @@ This means that you will now have to start using the new `*UserFactor` objects i
 ### Package `com.okta.sdk.client.Client`
 
 Below methods have been renamed for the sake of clarity.
-   - Renamed `createRule` to `createGroupRule`
-   - Renamed `getRule` to `getGroupRule`
-   - Renamed `listRules` to `listGroupRules`
+- Renamed `createRule` to `createGroupRule`
+- Renamed `getRule` to `getGroupRule`
+- Renamed `listRules` to `listGroupRules`
 
 Below API has undergone a signature change.
-   - `listUsers(String q, String filter, String format, String search, String expand)`
-   Signature changed to `listUsers(java.lang.String q, java.lang.String filter, java.lang.String search, java.lang.String sortBy, java.lang.String sortOrder)`
+- `listUsers(String q, String filter, String format, String search, String expand)`
+  Signature changed to `listUsers(java.lang.String q, java.lang.String filter, java.lang.String search, java.lang.String sortBy, java.lang.String sortOrder)`
 
-Note that the params `format` and `expand` have been removed. New params `sortBy` and `sortOrder` have been added. These are optional and would need to be specified only while using search queries. 
+Note that the params `format` and `expand` have been removed. New params `sortBy` and `sortOrder` have been added. These are optional and would need to be specified only while using search queries.
 
 ### Package `com.okta.sdk.resource.log.LogEventList`
 
 The API used to get log info has undergone a signature change (note the order swap of `until` and `since` parameters).
-   - `getLogs(String until, String since, String filter, String q, String sortOrder)`
-   Signature changed to `getLogs(Date since, Date until, String filter, String q, String sortOrder)`
-   
+- `getLogs(String until, String since, String filter, String q, String sortOrder)`
+  Signature changed to `getLogs(Date since, Date until, String filter, String q, String sortOrder)`
+
 ### Package `com.okta.sdk.resource.group.GroupList`
 
-The API used to list the groups to which a user belongs, has undergone a signature change. 
-There is no need for supplying the `expand` parameter anymore. 
-   - `listGroups(String q, String filter, String expand)`
-   Signature changed to `listGroups(String q, String filter)`
-   
-       - With this removal of `expand` parameter, the caller has two options of achieving the previous result:
-       - Make a second API call to the Group API and fetch the results.
-       - You can call the Groups API endpoint (or any Okta management API endpoint) using a syntax like below example:
-       ```
-       // List Groups API, see: https://developer.okta.com/docs/reference/api/groups/#list-groups
-       GroupsList result = client.http()
-         .addQueryParameter("expand", true)
-         .get("/api/v1/groups", GroupsList.class);
-       ```
+The API used to list the groups to which a user belongs, has undergone a signature change.
+There is no need for supplying the `expand` parameter anymore.
+- `listGroups(String q, String filter, String expand)`
+  Signature changed to `listGroups(String q, String filter)`
+
+    - With this removal of `expand` parameter, the caller has two options of achieving the previous result:
+    - Make a second API call to the Group API and fetch the results.
+    - You can call the Groups API endpoint (or any Okta management API endpoint) using a syntax like below example:
+    ```
+    // List Groups API, see: https://developer.okta.com/docs/reference/api/groups/#list-groups
+    GroupsList result = client.http()
+      .addQueryParameter("expand", true)
+      .get("/api/v1/groups", GroupsList.class);
+    ```
 - Note that the support for `expand` parameter might go away anytime in the future.
 
 ### Package `com.okta.sdk.resource.application.SwaThreeFieldApplicationSettingsApplication`
 
 Below APIs have undergone a name change.
-   - `getTargetUrl` Renamed to `getTargetURL`
-   - `setTargetUrl` Renamed to `setTargetURL`
+- `getTargetUrl` Renamed to `getTargetURL`
+- `setTargetUrl` Renamed to `setTargetURL`
 
 ### Package `com.okta.sdk.resource.group.Group`
 
-With the introduction of enum type `com.okta.sdk.resource.group.GroupType`, the get group type operation will now make 
+With the introduction of enum type `com.okta.sdk.resource.group.GroupType`, the get group type operation will now make
 use of this new enum type instead of the `String` type used earlier.
-   - `getType` Return type changed from `String` to an enum `com.okta.sdk.resource.group.GroupType`
-   
+- `getType` Return type changed from `String` to an enum `com.okta.sdk.resource.group.GroupType`
+
 ### Package `com.okta.sdk.resource.group.rule.GroupRule`
 
 The properties `allGroupsValid` & `_embedded` were not used by the backend earlier and were always set to `null`.
 As part of this upgrade, we will remove it from the method signatures.
-   - Removed `getAllGroupsValid` and `setAllGroupsValid` (property `allGroupsValid` is being removed; 
-   this option would be removed from future versions of Okta API)
-   - Removed `getEmbedded` (property `_embedded` is removed; this property is undocumented in Okta API and hence being removed)
-   - `delete(Boolean removeUsers)` Signature changed to `delete()`
+- Removed `getAllGroupsValid` and `setAllGroupsValid` (property `allGroupsValid` is being removed;
+  this option would be removed from future versions of Okta API)
+- Removed `getEmbedded` (property `_embedded` is removed; this property is undocumented in Okta API and hence being removed)
+- `delete(Boolean removeUsers)` Signature changed to `delete()`
 
 ### Package `com.okta.sdk.resource.log.LogAuthenticationContext`
 
-The API to get log credential provider used to return a list of objects of type `LogCredentialProvider` earlier. 
+The API to get log credential provider used to return a list of objects of type `LogCredentialProvider` earlier.
 This is now fixed to return a single object of type `LogCredentialProvider`.
-   - `getCredentialProvider` Return type changed from `List<com.okta.sdk.resource.log.LogCredentialProvider>` to `com.okta.sdk.resource.log.LogCredentialProvider`
+- `getCredentialProvider` Return type changed from `List<com.okta.sdk.resource.log.LogCredentialProvider>` to `com.okta.sdk.resource.log.LogCredentialProvider`
 
-The API to get log credential type used to return a list of objects of type `LogCredentialType` earlier. 
+The API to get log credential type used to return a list of objects of type `LogCredentialType` earlier.
 This is now fixed to return a single object of type `LogCredentialType`.
 - `getCredentialType` Return type changed from `List<com.okta.sdk.resource.log.LogCredentialType>` to `com.okta.sdk.resource.log.LogCredentialType`
 
 ### Package `com.okta.sdk.resource.policy.PolicyRule`
 
 There is no need of exposing setter for the `read-only` property `id`.
-   - Removed `setId` (property `id` is `read-only`)
+- Removed `setId` (property `id` is `read-only`)
 
 ### Package `com.okta.sdk.resource.user.factor.VerifyFactorRequest`
 
 The property `tokenLifetimeSeconds` will not used by the backend going forward.
-   - Removed `getTokenLifetimeSeconds` & `setTokenLifetimeSeconds` (property `tokenLifetimeSeconds` is removed)
+- Removed `getTokenLifetimeSeconds` & `setTokenLifetimeSeconds` (property `tokenLifetimeSeconds` is removed)
 
 ### Package `com.okta.sdk.resource.user.Role`
 
-With the introduction of enum type `com.okta.sdk.resource.role.RoleType`, the getter/setter for role type operation will now make 
+With the introduction of enum type `com.okta.sdk.resource.role.RoleType`, the getter/setter for role type operation will now make
 use of this new enum type instead of the `String` type used earlier.
-   - `getType` Return type changed from `String` to an enum `com.okta.sdk.resource.role.RoleType`
-   - `setType` Param type changed from `String` to an enum `com.okta.sdk.resource.role.RoleType`
+- `getType` Return type changed from `String` to an enum `com.okta.sdk.resource.role.RoleType`
+- `setType` Param type changed from `String` to an enum `com.okta.sdk.resource.role.RoleType`
 
 ### Package `com.okta.sdk.resource.user.User`
 
 The below method names have been refactored to be more apt:
-   - Renamed `addGroupTarget` to `addGroupTargetToRole`
-   - Renamed `addRole` to `assignRole`
-   - Renamed `listGroupTargetsForRole` to `listGroupTargets`
-   - Renamed `removeGroupTargetFromRole` to `removeGroupTarget`
-   - Renamed `addFactor` to `enrollFactor`
-   - Renamed `listRoles`to `listAssignedRoles`
-   
+- Renamed `addGroupTarget` to `addGroupTargetToRole`
+- Renamed `addRole` to `assignRole`
+- Renamed `listGroupTargetsForRole` to `listGroupTargets`
+- Renamed `removeGroupTargetFromRole` to `removeGroupTarget`
+- Renamed `addFactor` to `enrollFactor`
+- Renamed `listRoles`to `listAssignedRoles`
+
 The `forgotPassword` method has been removed. Use `resetPassword` instead to achieve the same functionality.
 
 The `endAllSessions` method has been removed. Use `clearSessions` instead to achieve the same functionality.
- 
+
 Following methods have undergone a return type change inline with the refactoring of `UserFactor*` objects as mentioned above.
-   - `listSupportedFactors` Return type changed from `com.okta.sdk.resource.user.factor.FactorList` to `com.okta.sdk.resource.user.factor.UserFactorList`
-   - `getFactor` Return type changed from `com.okta.sdk.resource.user.factor.Factor` to `com.okta.sdk.resource.user.factor.UserFactor`
-   - `listFactors` Return type changed from `com.okta.sdk.resource.user.factor.FactorList` to `com.okta.sdk.resource.user.factor.UserFactorList` 
+- `listSupportedFactors` Return type changed from `com.okta.sdk.resource.user.factor.FactorList` to `com.okta.sdk.resource.user.factor.UserFactorList`
+- `getFactor` Return type changed from `com.okta.sdk.resource.user.factor.Factor` to `com.okta.sdk.resource.user.factor.UserFactor`
+- `listFactors` Return type changed from `com.okta.sdk.resource.user.factor.FactorList` to `com.okta.sdk.resource.user.factor.UserFactorList`
 
 The `expirePassword` Return type changed from `com.okta.sdk.resource.user.TempPassword` to `com.okta.sdk.resource.user.User`
 
-The reset password method will no longer need a provider argument.   
-   - `resetPassword(String provider, Boolean sendEmail)` Signature changed to `resetPassword(Boolean sendEmail)`
+The reset password method will no longer need a provider argument.
+- `resetPassword(String provider, Boolean sendEmail)` Signature changed to `resetPassword(Boolean sendEmail)`
 
 ### Package `com.okta.sdk.resource.user.UserCredentials`
 
-The property `emails` was not used by the backend and was always `null` hitherto. 
-   - Removed `getEmails` & `setEmails` (property `emails` was removed)
+The property `emails` was not used by the backend and was always `null` hitherto.
+- Removed `getEmails` & `setEmails` (property `emails` was removed)
 
 Below SDK classes/interfaces are **deprecated** and will be removed from this project.
 
@@ -1626,3 +1626,454 @@ These SDK classes were previously moved to [okta-commons-java](https://github.co
 - com.okta.sdk.lang.Strings
 - com.okta.sdk.lang.UnknownClassException
 ```
+
+# Migrating from 24.x.x to 25.0.0
+
+Version 25.0.0 of this SDK introduces significant breaking changes based on the updated Okta Admin Management API (OpenAPI spec v5.1.0). This is a major release with extensive schema changes that require careful review.
+
+### What's Changed
+
+| Aspect | v24.x | v25.0.0 |
+|--------|-------|---------|
+| OpenAPI Spec Version | 2024.08.3 | 5.1.0 |
+| API YAML Lines | 66,987 | 83,953 |
+| Integration Tests | Limited | 35 comprehensive suites |
+| Custom Deserializers | 3 | 9 |
+| New Endpoints | - | 70+ |
+
+### Quick Start Checklist
+
+Use this checklist to ensure a smooth migration:
+
+- [ ] Update SDK dependency to v25.0.0
+- [ ] Search codebase for `user.getType()` or `user.type` references
+- [ ] Review Authenticator API usage
+- [ ] Review User Factor API usage
+- [ ] Review Policy API usage
+- [ ] Review Identity Provider API usage
+- [ ] Review Role Assignment API usage
+- [ ] Replace `PaginationUtil.getAfter()` with `PagedIterable`
+- [ ] Run tests and verify functionality
+
+---
+
+## 🚨 Breaking Changes by Category
+
+This section organizes all breaking changes by functional area to help you identify which parts of your codebase need updates.
+
+### 1. Identity & Access Management (IAM)
+
+**Impact Level**: 🔴 High
+
+| Endpoint | Change |
+|----------|--------|
+| `GET /api/v1/iam/assignees/users` | Changed property type for `_links.roles` |
+| `GET /api/v1/iam/resource-sets` | Changed property type for `_links.resources` |
+| `POST /api/v1/iam/resource-sets` | Changed property type for `_links.resources` |
+| `PUT /api/v1/iam/resource-sets/{id}` | Changed property type for `_links.resources` |
+| `PATCH /api/v1/iam/resource-sets/{id}` | Changed property type for `_links.resources` |
+| `GET /api/v1/iam/resource-sets/{id}/bindings` | Missing `_links.bindings` property |
+| `POST /api/v1/iam/resource-sets/{id}/bindings` | Missing `id` property in response |
+| `GET /api/v1/iam/resource-sets/{id}/bindings/{roleId}` | Missing `_links.bindings` property |
+| `PATCH /api/v1/iam/resource-sets/{id}/bindings/{roleId}/members` | Missing `id` property |
+| `POST /api/v1/iam/roles` | Schema change |
+| `GET /api/v1/iam/roles/{id}/permissions` | Changed property type for `_links.role` |
+| `PUT /api/v1/iam/roles/{id}/permissions/{permissionType}` | Changed property type for `_links.role` |
+
+**Migration Example:**
+
+```java
+// Before (v24.x)
+ResourceSetApi resourceSetApi = new ResourceSetApi(client);
+ResourceSet resourceSet = resourceSetApi.getResourceSet(resourceSetId);
+// Accessing _links.resources as previous type
+
+// After (v25.0.0)
+ResourceSetApi resourceSetApi = new ResourceSetApi(client);
+ResourceSet resourceSet = resourceSetApi.getResourceSet(resourceSetId);
+// _links.resources property type has changed - review new structure
+```
+
+---
+
+### 2. User & Group Management
+
+**Impact Level**: 🔴 High (Critical)
+
+#### User Object Schema Changes
+
+The `User` object no longer includes the `type` property and its sub-properties in API responses.
+
+**Removed Properties from `user.type`:**
+- `created`
+- `createdBy`
+- `default`
+- `description`
+- `displayName`
+- `lastUpdated`
+- `name`
+- `_links`
+
+**Affected Endpoints:**
+
+| Endpoint | Change |
+|----------|--------|
+| `GET /api/v1/users` | Removed `type` metadata properties |
+| `POST /api/v1/users` | Removed `type` metadata properties |
+| `GET /api/v1/users/{id}` | Removed `type` metadata properties |
+| `PUT /api/v1/users/{id}` | Removed `type` metadata properties |
+| `PATCH /api/v1/users/{id}` | Removed `type` metadata properties |
+| `GET /api/v1/groups/{groupId}/users` | Removed all `type` metadata properties |
+| `GET /api/v1/devices` | Removed `type` metadata properties |
+| `GET /api/v1/devices/{deviceId}/users` | Removed `type` metadata properties |
+
+_Before (v24.x):_
+
+```java
+User user = userApi.getUser(userId);
+UserType type = user.getType();
+String typeId = type.getId();
+String typeName = type.getName();
+Boolean isDefault = type.getDefault();
+Date created = type.getCreated();
+String createdBy = type.getCreatedBy();
+```
+
+_After (v25.0.0):_
+
+```java
+User user = userApi.getUser(userId);
+// user.getType() may return null or different structure
+// Use UserTypeApi to get type information separately
+
+UserTypeApi userTypeApi = new UserTypeApi(client);
+List<UserType> types = userTypeApi.listUserTypes();
+// Find user's type from the types list or user's _links
+```
+
+#### User Factor Changes
+
+| Endpoint | Change |
+|----------|--------|
+| `GET /api/v1/users/{userId}/factors` | `_links.resend` changed from array to object |
+| `POST /api/v1/users/{userId}/factors` | `_links.resend` changed from array to object |
+| `POST /api/v1/users/{userId}/factors/{factorId}/verify` | `_links.resend` changed from array to object |
+
+#### Schema Endpoints
+
+| Endpoint | Change |
+|----------|--------|
+| `GET /api/v1/meta/schemas/user/{schemaId}` | `enum` values changed from strings to objects; `unique` flags changed from strings to booleans |
+| `POST /api/v1/meta/schemas/user/{schemaId}` | Same as above |
+| `GET /api/v1/meta/schemas/group/default` | `enum` values changed from integers to objects; `unique` flags changed from strings to booleans |
+| `POST /api/v1/meta/schemas/group/default` | Same as above |
+
+---
+
+### 3. Application & Auth Server Credentials
+
+**Impact Level**: 🟡 Medium
+
+| Endpoint | Change |
+|----------|--------|
+| `GET /api/v1/apps/{appId}/credentials/jwks` | Changed property types within JWKS object |
+| `POST /api/v1/apps/{appId}/credentials/jwks` | Changed property types and return types |
+| `PATCH /api/v1/apps/{appId}/credentials/jwks` | Changed property types |
+| `POST /api/v1/apps` | Request schema broken compatibility |
+| `PUT /api/v1/apps/{appId}` | Request schema broken compatibility |
+| `POST /api/v1/authorizationServers/{id}/policies` | Request schema broken compatibility |
+| `PUT /api/v1/authorizationServers/{id}/policies/{policyId}` | Request schema broken compatibility |
+| `GET /oauth2/v1/clients/{id}/roles` | Changed property type from object to array |
+
+_After (v25.0.0):_
+
+```java
+ApplicationCredentialsApi credApi = new ApplicationCredentialsApi(client);
+
+// List JWKs - now uses polymorphic response
+List<ListJwk200ResponseInner> jwks = credApi.listJwks(appId);
+for (ListJwk200ResponseInner jwk : jwks) {
+    System.out.println("Key ID: " + jwk.getKid());
+    System.out.println("Key Type: " + jwk.getKty());
+    System.out.println("Use: " + jwk.getUse()); // "sig" or "enc"
+    System.out.println("Status: " + jwk.getStatus());
+}
+```
+
+---
+
+### 4. System & Security Settings
+
+**Impact Level**: 🟡 Medium
+
+| Endpoint | Change |
+|----------|--------|
+| `GET /.well-known/okta-organization` | Missing `settings` object |
+| `GET /api/v1/inlineHooks` | Removed `metadata` property |
+| `POST /api/v1/inlineHooks` | Removed `metadata`, `status`, `_links` properties |
+| `PUT /api/v1/inlineHooks/{id}` | Removed `metadata`, `status`, `type`, `_links` properties |
+| `GET /api/v1/principal-rate-limits` | Return type schema broken compatibility |
+| `POST /api/v1/principal-rate-limits` | Return type schema broken compatibility |
+| `PUT /api/v1/principal-rate-limits/{id}` | Return type schema broken compatibility |
+| `GET /api/v1/policies` | Changed property type for `status` |
+| `POST /api/v1/policies` | Changed property type for `status` |
+| `PUT /api/v1/policies/{policyId}` | Changed property type for `status` |
+| `GET /api/v1/behaviors` | Changed property types for `created` and `lastUpdated` timestamps |
+| `POST /api/v1/behaviors` | Changed property types for `created` and `lastUpdated` timestamps |
+| `PUT /api/v1/behaviors/{id}` | Changed property types for `created` and `lastUpdated` timestamps |
+| `GET /api/v1/agentPools` | Changed `lastConnection` from string to integer |
+| `POST /api/v1/agentPools` | Changed `lastConnection` from string to integer |
+
+_Before (v24.x):_
+
+```java
+PolicyApi policyApi = new PolicyApi(client);
+Policy policy = policyApi.getPolicy(policyId, null);
+String status = policy.getStatus(); // Was different type
+```
+
+_After (v25.0.0):_
+
+```java
+PolicyApi policyApi = new PolicyApi(client);
+Policy policy = policyApi.getPolicy(policyId, null);
+PolicyStatus status = policy.getStatus(); // Now uses enum type
+String statusValue = status.getValue();
+```
+
+---
+
+### 5. Specialized Authenticators
+
+**Impact Level**: 🟡 Medium
+
+| Endpoint | Change |
+|----------|--------|
+| `GET /api/v1/authenticators` | Broad schema broken compatibility |
+| `POST /api/v1/authenticators` | Broad schema broken compatibility |
+| `PUT /api/v1/authenticators/{id}` | Broad schema broken compatibility |
+| `POST /api/v1/authenticators/{id}/lifecycle/activate` | Schema changes |
+| `POST /api/v1/authenticators/{id}/lifecycle/deactivate` | Schema changes |
+| `GET /api/v1/authenticators/{id}/methods` | Schema changes |
+| `PUT /api/v1/authenticators/{id}/methods/{methodType}` | Schema changes |
+| `POST /webauthn-registration/.../initiate-fulfillment-request` | Changed `fulfillmentData` from object to array |
+| `GET /.well-known/app-authenticator-configuration` | Schema broken compatibility |
+
+---
+
+### 6. Role Assignment Changes
+
+**Impact Level**: 🟡 Medium
+
+Role assignment responses now use polymorphic types handled by custom deserializers.
+
+| Endpoint | Model Used |
+|----------|------------|
+| `GET /api/v1/groups/{groupId}/roles` | `ListGroupAssignedRoles200ResponseInner` |
+| `POST /api/v1/groups/{groupId}/roles` | `AssignRoleToGroup200Response` |
+| `GET /api/v1/users/{userId}/roles` | Uses polymorphic response |
+| `POST /api/v1/users/{userId}/roles` | `AssignRoleToUser201Response` |
+| `GET /oauth2/v1/clients/{clientId}/roles` | Uses polymorphic response |
+| `POST /oauth2/v1/clients/{clientId}/roles` | `AssignRoleToClient200Response` |
+
+_After (v25.0.0):_
+
+```java
+// Works automatically with custom deserializers
+RoleAssignmentApi roleApi = new RoleAssignmentApi(client);
+List<ListGroupAssignedRoles200ResponseInner> roles = 
+    roleApi.listGroupAssignedRoles(groupId, null);
+
+for (ListGroupAssignedRoles200ResponseInner role : roles) {
+    System.out.println("Role Type: " + role.getType());
+    System.out.println("Assignment Type: " + role.getAssignmentType());
+    System.out.println("Status: " + role.getStatus());
+}
+```
+
+---
+
+## SDK-Specific Changes
+
+### Custom Deserializers for Polymorphic Types
+
+The SDK now includes custom Jackson deserializers to handle polymorphic API responses. These are automatically registered when using `DefaultClientBuilder`.
+
+| Deserializer | Target Class | Purpose |
+|-------------|--------------|---------|
+| `RoleAssignmentDeserializer` | `ListGroupAssignedRoles200ResponseInner` | StandardRole/CustomRole polymorphism |
+| `AssignRoleToGroupResponseDeserializer` | `AssignRoleToGroup200Response` | Group role assignments |
+| `AssignRoleToUserResponseDeserializer` | `AssignRoleToUser201Response` | User role assignments |
+| `AssignRoleToClientResponseDeserializer` | `AssignRoleToClient200Response` | Client role assignments |
+| `JwkResponseDeserializer` | `ListJwk200ResponseInner` | JWK signing/encryption keys |
+| `GroupOwnerDeserializer` | `GroupOwner` | Non-ISO date format handling |
+| `FlexibleOffsetDateTimeDeserializer` | Various | Global flexible date parsing |
+| `GroupProfileDeserializer` | `GroupProfile` | Group profile polymorphism |
+| `UserProfileDeserializer` | `UserProfile` | User profile polymorphism |
+
+### Custom Serializers
+
+| Serializer | Target Class | Purpose |
+|-----------|--------------|---------|
+| `GroupProfileSerializer` | `GroupProfile` | Proper serialization of group profiles |
+| `UserProfileSerializer` | `UserProfile` | Proper serialization of user profiles |
+| `OktaUserGroupProfileSerializer` | `OktaUserGroupProfile` | Proper serialization of Okta user group profiles |
+
+---
+
+## Pagination Changes
+
+### `PaginationUtil.getAfter()` is Deprecated
+
+The `PaginationUtil.getAfter()` method is deprecated and will be removed in v26.0.0. Use `PagedIterable` instead.
+
+| Feature | Old (PaginationUtil) | New (PagedIterable) |
+|---------|---------------------|---------------------|
+| Thread Safety | ❌ Shared state issues | ✅ Isolated iterator state |
+| Memory Efficiency | ❌ Manual collection building | ✅ Lazy loading |
+| Code Simplicity | ❌ Manual loop with `do-while` | ✅ Simple `for-each` |
+
+_Before (v24.x) - DEPRECATED:_
+
+```java
+// DEPRECATED - Will be removed in v26.0.0
+UserApi userApi = new UserApi(client);
+List<User> allUsers = new ArrayList<>();
+String after = null;
+
+do {
+    List<User> page = userApi.listUsers("application/json", null, after, 200, null, null, null, null);
+    allUsers.addAll(page);
+    after = PaginationUtil.getAfter(userApi.getApiClient());
+} while (StringUtils.isNotBlank(after));
+```
+
+_After (v25.0.0) - RECOMMENDED:_
+
+```java
+UserApi userApi = new UserApi(client);
+
+// Option 1: Iterate directly (lazy loading, memory efficient)
+PagedIterable<User> users = userApi.listUsersPagedIterable(null, null, 200, null, null, null, null);
+for (User user : users) {
+    System.out.println("User: " + user.getProfile().getLogin());
+}
+
+// Option 2: Collect all to a list
+List<User> allUsers = new ArrayList<>();
+for (User user : userApi.listUsersPagedIterable(null, null, 200, null, null, null, null)) {
+    allUsers.add(user);
+}
+
+// Option 3: Using Java Streams
+List<User> filteredUsers = StreamSupport.stream(users.spliterator(), false)
+    .filter(user -> user.getProfile().getEmail().endsWith("@example.com"))
+    .collect(Collectors.toList());
+```
+
+---
+
+## New Features in v25.0.0
+
+### New API Clients
+
+| API Client | Purpose |
+|------------|---------|
+| `UserRiskApi` | Manage user risk levels |
+| `UserClassificationApi` | Manage user classification |
+| `GroupOwnerApi` | Manage group owners |
+| `DeviceIntegrationsApi` | Manage device integrations |
+| `DevicePostureCheckApi` | Manage device posture checks |
+| `GovernanceBundleApi` | Manage governance bundles |
+| `ServiceAccountApi` | Manage service accounts |
+
+### Code Examples
+
+**Working with User Risk (New):**
+
+```java
+UserRiskApi riskApi = new UserRiskApi(client);
+
+// Get user risk level
+UserRisk risk = riskApi.getUserRisk(userId);
+System.out.println("Risk Level: " + risk.getLevel());
+
+// Update user risk level
+UserRisk updateRequest = new UserRisk();
+updateRequest.setLevel(RiskLevel.LOW);
+UserRisk updated = riskApi.updateUserRisk(userId, updateRequest);
+```
+
+**Working with Group Owners (New):**
+
+```java
+GroupOwnerApi ownerApi = new GroupOwnerApi(client);
+
+// Assign a user as group owner
+AssignGroupOwnerRequestBody request = new AssignGroupOwnerRequestBody();
+request.setId(userId);
+request.setType(GroupOwnerType.USER);
+GroupOwner owner = ownerApi.assignGroupOwner(groupId, request);
+
+// List group owners
+List<GroupOwner> owners = ownerApi.listGroupOwners(groupId, null, null, null);
+```
+
+---
+
+## Deprecated Endpoints
+
+The following endpoints are deprecated and will be removed in a future release:
+
+| Endpoint | Note |
+|----------|------|
+| `POST /api/v1/org/privacy/oktaSupport/extend` | Returns 301 redirect |
+| `POST /api/v1/org/privacy/oktaSupport/grant` | Returns 301 redirect |
+| `POST /api/v1/org/privacy/oktaSupport/revoke` | Returns 301 redirect |
+| `POST /api/v1/risk/events/ip` | Deprecated |
+| `GET /api/v1/risk/providers` | Deprecated |
+| `POST /api/v1/risk/providers` | Deprecated |
+| `DELETE /api/v1/risk/providers/{id}` | Deprecated |
+| `GET /api/v1/risk/providers/{id}` | Deprecated |
+| `PUT /api/v1/risk/providers/{id}` | Deprecated |
+
+**Action Required:** Update code to handle 301 redirects for `oktaSupport` endpoints.
+
+---
+
+## FAQ
+
+### Q: Do I need to update all my code at once?
+
+A: No. Most existing code will continue to work. Focus on:
+1. Code that accesses `user.type` properties
+2. Code that handles specific response structures from affected endpoints
+3. Code using `PaginationUtil.getAfter()`
+
+### Q: Will the custom deserializers work automatically?
+
+A: Yes. When you use `DefaultClientBuilder` to create the API client, all custom deserializers are automatically registered.
+
+### Q: How do I handle the removed `user.type` property?
+
+A: Use the `UserTypeApi` to fetch user type information separately:
+
+```java
+UserTypeApi userTypeApi = new UserTypeApi(client);
+List<UserType> types = userTypeApi.listUserTypes();
+```
+
+### Q: What if I encounter deserialization errors?
+
+A: The custom deserializers should handle most cases. If you encounter errors, please [open an issue](https://github.com/okta/okta-sdk-java/issues) with the JSON response that caused the error.
+
+---
+
+## Getting Help
+
+If you encounter issues during migration:
+
+1. **Check the API documentation**: Review the [Okta API Reference](https://developer.okta.com/docs/reference/) for the latest endpoint specifications
+2. **Review the examples**: Check the `examples/quickstart` directory for working code samples
+3. **File an issue**: [Open an issue](https://github.com/okta/okta-sdk-java/issues) on GitHub
+4. **Join the community**: Visit the [Okta Developer Forum](https://devforum.okta.com/) for community support

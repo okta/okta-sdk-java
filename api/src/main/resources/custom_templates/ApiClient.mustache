@@ -95,6 +95,8 @@ import com.okta.sdk.cache.Caches;
 import com.okta.sdk.cache.Cache;
 import com.okta.sdk.cache.CacheManager;
 
+import com.okta.sdk.client.MultiThreadingWarningUtil;
+
 import com.okta.sdk.resource.common.PagedList;
 
 import com.okta.sdk.resource.model.HttpMethod;
@@ -165,6 +167,9 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
     // These are automatically cleaned up when threads die, preventing memory leaks
     private static final ThreadLocal<Integer> lastStatusCode = new ThreadLocal<>();
     private static final ThreadLocal<Map<String, List<String>>> lastResponseHeaders = new ThreadLocal<>();
+
+    // Utility to detect and warn about multi-threaded usage patterns
+    private final MultiThreadingWarningUtil multiThreadingWarningUtil = new MultiThreadingWarningUtil();
 
         private DateFormat dateFormat;
 
@@ -796,6 +801,13 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                         if (contentTypes.length == 0 || contentTypes[0].equals("*/*")) {
                                         return "application/json";
                                         }
+                                        // Prioritize multipart/form-data for file uploads
+                                        for (String contentType : contentTypes) {
+                                        if (contentType.contains("multipart/form-data")) {
+                                        return contentType;
+                                        }
+                                        }
+                                        // Then check for JSON
                                         for (String contentType : contentTypes) {
                                         if (isJsonMime(contentType)) {
                                         return contentType;
@@ -1115,6 +1127,9 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                     protected <T> T processResponse(CloseableHttpResponse response, TypeReference<T> returnType) throws ApiException, IOException, ParseException {
                                                                         int statusCode = response.getCode();
                                                                         
+                                                                        // Record thread access to detect multi-threaded usage patterns
+                                                                        multiThreadingWarningUtil.recordThreadAccess();
+
                                                                         // Store in ThreadLocal for backward compatibility with PaginationUtil
                                                                         // ThreadLocal automatically cleans up when thread dies (no memory leak)
                                                                         lastStatusCode.set(statusCode);

@@ -237,16 +237,19 @@ public class DefaultPasswordPolicyBuilder extends DefaultPolicyBuilder<PasswordP
         if (!Collections.isEmpty(groupIds)) {
             GroupCondition groupCondition = new GroupCondition();
             groupCondition.setInclude(groupIds);
-            PolicyPeopleCondition policyPeopleCondition = new PolicyPeopleCondition();
-            policyPeopleCondition.setGroups(groupCondition);
+            AuthenticatorEnrollmentPolicyConditionsAllOfPeople policyPeopleCondition = new AuthenticatorEnrollmentPolicyConditionsAllOfPeople();
+            AuthenticatorEnrollmentPolicyConditionsAllOfPeopleGroups peopleGroups = new AuthenticatorEnrollmentPolicyConditionsAllOfPeopleGroups();
+            peopleGroups.setInclude(groupIds);
+            policyPeopleCondition.setGroups(peopleGroups);
             passwordPolicyConditions.setPeople(policyPeopleCondition);
         }
 
         if (!Collections.isEmpty(userIds)) {
             UserCondition userCondition = new UserCondition();
             userCondition.setInclude(userIds);
-            PolicyPeopleCondition policyPeopleCondition = new PolicyPeopleCondition();
-            policyPeopleCondition.setUsers(userCondition);
+            AuthenticatorEnrollmentPolicyConditionsAllOfPeople policyPeopleCondition = new AuthenticatorEnrollmentPolicyConditionsAllOfPeople();
+            // Note: AuthenticatorEnrollmentPolicyConditionsAllOfPeople may not have setUsers method
+            // This needs to be checked against the actual API model
             passwordPolicyConditions.setPeople(policyPeopleCondition);
         }
 

@@ -34,8 +34,16 @@ import com.okta.sdk.client.AuthorizationMode;
 import com.okta.sdk.client.ClientBuilder;
 import com.okta.sdk.impl.api.DefaultClientCredentialsResolver;
 import com.okta.sdk.impl.config.*;
+import com.okta.sdk.impl.deserializer.AssignRoleToClientResponseDeserializer;
+import com.okta.sdk.impl.deserializer.AssignRoleToGroupResponseDeserializer;
+import com.okta.sdk.impl.deserializer.AssignRoleToUserResponseDeserializer;
+import com.okta.sdk.impl.deserializer.FlexibleOffsetDateTimeDeserializer;
+import com.okta.sdk.impl.deserializer.GroupOwnerDeserializer;
 import com.okta.sdk.impl.deserializer.GroupProfileDeserializer;
+import com.okta.sdk.impl.deserializer.IgnoreTypeInfoMixIn;
+import com.okta.sdk.impl.deserializer.JwkResponseDeserializer;
 import com.okta.sdk.impl.deserializer.OktaUserGroupProfileDeserializer;
+import com.okta.sdk.impl.deserializer.RoleAssignmentDeserializer;
 import com.okta.sdk.impl.deserializer.UserProfileDeserializer;
 import com.okta.sdk.impl.io.ClasspathResource;
 import com.okta.sdk.impl.io.DefaultResourceFactory;
@@ -52,7 +60,14 @@ import com.okta.sdk.impl.util.ConfigUtil;
 import com.okta.sdk.impl.util.DefaultBaseUrlResolver;
 
 import com.okta.sdk.impl.retry.OktaHttpRequestRetryStrategy;
+import com.okta.sdk.resource.client.auth.Authentication;
+import com.okta.sdk.resource.model.AssignRoleToClient200Response;
+import com.okta.sdk.resource.model.AssignRoleToGroup200Response;
+import com.okta.sdk.resource.model.AssignRoleToUser201Response;
+import com.okta.sdk.resource.model.GroupOwner;
 import com.okta.sdk.resource.model.GroupProfile;
+import com.okta.sdk.resource.model.ListGroupAssignedRoles200ResponseInner;
+import com.okta.sdk.resource.model.ListJwk200ResponseInner;
 import com.okta.sdk.resource.model.OktaUserGroupProfile;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
@@ -82,6 +97,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.security.PrivateKey;
+import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.UnaryOperator;
@@ -375,7 +391,7 @@ public class DefaultClientBuilder implements ClientBuilder {
                     new OAuth2ClientCredentials(accessTokenRetrieverService);
 
                 // replace the default OAuth authentication with an auto-refreshing one
-                apiClient.replaceAuthentication("oauth2", oAuth2ClientCredentials);
+                apiClient.replaceAuthentication("oauth2", (Authentication) oAuth2ClientCredentials);
                 oAuth2ClientCredentials.refreshOAuth2AccessToken();
             }
         }
@@ -478,6 +494,35 @@ public class DefaultClientBuilder implements ClientBuilder {
         module.addDeserializer(GroupProfile.class, new GroupProfileDeserializer());
         module.addSerializer(OktaUserGroupProfile.class, new OktaUserGroupProfileSerializer());
         module.addDeserializer(OktaUserGroupProfile.class, new OktaUserGroupProfileDeserializer());
+        
+        // Add mix-ins to disable @JsonTypeInfo annotations on classes with problematic polymorphic types
+        // These classes have @JsonSubTypes that reference types (StandardRole, CustomRole) that don't
+        // actually extend the parent class, causing "not a subtype" errors during deserialization.
+        // By disabling the type info and using custom deserializers, we can properly parse these responses.
+        
+        // Role assignment response types
+        mapper.addMixIn(ListGroupAssignedRoles200ResponseInner.class, IgnoreTypeInfoMixIn.class);
+        mapper.addMixIn(AssignRoleToClient200Response.class, IgnoreTypeInfoMixIn.class);
+        mapper.addMixIn(AssignRoleToGroup200Response.class, IgnoreTypeInfoMixIn.class);
+        mapper.addMixIn(AssignRoleToUser201Response.class, IgnoreTypeInfoMixIn.class);
+        
+        // JWK response types
+        mapper.addMixIn(ListJwk200ResponseInner.class, IgnoreTypeInfoMixIn.class);
+        
+        // Add custom deserializers for polymorphic response types
+        module.addDeserializer(ListGroupAssignedRoles200ResponseInner.class, new RoleAssignmentDeserializer());
+        module.addDeserializer(AssignRoleToClient200Response.class, new AssignRoleToClientResponseDeserializer());
+        module.addDeserializer(AssignRoleToGroup200Response.class, new AssignRoleToGroupResponseDeserializer());
+        module.addDeserializer(AssignRoleToUser201Response.class, new AssignRoleToUserResponseDeserializer());
+        module.addDeserializer(ListJwk200ResponseInner.class, new JwkResponseDeserializer());
+        
+        // Add custom deserializer for GroupOwner to handle non-ISO-8601 date format
+        // The Okta Group Owner API returns dates like "Wed Dec 10 19:57:11 UTC 2025"
+        module.addDeserializer(GroupOwner.class, new GroupOwnerDeserializer());
+        
+        // Add flexible OffsetDateTime deserializer to handle non-ISO-8601 date formats globally
+        // This overrides the default JavaTimeModule deserializer and supports both formats
+        module.addDeserializer(OffsetDateTime.class, new FlexibleOffsetDateTimeDeserializer());
         mapper.registerModule(module);
     }
 
