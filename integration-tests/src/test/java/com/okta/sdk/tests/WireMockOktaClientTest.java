@@ -54,6 +54,25 @@ public class WireMockOktaClientTest {
 
     @BeforeMethod
     public void setup() throws Exception {
+        // Generate WireMock keystore if it doesn't exist
+        String keystorePath = Paths.get(KEYSTORE_PATH).toAbsolutePath().toString();
+        java.io.File keystoreFile = new java.io.File(keystorePath);
+        if (!keystoreFile.exists()) {
+            System.out.println("Generating WireMock keystore at: " + keystorePath);
+            ProcessBuilder pb = new ProcessBuilder(
+                "keytool", "-genkey", "-alias", "wiremock", "-keyalg", "RSA",
+                "-keystore", keystorePath,
+                "-storepass", KEYSTORE_PASSWORD, "-keypass", KEYSTORE_PASSWORD,
+                "-dname", "CN=localhost", "-validity", "365", "-noprompt"
+            );
+            int exitCode = pb.start().waitFor();
+            if (exitCode != 0) {
+                throw new RuntimeException("Failed to generate WireMock keystore. " +
+                    "Ensure 'keytool' is in your PATH (comes with Java)");
+            }
+            System.out.println("WireMock keystore generated successfully");
+        }
+
         // Start WireMock on HTTPS with self-signed certificate
         wireMockServer = new WireMockServer(
             WireMockConfiguration.wireMockConfig()
@@ -65,7 +84,6 @@ public class WireMockOktaClientTest {
 
         // Configure custom SSL context with the self-signed keystore
         KeyStore trustStore = KeyStore.getInstance("JKS");
-        String keystorePath = Paths.get(KEYSTORE_PATH).toAbsolutePath().toString();
         try (FileInputStream fis = new FileInputStream(keystorePath)) {
             trustStore.load(fis, KEYSTORE_PASSWORD.toCharArray());
         }
