@@ -23,6 +23,8 @@ import com.okta.sdk.resource.client.ApiClient;
 import com.okta.sdk.resource.client.ApiException;
 import com.okta.sdk.resource.model.User;
 import com.okta.sdk.resource.model.UserProfile;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -94,12 +96,22 @@ public class WireMockOktaClientTest {
         SSLContext sslContext = SSLContext.getInstance("TLS");
         sslContext.init(null, tmf.getTrustManagers(), new java.security.SecureRandom());
 
-        // Build Okta API client pointing to WireMock
-        // Note: This uses environment variables or okta.yaml for credentials in real scenarios
-        // For testing, we'll just build with the org URL pointing to WireMock
-        client = Clients.builder()
-            .setOrgUrl(WIREMOCK_HOST)
-            .build();
+        // Build HttpClient with custom SSL context using HTTP Client 5 APIs
+        // We need to set up the connection manager with custom SSL context
+        org.apache.hc.client5.http.impl.classic.CloseableHttpClient httpClient = 
+            HttpClients.custom()
+                .setConnectionManager(
+                    PoolingHttpClientConnectionManagerBuilder.create()
+                        .setSSLSocketFactory(
+                            new org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory(sslContext)
+                        )
+                        .build()
+                )
+                .build();
+        
+        // Create ApiClient with the custom HttpClient and a disabled cache manager
+        client = new ApiClient(httpClient, new com.okta.sdk.impl.cache.DisabledCacheManager());
+        client.setBasePath(WIREMOCK_HOST);
 
         userApi = new UserApi(client);
     }
@@ -144,7 +156,7 @@ public class WireMockOktaClientTest {
         // Verify the response
         assertNotNull(user);
         assertEquals(userId, user.getId());
-        assertEquals("ACTIVE", user.getStatus());
+        assertEquals("ACTIVE", user.getStatus().toString());
         assertNotNull(user.getProfile());
         assertEquals("isaac.brock@example.com", user.getProfile().getEmail());
         assertEquals("Isaac", user.getProfile().getFirstName());
