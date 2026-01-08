@@ -60724,6 +60724,9 @@ components:
               $ref: '#/components/schemas/OAuthEndpoints'
             scopes:
               $ref: '#/components/schemas/OAuthScopes'
+            oktaIdpOrgUrl:
+              type: string
+              nullable: true
     ProtocolSaml:
       title: SAML 2.0 Protocol
       description: Protocol settings for the [SAML 2.0 Authentication Request Protocol](http://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf)
