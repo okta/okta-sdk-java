@@ -54332,6 +54332,7 @@ components:
       - LOGINGOV
       - LOGINGOV_SANDBOX
       - MICROSOFT
+      - OKTA_INTEGRATION
       - OIDC
       - OKTA
       - PAYPAL
