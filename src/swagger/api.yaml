@@ -1493,6 +1493,107 @@ paths:
       x-okta-lifecycle:
         lifecycle: GA
         isGenerallyAvailable: true
+  /okta-personal-settings/api/v1/edit-feature:
+    put:
+      summary: Replace the Okta Personal admin settings
+      description: Replaces Okta Personal admin settings in a Workforce org
+      operationId: replaceOktaPersonalAdminSettings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OktaPersonalAdminFeatureSettings'
+            examples:
+              exampleSettings:
+                $ref: '#/components/examples/editFeatureExample'
+        required: true
+      responses:
+        '204':
+          description: No Content
+          content: {}
+        '401':
+          $ref: '#/components/responses/Error-FF-NotEnabled-Response-401'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '404':
+          $ref: '#/components/responses/ErrorResourceNotFound404'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+        - apiToken: []
+        - oauth2:
+            - okta.personal.adminSettings.manage
+      tags:
+        - OktaPersonalSettings
+      x-okta-lifecycle:
+        lifecycle: GA
+        isGenerallyAvailable: true
+  /okta-personal-settings/api/v1/export-blocklists:
+    get:
+      summary: List all blocked email domains
+      description: Lists all blocked email domains which are excluded from app migration
+      operationId: listPersonalAppsExportBlockList
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalAppsBlockList'
+              examples:
+                exampleSettings:
+                  $ref: '#/components/examples/getBlockListExample'
+        '401':
+          $ref: '#/components/responses/Error-FF-NotEnabled-Response-401'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '404':
+          $ref: '#/components/responses/ErrorResourceNotFound404'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+        - apiToken: []
+        - oauth2:
+            - okta.personal.adminSettings.read
+      tags:
+        - OktaPersonalSettings
+      x-okta-lifecycle:
+        lifecycle: GA
+        isGenerallyAvailable: true
+    put:
+      summary: Replace the blocked email domains
+      description: Replaces the list of blocked email domains which are excluded from app migration
+      operationId: replaceBlockedEmailDomains
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonalAppsBlockList'
+            examples:
+              exampleSettings:
+                $ref: '#/components/examples/getBlockListExample'
+        required: true
+      responses:
+        '204':
+          description: No Content
+          content: {}
+        '401':
+          $ref: '#/components/responses/Error-FF-NotEnabled-Response-401'
+        '403':
+          $ref: '#/components/responses/ErrorAccessDenied403'
+        '404':
+          $ref: '#/components/responses/ErrorResourceNotFound404'
+        '429':
+          $ref: '#/components/responses/ErrorTooManyRequests429'
+      security:
+        - apiToken: []
+        - oauth2:
+            - okta.personal.adminSettings.manage
+      tags:
+        - OktaPersonalSettings
+      x-okta-lifecycle:
+        lifecycle: GA
+        isGenerallyAvailable: true
   /api/v1/apps:
     get:
       summary: List all Applications
