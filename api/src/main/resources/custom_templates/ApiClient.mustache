@@ -161,7 +161,8 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
 
     private Map<String, Authentication> authentications;
 
-    private Cache<String, Object> cache;
+    private CacheManager cacheManager;
+    private Cache<String, Object> defaultCache;
 
     // ThreadLocal for backward compatibility with old pagination methods (PaginationUtil)
     // These are automatically cleaned up when threads die, preventing memory leaks
@@ -213,7 +214,8 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
 
             this.httpClient = httpClient;
 
-            this.cache = cacheManager.getCache("default");
+            this.cacheManager = cacheManager;
+            this.defaultCache = cacheManager.getCache("default");
             }
 
             public ApiClient() {
@@ -1411,15 +1413,15 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                                             }
 
                                                                                             if (method.equals(HttpMethod.DELETE.name())) {
-                                                                                            cache.remove(cacheKey);
+                                                                                            defaultCache.remove(cacheKey);
                                                                                             }
 
                                                                                             String[] uriSegments = path.split("/");
 
                                                                                             if (uriSegments.length >= 6) {
                                                                                             String key = getBasePath() + "/" + uriSegments[1] + "/" + uriSegments[2] + "/" + uriSegments[3] + "/" + uriSegments[4];
-                                                                                            if (cache.get(key) != null) {
-                                                                                            cache.remove(key);
+                                                                                            if (defaultCache.get(key) != null) {
+                                                                                            defaultCache.remove(key);
                                                                                             }
                                                                                             }
 
@@ -1429,7 +1431,29 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                                             !(url.contains(".well-known/okta-organization"))
                                                                                             && !(String.join("/", uriSegments)).matches("/api/v1/users/[A-Za-z0-9]+/factors/[A-Za-z0-9]+/transactions/[A-Za-z0-9]+")) {
 
-                                                                                            T cacheData = (T) cache.get(cacheKey);
+                                                                                            // Fix for GitHub issue #1600: Get resource-specific cache if available
+                                                                                            Cache<String, Object> cache = defaultCache;
+                                                                                            Class<?> expectedType = returnType.getType() instanceof Class ? 
+                                                                                                (Class<?>) returnType.getType() : null;
+                                                                                            if (expectedType != null) {
+                                                                                                try {
+                                                                                                    cache = cacheManager.getCache(expectedType.getName());
+                                                                                                } catch (Exception e) {
+                                                                                                    // Fall back to default cache if resource-specific cache lookup fails
+                                                                                                    cache = defaultCache;
+                                                                                                }
+                                                                                            }
+
+                                                                                            Object cachedObject = cache.get(cacheKey);
+                                                                                            T cacheData = null;
+                                                                                            
+                                                                                            // Fix for GitHub issue #1618: Validate cached object type matches expected return type
+                                                                                            // to prevent ClassCastException when different API methods return different types for same resource
+                                                                                            if (Objects.nonNull(cachedObject)) {
+                                                                                                if (expectedType != null && expectedType.isInstance(cachedObject)) {
+                                                                                                    cacheData = (T) cachedObject;
+                                                                                                }
+                                                                                            }
 
                                                                                                 if (Objects.isNull(cacheData)) {
 
@@ -1478,8 +1502,8 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                                             try (CloseableHttpResponse response = httpClient.execute(builder.build(), context)) {
                                                                                             T t = processResponse(response, returnType);
 
-                                                                                            if (cache.get(cacheKey) != null && !method.equals(HttpMethod.DELETE.name())) {
-                                                                                            cache.put(cacheKey, t);
+                                                                                            if (defaultCache.get(cacheKey) != null && !method.equals(HttpMethod.DELETE.name())) {
+                                                                                            defaultCache.put(cacheKey, t);
                                                                                             }
                                                                                             return t;
                                                                                             } catch (IOException | ParseException e) {
