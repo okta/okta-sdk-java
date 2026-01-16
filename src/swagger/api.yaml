@@ -49408,6 +49408,40 @@ components:
           type: string
           description: Link name
           example: Example Authorization Server
+    AutomationPolicy:
+      allOf:
+        - $ref: '#/components/schemas/Policy'
+        - type: object
+          properties:
+            conditions:
+              $ref: '#/components/schemas/AutomationPolicyConditions'
+    AutomationPolicyConditions:
+      type: object
+      properties:
+        people:
+          $ref: '#/components/schemas/AutomationPolicyConditionsPeople'
+    AutomationPolicyConditionsPeople:      
+      type: object
+      description: Identifies conditions on User and Groups
+      properties:
+        groups:
+          type: object
+          properties:
+            include:
+              type: array
+              items:
+                type: string
+        users:
+          type: object
+          description: Specifies for how long and it what state the users should be for the policy to apply
+          properties:
+            inactivity:
+              type: object
+              properties: 
+                unit:
+                  type: string
+                number:
+                  type: integer
     AutoAssignAdminAppSetting:
       description: The org setting that automatically assigns the Okta Admin Console when an admin role is assigned
       type: object
@@ -59581,6 +59615,7 @@ components:
           PROFILE_ENROLLMENT: '#/components/schemas/ProfileEnrollmentPolicy'
           POST_AUTH_SESSION: '#/components/schemas/PostAuthSessionPolicy'
           ENTITY_RISK: '#/components/schemas/EntityRiskPolicy'
+          USER_LIFECYCLE: '#/components/schemas/AutomationPolicy'
     PolicyAccess:
       type: string
       enum:
@@ -59958,6 +59993,7 @@ components:
         - POST_AUTH_SESSION
         - PROFILE_ENROLLMENT
         - RESOURCE_ACCESS
+        - USER_LIFECYCLE
     PolicyTypeSimulation:
       type: string
       enum:
