@@ -59960,6 +59960,7 @@ components:
         - PROFILE_ENROLLMENT
         - RESOURCE_ACCESS
         - SIGN_ON
+        - USER_LIFECYCLE
     PolicyRuleVerificationMethodType:
       description: Verification method type
       type: string
