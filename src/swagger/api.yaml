@@ -49442,6 +49442,30 @@ components:
                   type: string
                 number:
                   type: integer
+    AutomationPolicyRule:
+      allOf:
+        - $ref: '#/components/schemas/PolicyRule'
+        - type: object
+          properties:
+            actions:
+              $ref: '#/components/schemas/AutomationPolicyRuleActions'
+    AutomationPolicyRuleActions:
+      description: Specifies whether the User is to be enrolled the first time they `LOGIN`, the next time they are in the `CHALLENGE` process, or `NEVER`
+      type: object
+      properties:
+        updateUserLifecycle:
+          type: object
+          properties : 
+            targetStatus:
+              type: string
+            quietPeriod:
+              type: object
+              description: Quiet Period
+              properties: 
+                unit:
+                  type: string
+                number:
+                  type: integer
     AutoAssignAdminAppSetting:
       description: The org setting that automatically assigns the Okta Admin Console when an admin role is assigned
       type: object
@@ -59853,6 +59877,7 @@ components:
           POST_AUTH_SESSION: '#/components/schemas/PostAuthSessionPolicyRule'
           ENTITY_RISK: '#/components/schemas/EntityRiskPolicyRule'
           MFA_ENROLL: '#/components/schemas/AuthenticatorEnrollmentPolicyRule'
+          USER_LIFECYCLE: '#/components/schemas/AutomationPolicyRule'
     PolicyRuleActions:
       type: object
     PolicyRuleActionsEnroll:
