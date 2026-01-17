@@ -40,45 +40,61 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertEquals;
 
+import java.net.ServerSocket;
+
 /**
  * Integration test demonstrating WireMock + Okta SDK with HTTPS using self-signed certificates.
  * This test proves the solution works end-to-end without hitting actual Okta servers.
+ * 
+ * Thread-safe design: Uses dynamic port allocation for each test instance,
+ * allowing parallel test execution without port conflicts.
  */
 public class WireMockOktaClientTest {
 
     private WireMockServer wireMockServer;
     private ApiClient client;
     private UserApi userApi;
-    private static final int WIREMOCK_HTTPS_PORT = 8443;
-    private static final String WIREMOCK_HOST = "https://localhost:" + WIREMOCK_HTTPS_PORT;
+    private int wireMockHttpsPort;  // Dynamic port for thread-safety
+    private String wireMockHost;     // Computed from dynamic port
     private static final String KEYSTORE_PATH = "../../wiremock-keystore.jks";  // Path from integration-tests module
     private static final String KEYSTORE_PASSWORD = "password";
+    private static final Object KEYSTORE_LOCK = new Object();  // Lock for thread-safe keystore generation
 
     @BeforeMethod
     public void setup() throws Exception {
-        // Generate WireMock keystore if it doesn't exist
+        // Generate WireMock keystore if it doesn't exist (synchronized for thread-safety)
         String keystorePath = Paths.get(KEYSTORE_PATH).toAbsolutePath().toString();
-        java.io.File keystoreFile = new java.io.File(keystorePath);
-        if (!keystoreFile.exists()) {
-            System.out.println("Generating WireMock keystore at: " + keystorePath);
-            ProcessBuilder pb = new ProcessBuilder(
-                "keytool", "-genkey", "-alias", "wiremock", "-keyalg", "RSA",
-                "-keystore", keystorePath,
-                "-storepass", KEYSTORE_PASSWORD, "-keypass", KEYSTORE_PASSWORD,
-                "-dname", "CN=localhost", "-validity", "365", "-noprompt"
-            );
-            int exitCode = pb.start().waitFor();
-            if (exitCode != 0) {
-                throw new RuntimeException("Failed to generate WireMock keystore. " +
-                    "Ensure 'keytool' is in your PATH (comes with Java)");
+        synchronized(KEYSTORE_LOCK) {
+            java.io.File keystoreFile = new java.io.File(keystorePath);
+            if (!keystoreFile.exists()) {
+                System.out.println("[Thread: " + Thread.currentThread().getName() + "] " +
+                    "Generating WireMock keystore at: " + keystorePath);
+                ProcessBuilder pb = new ProcessBuilder(
+                    "keytool", "-genkey", "-alias", "wiremock", "-keyalg", "RSA",
+                    "-keystore", keystorePath,
+                    "-storepass", KEYSTORE_PASSWORD, "-keypass", KEYSTORE_PASSWORD,
+                    "-dname", "CN=localhost", "-validity", "365", "-noprompt"
+                );
+                int exitCode = pb.start().waitFor();
+                if (exitCode != 0) {
+                    throw new RuntimeException("Failed to generate WireMock keystore. " +
+                        "Ensure 'keytool' is in your PATH (comes with Java)");
+                }
+                System.out.println("[Thread: " + Thread.currentThread().getName() + "] " +
+                    "WireMock keystore generated successfully");
             }
-            System.out.println("WireMock keystore generated successfully");
         }
 
-        // Start WireMock on HTTPS with self-signed certificate
+        // Allocate a dynamic HTTPS port for this test instance (thread-safe)
+        wireMockHttpsPort = allocateAvailablePort();
+        wireMockHost = "https://localhost:" + wireMockHttpsPort;
+        System.out.println("[Thread: " + Thread.currentThread().getName() + "] " +
+            "Using dynamic HTTPS port: " + wireMockHttpsPort);
+
+        // Start WireMock on dynamic HTTPS port with self-signed certificate
         wireMockServer = new WireMockServer(
             WireMockConfiguration.wireMockConfig()
-                .httpsPort(WIREMOCK_HTTPS_PORT)
+                .httpsPort(wireMockHttpsPort)
                 .keystorePath(KEYSTORE_PATH)
                 .keystorePassword(KEYSTORE_PASSWORD)
         );
@@ -111,9 +127,22 @@ public class WireMockOktaClientTest {
         
         // Create ApiClient with the custom HttpClient and a disabled cache manager
         client = new ApiClient(httpClient, new com.okta.sdk.impl.cache.DisabledCacheManager());
-        client.setBasePath(WIREMOCK_HOST);
+        client.setBasePath(wireMockHost);  // Use dynamic host with dynamic port
 
         userApi = new UserApi(client);
+    }
+
+    /**
+     * Allocates an available port by binding to port 0 (OS assigns available port).
+     * This ensures thread-safe, collision-free port allocation.
+     * 
+     * @return an available port number
+     * @throws Exception if port allocation fails
+     */
+    private int allocateAvailablePort() throws Exception {
+        try (ServerSocket socket = new ServerSocket(0)) {
+            return socket.getLocalPort();
+        }
     }
 
     @AfterMethod
