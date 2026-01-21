@@ -24308,7 +24308,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/TempPassword'
               examples:
                 Expire password with temp password response:
                   $ref: '#/components/examples/ExpirePwdWithTempPwdResponse'
@@ -66013,6 +66013,8 @@ components:
         mapping:
           okta:user_group: '#/components/schemas/OktaUserGroupProfile'
           okta:windows_security_principal: '#/components/schemas/OktaActiveDirectoryGroupProfile'
+      additionalProperties: true
+      x-okta-extensible: true
     GroupPushMapping:
       type: object
       properties:
@@ -68628,9 +68630,10 @@ components:
       type: object
       properties:
         resend:
-          allOf:
-            - description: Resends the factor enrollment challenge. See [Resend a factor enrollment](/openapi/okta-management/management/tag/UserFactor/#tag/UserFactor/operation/resendEnrollFactor).
-            - $ref: '#/components/schemas/HrefObject'
+          type: array
+          description: Resends the factor enrollment challenge. See [Resend a factor enrollment](/openapi/okta-management/management/tag/UserFactor/#tag/UserFactor/operation/resendEnrollFactor).
+          items:
+            $ref: '#/components/schemas/HrefObject'
       readOnly: true
     LinksSelf:
       description: Specifies link relations (see [Web Linking](https://www.rfc-editor.org/rfc/rfc8288)) available using the [JSON Hypertext Application Language](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06) specification. This object is used for dynamic discovery of related resources and lifecycle operations.
@@ -68818,6 +68821,10 @@ components:
           readOnly: true
         issuer:
           $ref: '#/components/schemas/LogIssuer'
+        rootSessionId:
+          description: The root session ID for the authentication session
+          type: string
+          readOnly: true
     LogAuthenticationProvider:
       description: The system that proves the identity of an actor using the credentials provided to it
       type: string

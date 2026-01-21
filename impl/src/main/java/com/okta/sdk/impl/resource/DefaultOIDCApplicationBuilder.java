@@ -195,7 +195,13 @@ public class DefaultOIDCApplicationBuilder extends DefaultApplicationBuilder<OID
 
         if (Strings.hasText(label)) application.setLabel(label);
 
-        if (Strings.hasText(name)) application.setName(OpenIdConnectApplication.NameEnum.valueOf(name));
+        // Fix for GitHub issue #1619: Default name to "oidc_client" for OIDC applications
+        // The Okta API requires this value for OpenID Connect applications
+        if (Strings.hasText(name)) {
+            application.setName(OpenIdConnectApplication.NameEnum.valueOf(name));
+        } else {
+            application.setName(OpenIdConnectApplication.NameEnum.OIDC_CLIENT);
+        }
 
         application.setSignOnMode(com.okta.sdk.resource.model.ApplicationSignOnMode.OPENID_CONNECT);
 
