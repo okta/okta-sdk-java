@@ -1433,115 +1433,70 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                                             if (!method.equals(HttpMethod.GET.name())) {
                                                                                             // Wrap cache operations in try-catch to prevent interference with API exceptions
                                                                                             try {
-                                                                                                System.out.println("DEBUG: Invalidating cache for " + method + " " + cacheKey);
-                                                                                                System.out.println("DEBUG: Path: " + path);
-                                                                                                System.out.println("DEBUG: Current cache: " + cache.getClass().getName());
-                                                                                                
                                                                                                 // Remove from current cache (based on returnType)
                                                                                                 cache.remove(cacheKey);
-                                                                                                System.out.println("DEBUG: Removed from current cache");
                                                                                                 
                                                                                                 // Also remove from default cache in case it was cached there
                                                                                                 if (cache != defaultCache) {
                                                                                                     defaultCache.remove(cacheKey);
-                                                                                                    System.out.println("DEBUG: Removed from default cache");
-                                                                                                }
-                                                                                                
-                                                                                                // For DELETE/PUT/POST, the returnType might be void/null, so cache = defaultCache
-                                                                                                // But the resource might have been cached in a resource-specific cache by a previous GET
-                                                                                                // So we need to invalidate from all relevant resource-specific caches
-                                                                                                // Determine ALL resource types from path and invalidate from those caches
-                                                                                                // For nested resources like /apps/{id}/sso/claims/{id}, invalidate from ALL matching caches
-                                                                                                // This ensures we catch cases where resources might be cached in multiple places
-                                                                                                java.util.List<String> resourceCacheNames = new java.util.ArrayList<>();
-                                                                                                
-                                                                                                // Check for ALL matching resource types in the path (not just first match)
-                                                                                                if (path.contains("/push-mappings/") || path.contains("/group-push/mappings/")) {
-                                                                                                    resourceCacheNames.add("com.okta.sdk.resource.model.GroupPushMapping");
-                                                                                                }
-                                                                                                if (path.contains("/federated-claims/") || path.contains("/claims/")) {
-                                                                                                    resourceCacheNames.add("com.okta.sdk.resource.model.FederatedClaim");
-                                                                                                    resourceCacheNames.add("com.okta.sdk.resource.model.FederatedClaimRequestBody");
-                                                                                                }
-                                                                                                if (path.contains("/users/")) {
-                                                                                                    resourceCacheNames.add("com.okta.sdk.resource.model.User");
-                                                                                                }
-                                                                                                if (path.contains("/policies/")) {
-                                                                                                    resourceCacheNames.add("com.okta.sdk.resource.model.Policy");
-                                                                                                }
-                                                                                                if (path.contains("/apps/")) {
-                                                                                                    resourceCacheNames.add("com.okta.sdk.resource.model.Application");
-                                                                                                }
-                                                                                                if (path.contains("/groups/")) {
-                                                                                                    resourceCacheNames.add("com.okta.sdk.resource.model.Group");
-                                                                                                }
-                                                                                                
-                                                                                                // Try to invalidate from ALL matching resource caches
-                                                                                                for (String resourceCacheName : resourceCacheNames) {
-                                                                                                    try {
-                                                                                                        Cache<String, Object> resourceCache = cacheManager.getCache(resourceCacheName);
-                                                                                                        resourceCache.remove(cacheKey);
-                                                                                                    } catch (Exception e) {
-                                                                                                        // Ignore errors during cache invalidation
-                                                                                                    }
                                                                                                 }
                                                                                             } catch (Exception cacheEx) {
                                                                                                 // Ignore cache errors - don't let them interfere with API operations
-                                                                                            }                                                                                            // For sub-resource operations (e.g., /users/{id}/lifecycle/suspend, /apps/{id}/policies/{pid}),
-                                                                                            // also invalidate the parent resource cache (/users/{id}, /apps/{id})
-                                                                                            // This ensures that after DELETE/PUT/POST on a sub-resource, the parent resource is refetched
-                                                                                            try {
-                                                                                            if (uriSegments.length >= 5) {
-                                                                                            // Determine the resource cache name based on the PRIMARY resource (segment 3)
-                                                                                            // For paths like /api/v1/apps/{id}/policies/{pid}, we want Application cache, not Policy
-                                                                                            String resourceCacheName = null;
-                                                                                            String primaryResource = uriSegments.length > 3 ? uriSegments[3] : null;
-                                                                                            if ("users".equals(primaryResource)) {
-                                                                                                resourceCacheName = "com.okta.sdk.resource.model.User";
-                                                                                            } else if ("policies".equals(primaryResource)) {
-                                                                                                resourceCacheName = "com.okta.sdk.resource.model.Policy";
-                                                                                            } else if ("apps".equals(primaryResource)) {
-                                                                                                resourceCacheName = "com.okta.sdk.resource.model.Application";
-                                                                                            } else if ("groups".equals(primaryResource)) {
-                                                                                                resourceCacheName = "com.okta.sdk.resource.model.Group";
-                                                                                            } else if ("push-mappings".equals(primaryResource)) {
-                                                                                                resourceCacheName = "com.okta.sdk.resource.model.GroupPushMapping";
-                                                                                            } else if ("claims".equals(primaryResource)) {
-                                                                                                resourceCacheName = "com.okta.sdk.resource.model.FederatedClaim";
                                                                                             }
                                                                                             
-                                                                                            // Build parent key: /api/v1/{resource}/{id}
+                                                                                            // For lifecycle/action endpoints like /users/{id}/lifecycle/suspend,
+                                                                                            // also invalidate the parent resource cache (/users/{id})
+                                                                                            // Important: lifecycle operations might use default cache, but the parent resource
+                                                                                            // might be cached in a resource-specific cache (e.g., User cache)
+                                                                                            try {
+                                                                                            if (uriSegments.length >= 7 && (path.contains("/lifecycle/") || path.contains("/actions/"))) {
+                                                                                            // Parent key needs full URL like cacheKey: https://host/api/v1/users/{id}
                                                                                             String parentPath = "/" + uriSegments[1] + "/" + uriSegments[2] + "/" + uriSegments[3] + "/" + uriSegments[4];
                                                                                             String parentKey = url.substring(0, url.indexOf(path)) + parentPath;
                                                                                             
-                                                                                            // Invalidate from current cache
-                                                                                            try {
-                                                                                                cache.remove(parentKey);
-                                                                                            } catch (Exception e) {
-                                                                                                // Silently ignore
+                                                                                            // Try to invalidate from current cache first
+                                                                                            if (cache.get(parentKey) != null) {
+                                                                                            cache.remove(parentKey);
                                                                                             }
                                                                                             
-                                                                                            // Invalidate from default cache if different
-                                                                                            if (cache != defaultCache) {
-                                                                                                try {
-                                                                                                    defaultCache.remove(parentKey);
-                                                                                                } catch (Exception e) {
-                                                                                                    // Silently ignore
-                                                                                                }
+                                                                                            // Also try to invalidate from resource-specific caches
+                                                                                            // Map endpoint paths to their resource cache names
+                                                                                            String resourceCacheName = null;
+                                                                                            if (path.contains("/users/")) {
+                                                                                                resourceCacheName = "com.okta.sdk.resource.model.User";
+                                                                                            } else if (path.contains("/policies/")) {
+                                                                                                resourceCacheName = "com.okta.sdk.resource.model.Policy";
+                                                                                            } else if (path.contains("/apps/")) {
+                                                                                                resourceCacheName = "com.okta.sdk.resource.model.Application";
+                                                                                            } else if (path.contains("/groups/")) {
+                                                                                                resourceCacheName = "com.okta.sdk.resource.model.Group";
+                                                                                            } else if (path.contains("/push-mappings/")) {
+                                                                                                resourceCacheName = "com.okta.sdk.resource.model.GroupPushMapping";
+                                                                                            } else if (path.contains("/claims/")) {
+                                                                                                resourceCacheName = "com.okta.sdk.resource.model.FederatedClaim";
                                                                                             }
                                                                                             
-                                                                                            // Invalidate from resource-specific cache if available
                                                                                             if (resourceCacheName != null) {
                                                                                                 try {
                                                                                                     Cache<String, Object> resourceCache = cacheManager.getCache(resourceCacheName);
-                                                                                                    resourceCache.remove(parentKey);
+                                                                                                    if (resourceCache.get(parentKey) != null) {
+                                                                                                        resourceCache.remove(parentKey);
+                                                                                                    }
                                                                                                 } catch (Exception e) {
                                                                                                     // Silently ignore if resource cache is not available
                                                                                                 }
                                                                                             }
                                                                                             }
+                                                                                            
+                                                                                            // Also invalidate related cache entries for collection endpoints
+                                                                                            if (uriSegments.length >= 6) {
+                                                                                            String key = getBasePath() + "/" + uriSegments[1] + "/" + uriSegments[2] + "/" + uriSegments[3] + "/" + uriSegments[4];
+                                                                                            if (cache.get(key) != null) {
+                                                                                            cache.remove(key);
+                                                                                            }
+                                                                                            }
                                                                                             } catch (Exception cacheEx) {
-                                                                                            // Ignore cache errors - don't let them interfere with API operations
+                                                                                                // Ignore cache errors - don't let them interfere with API operations
                                                                                             }
                                                                                             }
 
