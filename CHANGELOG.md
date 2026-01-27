@@ -1,3 +1,27 @@
+# Release v25.0.1 - Bug Fixes and Cache Improvements
+
+## � Bug Fixes
+- **#1608**: Fixed DPoP nonce expiration not being checked on regular API calls (only checked during token requests), causing intermittent session errors after 22 hours- **#1615/#1667**: Fixed `LinksResend.resend` array type issue causing `MismatchedInputException`
+- **#1618**: Fixed cache `ClassCastException` with type validation
+- **#1619**: Fixed `OIDCApplicationBuilder` default name
+- **#1622**: Fixed `expirePasswordWithTempPassword` return type ⚠️ **Breaking Change** - now returns `TempPassword` instead of `User`
+- **#1642**: Added support for custom attributes in `OktaUserGroupProfile`
+- **#1650**: Fixed `PasswordPolicyRule.equals()` to include parent attributes
+- **#1653**: Added missing `rootSessionId` field to `LogAuthenticationContext`
+- **#1600**: Implemented resource-specific cache configuration
+- **#1657**: Upgraded Apache HttpClient5 to 5.5.1 (fixes connection pool leak)
+- **#1666**: Fixed JUnit dependency scope
+
+## 🔧 Cache System Improvements
+
+- Multi-cache invalidation for nested resources
+- Fixed path matching for `/federated-claims/` and `/group-push/mappings/`
+- Cross-cache invalidation for lifecycle operations
+- Defensive exception handling to prevent cache errors from masking API exceptions
+- **Result**: All 431 integration tests passing
+
+---
+
 # Release v25.0.0 - Major SDK Refactoring and Enhanced Test Coverage
 
 ## 📋 Overview

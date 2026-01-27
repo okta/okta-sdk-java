@@ -78,11 +78,22 @@ public class DPoPInterceptor implements ExecChainHandler {
     public ClassicHttpResponse execute(ClassicHttpRequest request, ExecChain.Scope scope, ExecChain execChain)
         throws IOException, HttpException {
         boolean tokenRequest = request.getRequestUri().equals(TOKEN_URI);
-        if (tokenRequest && nonce != null && nonceValidUntil.isBefore(Instant.now())) {
-            log.debug("DPoP nonce expired, will refresh it");
+        
+        // Check nonce expiration on ALL requests (not just token requests)
+        if (nonce != null && nonceValidUntil != null && nonceValidUntil.isBefore(Instant.now())) {
+            log.info("DPoP nonce expired after {} hours, clearing nonce to force token refresh", 
+                NONCE_VALID_SECONDS / 3600);
             nonce = null;
             nonceValidUntil = null;
+            
+            // For regular API calls, we need to force re-authentication by removing the Authorization header
+            // This will cause the request to fail with 401, triggering the OAuth2 flow to get a new token
+            if (!tokenRequest) {
+                log.debug("Removing Authorization header to force token refresh on next request");
+                request.removeHeaders("Authorization");
+            }
         }
+        
         if (jwk != null) {
             processRequest(request, tokenRequest);
         }
