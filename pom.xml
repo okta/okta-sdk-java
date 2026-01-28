@@ -244,7 +244,7 @@
                         <trimStackTrace>false</trimStackTrace>
                         <reuseForks>true</reuseForks>
                         <forkCount>1</forkCount>
-                        <parallel>classesAndMethods</parallel>
+                        <parallel>methods</parallel>
                         <threadCount>5</threadCount>
                         <skipTests>${skipImplTests}</skipTests>
                         <argLine>@{argLine} --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.base/java.text=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED</argLine>
