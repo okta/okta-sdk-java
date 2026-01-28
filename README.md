@@ -13,6 +13,7 @@
     * [Thread safety considerations](#thread-safety-considerations)
 * [Spring Support](#spring-support)
 * [Configuration reference](#configuration-reference)
+* [WireMock Integration Testing](#wiremock-integration-testing)
 * [Building the SDK](#building-the-sdk)
 * [Contributing](#contributing)
 
@@ -803,7 +804,20 @@ ApiClient client = Clients.builder()
 ```
 [//]: # (end: disableCaching)
 
+## WireMock Integration Testing
+
+WireMock can be configured to serve HTTPS with a self-signed certificate and custom KeyStore. The SDK's HTTP client can be configured with a custom SSLContext and TrustManager to accept the certificate. This implementation demonstrates both: automatic self-signed certificate generation, WireMock HTTPS configuration, and SDK HTTP client setup with a custom TrustManager. It also uses dynamic port allocation for thread-safe parallel test execution.
+
+### Running the Tests
+
+```bash
+mvn test -Dtest=WireMockOktaClientTest -pl integration-tests
+```
+
+See the complete implementation in `integration-tests/src/test/java/com/okta/sdk/tests/WireMockOktaClientTest.java`.
+
 ## Building the SDK
+
 
 In most cases, you won't need to build the SDK from source. If you want to build it yourself, take a look at the [build instructions wiki](https://github.com/okta/okta-sdk-java/wiki/Build-It) (though just cloning the repo and running `mvn install` should get you going).
 
