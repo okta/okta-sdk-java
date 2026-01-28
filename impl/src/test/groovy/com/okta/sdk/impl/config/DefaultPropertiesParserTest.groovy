@@ -36,7 +36,7 @@ class DefaultPropertiesParserTest {
         def testStr = "okta.web.verifyEmail.nextUri=/login?status=verified"
         [testStr, new TestStringResource(testStr)].each {
             def result = parser.parse(it)
-            assertEquals(result.size(), 1)
+            assertEquals(1, (int) result.size())
             assertEquals(result.get("okta.web.verifyEmail.nextUri"), "/login?status=verified")
         }
     }
@@ -47,7 +47,7 @@ class DefaultPropertiesParserTest {
         def testStr = "okta.web.verifyEmail.nextUri                                                     =                                         /login?status=verified"
         [testStr, new TestStringResource(testStr)].each {
             def result = parser.parse(it)
-            assertEquals(result.size(), 1)
+            assertEquals(1, (int) result.size())
             assertEquals(result.get("okta.web.verifyEmail.nextUri"), "/login?status=verified")
         }
     }
@@ -59,7 +59,7 @@ class DefaultPropertiesParserTest {
         [testStr, new TestStringResource(testStr)].each {
             def result = parser.parse(it)
 
-            assertEquals(result.size(), 1)
+            assertEquals(1, (int) result.size())
             assertEquals(result.get("okta.web.verifyEmail.nextUri"), null)
         }
     }
@@ -87,7 +87,7 @@ class DefaultPropertiesParserTest {
         [testStr, new TestStringResource(testStr)].each {
             def result = parser.parse(it)
 
-            assertEquals(result.size(), 2)
+            assertEquals(2, (int) result.size())
             assertEquals(result.get("okta.web.login.nextUri"), "/")
         }
     }
@@ -103,7 +103,7 @@ class DefaultPropertiesParserTest {
         [testStr, new TestStringResource(testStr)].each {
             def result = parser.parse(it)
 
-            assertEquals(result.size(), 2)
+            assertEquals(2, (int) result.size())
             assertEquals(result.get("okta.web.login.nextUri"), "/")
         }
     }
@@ -119,7 +119,7 @@ class DefaultPropertiesParserTest {
         [testStr, new TestStringResource(testStr)].each {
             def result = parser.parse(it)
 
-            assertEquals(result.size(), 2)
+            assertEquals(2, (int) result.size())
             assertEquals(result.get("okta.web.login.nextUri"), "/")
         }
     }

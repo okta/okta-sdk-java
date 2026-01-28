@@ -204,7 +204,7 @@ class AccessTokenRetrieverServiceImplTest {
         assertEquals(mockResponseAccessToken.getAccessToken(), "accessToken")
         assertEquals(mockResponseAccessToken.getIdToken(), "idToken")
         assertEquals(mockResponseAccessToken.getTokenType(), "Bearer")
-        assertEquals(mockResponseAccessToken.getExpiresIn(), 3600)
+        assertEquals(3600, (int) mockResponseAccessToken.getExpiresIn())
         assertEquals(mockResponseAccessToken.getScope(), "openid")
     }
 
@@ -254,7 +254,7 @@ class AccessTokenRetrieverServiceImplTest {
         assertThat(claims.get("aud"), hasItem(clientConfig.getBaseUrl() + "/oauth2/v1/token"))
         assertThat(claims.get("iat"), notNullValue())
         assertThat(claims.get("exp"), notNullValue())
-        assertEquals(Integer.valueOf(claims.get("exp") as String) - Integer.valueOf(claims.get("iat") as String), 3000,
+        assertEquals(3000, (int) (Integer.valueOf(claims.get("exp") as String) - Integer.valueOf(claims.get("iat") as String)),
             "token expiry time is not 50 minutes")
         assertThat(claims.get("iss"), notNullValue())
         assertEquals(claims.get("iss"), clientConfig.getClientId(), "iss must be equal to client id")

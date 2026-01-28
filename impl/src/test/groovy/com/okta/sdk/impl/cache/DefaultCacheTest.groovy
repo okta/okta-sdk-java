@@ -96,7 +96,7 @@ class DefaultCacheTest {
         assertEquals cache.accessCount, 1
         assertEquals cache.hitCount, 1
         assertEquals cache.missCount, 0
-        assertEquals cache.hitRatio, 1.0d
+        assertEquals 1.0d, (double) cache.hitRatio
 
         def value = cache.get('key')
         assertNull value
@@ -105,7 +105,7 @@ class DefaultCacheTest {
         assertEquals cache.hitCount, 1
         assertEquals cache.missCount, 1
         def ratio = cache.hitRatio
-        assertEquals ratio, 0.5d
+        assertEquals 0.5d, (double) ratio
 
         value = cache.remove('key')
         assertNull value
@@ -114,7 +114,7 @@ class DefaultCacheTest {
         assertEquals cache.hitCount, 1
         assertEquals cache.missCount, 2
         ratio = cache.hitRatio
-        assertEquals ratio, (1d/3d)
+        assertEquals (1d/3d), (double) ratio
     }
 
 
@@ -122,9 +122,9 @@ class DefaultCacheTest {
     void testClear() {
         def cache = new DefaultCache('foo')
         cache.put('key', 'value')
-        assertEquals cache.size(), 1
+        assertEquals 1, (int) cache.size()
         cache.clear()
-        assertEquals cache.size(), 0
+        assertEquals 0, (int) cache.size()
     }
 
     @Test
@@ -133,11 +133,11 @@ class DefaultCacheTest {
         def json = new JsonSlurper().parseText(cache.toString())
 
         assertEquals json.name, 'foo'
-        assertEquals json.size, 0
-        assertEquals json.accessCount, 0
-        assertEquals json.hitCount, 0
-        assertEquals json.missCount, 0
-        assertEquals json.hitRatio, 0.0
+        assertEquals 0, (int) json.size
+        assertEquals 0, (int) json.accessCount
+        assertEquals 0, (int) json.hitCount
+        assertEquals 0, (int) json.missCount
+        assertEquals 0.0, (double) json.hitRatio
 
         cache.put('key', 'value')
         def value = cache.get('key')
@@ -146,11 +146,11 @@ class DefaultCacheTest {
         json = new JsonSlurper().parseText(cache.toString())
 
         assertEquals json.name, 'foo'
-        assertEquals json.size, 1
-        assertEquals json.accessCount, 1
-        assertEquals json.hitCount, 1
-        assertEquals json.missCount, 0
-        assertEquals json.hitRatio, 1.0
+        assertEquals 1, (int) json.size
+        assertEquals 1, (int) json.accessCount
+        assertEquals 1, (int) json.hitCount
+        assertEquals 0, (int) json.missCount
+        assertEquals 1.0, (double) json.hitRatio
     }
 
     @Test
@@ -182,14 +182,14 @@ class DefaultCacheTest {
 
         def found = cache.get(key)
         assertEquals value, found
-        assertEquals cache.size(), 1
+        assertEquals 1, (int) cache.size()
 
         Thread.sleep(15)
 
         found = cache.get(key)
 
         assertNull found
-        assertEquals cache.size(), 0
+        assertEquals 0, (int) cache.size()
     }
 
     @Test(enabled = true) // TODO: flaky test, need to fix
@@ -205,19 +205,19 @@ class DefaultCacheTest {
 
         def found = cache.get(key)
         assertEquals found, value
-        assertEquals cache.size(), 1
+        assertEquals 1, (int) cache.size()
 
         Thread.sleep(5)
 
         found = cache.get(key)
         assertEquals found, value
-        assertEquals cache.size(), 1
+        assertEquals 1, (int) cache.size()
 
         Thread.sleep(300)
 
         found = cache.get(key)
         assertNull found
-        assertEquals cache.size(), 0
+        assertEquals 0, (int) cache.size()
     }
 
     @Test(enabled = true) // TODO: flaky test, need to fix
@@ -233,7 +233,7 @@ class DefaultCacheTest {
 
         def found = cache.get(key)
         assertEquals found, value
-        assertEquals 1, cache.size()
+        assertEquals 1, (int) cache.size()
 
         //each time we access after sleeping 15 seconds, we should always acquire the value since the last
         //access timestamp is being updated, preventing expunging due to idle.
@@ -241,17 +241,17 @@ class DefaultCacheTest {
         Thread.sleep(20)
         found = cache.get(key)
         assertEquals(found, value)
-        assertEquals 1, cache.size()
+        assertEquals 1, (int) cache.size()
 
         Thread.sleep(20)
         found = cache.get(key)
         assertEquals(found, value)
-        assertEquals 1, cache.size()
+        assertEquals 1, (int) cache.size()
 
         Thread.sleep(20)
         found = cache.get(key)
         assertEquals(found, value)
-        assertEquals 1, cache.size()
+        assertEquals 1, (int) cache.size()
 
         //Now we need to ensure that no matter how frequently the value is used (not idle), we still need to remove
         //the value if older than the TTL
@@ -261,6 +261,6 @@ class DefaultCacheTest {
 
         found = cache.get(key)
         assertNull found
-        assertEquals 0, cache.size()
+        assertEquals 0, (int) cache.size()
     }
 }

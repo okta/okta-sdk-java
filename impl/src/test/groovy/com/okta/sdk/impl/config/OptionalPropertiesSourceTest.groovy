@@ -49,6 +49,6 @@ class OptionalPropertiesSourceTest {
         })
 
         def result = properties.getProperties()
-        assertEquals result.size(), 0
+        assertEquals 0, (int) result.size()
     }
 }
