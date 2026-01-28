@@ -43,6 +43,7 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.cookie.BasicClientCookie;
 import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpEntity;
@@ -116,6 +117,8 @@ import {{invokerPackage}}.auth.Authentication;
 {{#hasOAuthMethods}}
     import {{invokerPackage}}.auth.OAuth;
 {{/hasOAuthMethods}}
+    // Always import HttpBearerAuth for DPoP token management
+    import {{invokerPackage}}.auth.HttpBearerAuth;
 
 {{>generatedAnnotation}}
 public class ApiClient{{#jsr310}} extends JavaTimeFormatter{{/jsr310}} {
@@ -1564,10 +1567,10 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
 
                                                                                                 if (Objects.isNull(cacheData)) {
 
-                                                                                            try (CloseableHttpResponse response = httpClient.execute(builder.build(), context)) {
-                                                                                            T t = processResponse(response, returnType);
+                                                                                        try (CloseableHttpResponse response = executeWithDPoPRetry(builder.build(), context)) {
+                                                                                        T t = processResponse(response, returnType);
 
-                                                                                            if (Objects.nonNull(t)) {
+                                                                                        if (Objects.nonNull(t)) {
 
                                                                                                     if (t instanceof String && accept != null && accept.contains("xml")) {
                                                                                                          return t;
@@ -1606,18 +1609,91 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
 
                                                                                             } else {
 
-                                                                                            try (CloseableHttpResponse response = httpClient.execute(builder.build(), context)) {
-                                                                                            T t = processResponse(response, returnType);
+                                                                                        try (CloseableHttpResponse response = executeWithDPoPRetry(builder.build(), context)) {
+                                                                                        T t = processResponse(response, returnType);
 
-                                                                                            // Don't cache responses from PUT/POST/DELETE operations
-                                                                                            // Only GET requests are cacheable
-                                                                                            return t;
+                                                                                        // Don't cache responses from PUT/POST/DELETE operations
+                                                                                        // Only GET requests are cacheable
+                                                                                        return t;
                                                                                             } catch (IOException | ParseException e) {
                                                                                             throw new ApiException(e);
                                                                                             }
                                                                                             }
                                                                                             }
 
+
+    /**
+     * Execute HTTP request with automatic retry for DPoP nonce expiration.
+     * If DPoP nonce has expired, clears the access token to force refresh and retries once.
+     * 
+     * @param request the HTTP request to execute
+     * @param context the HTTP client context
+     * @return the HTTP response
+     * @throws IOException if an I/O error occurs
+     */
+    private CloseableHttpResponse executeWithDPoPRetry(ClassicHttpRequest request, HttpClientContext context) throws IOException {
+        try {
+            return httpClient.execute(request, context);
+        } catch (Exception e) {
+            // Check if this is a DPoP nonce expiration
+            if (isDPoPNonceExpired(e)) {
+                // Clear access token to force refresh on retry
+                // This will trigger a new token request which will get a fresh DPoP nonce
+                clearAccessToken();
+                
+                // Retry the request once with refreshed token/nonce
+                return httpClient.execute(request, context);
+            }
+            // Re-throw other exceptions
+            if (e instanceof IOException) {
+                throw (IOException) e;
+            }
+            throw new IOException("Request execution failed", e);
+        }
+    }
+
+    /**
+     * Check if an exception is due to DPoP nonce expiration.
+     * 
+     * @param e the exception to check
+     * @return true if the exception indicates DPoP nonce expiration
+     */
+    private boolean isDPoPNonceExpired(Exception e) {
+        if (e == null) {
+            return false;
+        }
+        
+        // Check if the exception class name contains DPoPNonceExpiredException
+        // We use string matching to avoid compile-time dependency
+        String exceptionClass = e.getClass().getName();
+        if (exceptionClass.contains("DPoPNonceExpiredException")) {
+            return true;
+        }
+        
+        // Check cause chain
+        Throwable cause = e.getCause();
+        while (cause != null) {
+            if (cause.getClass().getName().contains("DPoPNonceExpiredException")) {
+                return true;
+            }
+            cause = cause.getCause();
+        }
+        
+        return false;
+    }
+
+    /**
+     * Clear the cached access token to force refresh on next request.
+     * This is called when DPoP nonce expires to trigger a new OAuth2 token request.
+     */
+    private void clearAccessToken() {
+        // Clear the bearer token from OAuth2 authentication
+        // This forces the OAuth2RequestAuthenticator to get a new token on the next request
+        Authentication oauth2Auth = authentications.get("oauth2");
+        if (oauth2Auth != null && oauth2Auth instanceof HttpBearerAuth) {
+            ((HttpBearerAuth) oauth2Auth).setBearerToken((String) null);
+        }
+    }
                                                                                             /**
                                                                                             * Update query and header parameters based on authentication settings.
                                                                                             *

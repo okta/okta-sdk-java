@@ -15,24 +15,6 @@
  */
 package com.okta.sdk.impl.oauth2;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Encoders;
-import io.jsonwebtoken.security.Jwks;
-import io.jsonwebtoken.security.PrivateJwk;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.hc.client5.http.classic.ExecChain;
-import org.apache.hc.client5.http.classic.ExecChainHandler;
-import org.apache.hc.core5.http.ClassicHttpRequest;
-import org.apache.hc.core5.http.ClassicHttpResponse;
-import org.apache.hc.core5.http.Header;
-import org.apache.hc.core5.http.HttpException;
-import org.apache.hc.core5.http.HttpRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -44,7 +26,26 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.hc.client5.http.classic.ExecChain;
+import org.apache.hc.client5.http.classic.ExecChainHandler;
+import org.apache.hc.core5.http.ClassicHttpRequest;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpException;
+import org.apache.hc.core5.http.HttpRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import static com.okta.sdk.impl.oauth2.AccessTokenRetrieverServiceImpl.TOKEN_URI;
+
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Encoders;
+import io.jsonwebtoken.security.Jwks;
+import io.jsonwebtoken.security.PrivateJwk;
 
 /**
  * Interceptor that handle DPoP handshake during auth and adds DPoP header to regular requests.
@@ -79,18 +80,16 @@ public class DPoPInterceptor implements ExecChainHandler {
         throws IOException, HttpException {
         boolean tokenRequest = request.getRequestUri().equals(TOKEN_URI);
         
-        // Check nonce expiration on ALL requests (not just token requests)
-        if (nonce != null && nonceValidUntil != null && nonceValidUntil.isBefore(Instant.now())) {
-            log.info("DPoP nonce expired after {} hours, clearing nonce to force token refresh", 
-                NONCE_VALID_SECONDS / 3600);
-            nonce = null;
-            nonceValidUntil = null;
-            
-            // For regular API calls, we need to force re-authentication by removing the Authorization header
-            // This will cause the request to fail with 401, triggering the OAuth2 flow to get a new token
-            if (!tokenRequest) {
-                log.debug("Removing Authorization header to force token refresh on next request");
-                request.removeHeaders("Authorization");
+        // Check if nonce has expired
+        if (nonce != null && nonceValidUntil.isBefore(Instant.now())) {
+            if (tokenRequest) {
+                log.debug("DPoP nonce expired on token request, will refresh it");
+                nonce = null;
+                nonceValidUntil = null;
+            } else {
+                // Nonce expired on regular API request - need to refresh access token to get new nonce
+                log.info("DPoP nonce expired on API request, triggering token refresh");
+                throw new DPoPNonceExpiredException();
             }
         }
         
