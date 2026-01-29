@@ -1,0 +1,15 @@
+version: 2.1
+
+# This branch contains only static javadoc content
+# No CI/CD needed
+workflows:
+  skip-ci:
+    jobs:
+      - skip
+      
+jobs:
+  skip:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run: echo "Skipping CI for gh-pages branch - static content only"
