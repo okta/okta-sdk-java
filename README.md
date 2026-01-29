@@ -81,7 +81,7 @@ This library uses semantic versioning and follows Okta's [library version policy
 | 22.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-22.0.0))                       |
 | 23.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-23.0.0))                       |
 | 24.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-24.0.0))                       |
-| 25.x.x                                                      | :heavy_check_mark: Stable ([see changes](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-25.0.0), [migration guide](MIGRATING.md#migrating-from-24xx-to-2500)) |
+| 25.x.x                                                      | :heavy_check_mark: Stable ([see v25.0.0](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-25.0.0), [see v25.0.1](https://github.com/okta/okta-sdk-java/releases/tag/okta-sdk-root-25.0.1), [migration guide](MIGRATING.md#migrating-from-24xx-to-2500)) |
 
 The latest release can always be found on the [releases page][github-releases].
 
@@ -94,8 +94,12 @@ If you're upgrading from a previous version, please review the migration guide:
 | 24.x | 25.x | [MIGRATING.md](MIGRATING.md#migrating-from-24xx-to-2500) |
 | 8.x | 10.x | [MIGRATING.md](MIGRATING.md#migrating-from-8xx-to-10xx) |
 
-### Key Changes in v25.0.0
+### Key Changes in v25.x
 
+**v25.0.1 (Breaking Change)**
+- **Breaking Change**: `expirePasswordWithTempPassword` now returns `TempPassword` instead of `User` (#1622)
+
+**v25.0.0 (Major Release)**
 - **OpenAPI Spec Update**: Upgraded to v5.1.0 with 70+ new endpoints
 - **Breaking Changes**: User object schema, Authenticator APIs, Factor APIs, Policy APIs
 - **Custom Deserializers**: 9 new deserializers for proper polymorphic type handling

@@ -1,3 +1,35 @@
+# Release v25.0.1 - Bug Fixes and Cache Improvements
+
+## 🐛 Bug Fixes
+
+- **#1568**: Fixed `unique` property type in `UserSchemaAttribute` and `GroupSchemaAttribute` (changed from boolean to string to support values like 'UNIQUE_VALIDATED')
+- **#1608**: Fixed DPoP nonce expiration causing intermittent "Invalid session" errors after 22-24 hours - SDK now automatically refreshes access token when nonce expires
+- **#1615/#1667**: Fixed `LinksResend.resend` array type issue causing `MismatchedInputException`
+- **#1618**: Fixed cache `ClassCastException` with type validation
+- **#1619**: Fixed `OIDCApplicationBuilder` default name
+- **#1622**: Fixed `expirePasswordWithTempPassword` return type ⚠️ **Breaking Change** - now returns `TempPassword` instead of `User`
+- **#1642**: Added support for custom attributes in `OktaUserGroupProfile`
+- **#1650**: Fixed `PasswordPolicyRule.equals()` to include parent attributes
+- **#1653**: Added missing `rootSessionId` field to `LogAuthenticationContext`
+- **#1600**: Implemented resource-specific cache configuration
+- **#1657**: Upgraded Apache HttpClient5 to 5.5.1 (fixes connection pool leak)
+- **#1666**: Fixed JUnit dependency scope
+
+## � Security Updates
+
+- **#19**: Upgraded Bouncy Castle from 1.78.1 to 1.79 (fixes CVE - Excessive Allocation vulnerability in bcpkix/bcprov)
+- **#11**: Upgraded TestNG from 7.0.0 to 7.5.1 (fixes Path Traversal vulnerability)
+
+## �🔧 Cache System Improvements
+
+- Multi-cache invalidation for nested resources
+- Fixed path matching for `/federated-claims/` and `/group-push/mappings/`
+- Cross-cache invalidation for lifecycle operations
+- Defensive exception handling to prevent cache errors from masking API exceptions
+- **Result**: All 431 integration tests passing
+
+---
+
 # Release v25.0.0 - Major SDK Refactoring and Enhanced Test Coverage
 
 ## 📋 Overview

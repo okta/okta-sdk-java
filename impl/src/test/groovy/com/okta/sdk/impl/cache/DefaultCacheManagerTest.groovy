@@ -90,7 +90,7 @@ class DefaultCacheManagerTest {
         mgr.setDefaultTimeToIdle(tti)
 
         def cache = mgr.getCache('foo')
-        assertEquals cache.timeToIdle.seconds, tti.getSeconds()
+        assertEquals((long) tti.getSeconds(), cache.timeToIdle.seconds)
     }
 
     @Test
@@ -110,8 +110,8 @@ class DefaultCacheManagerTest {
         def string = mgr.toString()
         def json = new JsonSlurper().parseText(string)
 
-        assertEquals json.cacheCount, 2
-        assertEquals json.caches.size(), 2
+        assertEquals 2, (int) json.cacheCount
+        assertEquals 2, (int) json.caches.size()
         assertEquals json.defaultTimeToLive, 'indefinite'
         assertEquals json.defaultTimeToIdle, 'indefinite'
 
@@ -125,11 +125,11 @@ class DefaultCacheManagerTest {
         for(def name : names) {
             def cache = caches.get(name)
             assertEquals cache.name, name
-            assertEquals cache.size, 0
-            assertEquals cache.accessCount, 0
-            assertEquals cache.hitCount, 0
-            assertEquals cache.missCount, 0
-            assertEquals cache.hitRatio, 0.0
+            assertEquals 0, (int) cache.size
+            assertEquals 0, (int) cache.accessCount
+            assertEquals 0, (int) cache.hitCount
+            assertEquals 0, (int) cache.missCount
+            assertEquals 0.0, (double) cache.hitRatio
         }
     }
 

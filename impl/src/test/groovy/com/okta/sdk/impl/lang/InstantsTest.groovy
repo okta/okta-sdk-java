@@ -91,22 +91,22 @@ class InstantsTest {
         Calendar toConvert = Calendar.getInstance(tz)
         Long expected = toConvert.getTimeInMillis() - oneHourOffset // substract the offset corresponding to 1 hour
         long utcTimeStamp = Instants.convertDateToUTC(toConvert.getTimeInMillis(), tz)
-        assertEquals(expected, utcTimeStamp)
+        assertEquals((long) utcTimeStamp, (long) expected)
 
         toConvert = Calendar.getInstance(tg)
         expected = toConvert.getTimeInMillis() + (oneHourOffset * 6) // add the offset corresponding to 6 hours
         utcTimeStamp = Instants.convertDateToUTC(toConvert.getTimeInMillis(), tg)
-        assertEquals(expected, utcTimeStamp)
+        assertEquals((long) utcTimeStamp, (long) expected)
 
         // convertTimeFromUTC
         toConvert = Calendar.getInstance(utc)
         expected = toConvert.getTimeInMillis() - (oneHourOffset * 6) // substract the offset corresponding to 6 hours
         utcTimeStamp = Instants.convertDateToLocalTime(toConvert.getTimeInMillis(), tg)
-        assertEquals(expected, utcTimeStamp)
+        assertEquals((long) utcTimeStamp, (long) expected)
 
         expected = toConvert.getTimeInMillis() + oneHourOffset // add the offset corresponding to 1 hour
         utcTimeStamp = Instants.convertDateToLocalTime(toConvert.getTimeInMillis(), tz)
-        assertEquals(expected, utcTimeStamp)
+        assertEquals((long) utcTimeStamp, (long) expected)
 
         // of(year)
         GregorianCalendar beforeTestCal =  new GregorianCalendar()

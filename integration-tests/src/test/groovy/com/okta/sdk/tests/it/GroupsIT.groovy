@@ -278,23 +278,25 @@ class GroupsIT extends ITSupport {
         // 2. Search the group by name using the search parameter (wait for indexing)
         String searchQuery = "profile.name eq \"${groupName}\""
         
-        // Retry logic to handle indexing delay
+        // Retry logic to handle indexing delay (search indexing can take longer)
         List<Group> searchResults = null
-        int maxRetries = 10
+        int maxRetries = 15  // Increased retries for search indexing
         int retryCount = 0
+        long searchDelay = Math.max(getTestOperationDelay(), 500)  // Minimum 500ms delay for search
         
         while (retryCount < maxRetries) {
             searchResults = groupApi.listGroups(null, null, null, null, null, searchQuery, null, null)
             if (searchResults != null && !searchResults.isEmpty()) {
                 break
             }
-            TimeUnit.MILLISECONDS.sleep(getTestOperationDelay())
+            TimeUnit.MILLISECONDS.sleep(searchDelay)
             retryCount++
         }
 
         // 3. Assert that the search returned our group
         assertThat(searchResults, notNullValue())
-        assertThat(searchResults, not(empty()))
+        assertThat("Search should return at least one result after ${maxRetries} retries", 
+            searchResults, not(empty()))
         assertGroupPresent(searchResults, group)
     }
 
@@ -399,8 +401,30 @@ class GroupsIT extends ITSupport {
             createdGroups.add(group)
         }
 
-        // 2. List groups - verify we get results
-        List<Group> allGroups = groupApi.listGroups(null, null, null, null, null, null, null, null)
+        // 2. List groups with retry logic to handle eventual consistency
+        List<Group> allGroups = null
+        int maxRetries = 10
+        int retryCount = 0
+        boolean allGroupsFound = false
+        
+        while (retryCount < maxRetries && !allGroupsFound) {
+            allGroups = groupApi.listGroups(null, null, null, null, null, null, null, null)
+            
+            // Check if all created groups are present
+            allGroupsFound = true
+            for (Group createdGroup : createdGroups) {
+                boolean found = allGroups.any { it.getId() == createdGroup.getId() }
+                if (!found) {
+                    allGroupsFound = false
+                    break
+                }
+            }
+            
+            if (!allGroupsFound) {
+                TimeUnit.MILLISECONDS.sleep(getTestOperationDelay())
+                retryCount++
+            }
+        }
 
         // 3. Assert that we got groups back
         assertThat(allGroups, notNullValue())

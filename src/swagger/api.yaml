@@ -66328,7 +66328,7 @@ components:
             - $ref: '#/components/schemas/UserSchemaAttributeType'
         unique:
           description: Determines whether property values must be unique
-          type: boolean
+          type: string
           nullable: true
     GroupSchemaBase:
       type: object
@@ -82433,7 +82433,7 @@ components:
             - $ref: '#/components/schemas/UserSchemaAttributeType'
         unique:
           description: Determines whether property values must be unique
-          type: boolean
+          type: string
           nullable: true
       x-okta-allow-null-property-value-for-updates: true
     UserSchemaAttributeEnum:

@@ -30,9 +30,9 @@ class DefaultUserBuilderTest {
     void testSetBcryptPasswordHash() {
         userBuilder.setBcryptPasswordHash("\$2a\$10\$Ro0CUfOqk6cXEKf3dyaM7OhSCvnwM9s4wIX9JeLapehKK5YdLxKcm")
 
-        assertEquals(userBuilder.passwordHashProperties.size(), 4)
+        assertEquals(4, (int) userBuilder.passwordHashProperties.size())
         assertEquals(userBuilder.passwordHashProperties.salt, "Ro0CUfOqk6cXEKf3dyaM7O")
-        assertEquals(userBuilder.passwordHashProperties.workFactor, 10)
+        assertEquals(10, (int) userBuilder.passwordHashProperties.workFactor)
         assertEquals(userBuilder.passwordHashProperties.value, "hSCvnwM9s4wIX9JeLapehKK5YdLxKcm")
         assertEquals(userBuilder.passwordHashProperties.algorithm, "BCRYPT")
     }
