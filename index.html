@@ -1,35 +1,38 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Okta Java SDK Documentation</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-</head>
+
+<html>
 <body>
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="https://developer.okta.com">
-                Okta Developer
-            </a>
-        </div>
-        <p class="navbar-text navbar-right">
-            Version: <div class="btn-group">
-            <a id="currentSelection" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                25.0.0 [Current] <span class="caret"></span>
-            </a>
-            <ul id="versionsList" class="dropdown-menu">
-                <li><a href="25.0.0/apidocs/apidocs/index.html" target="javadocs">25.0.0 [Current]</a></li>
-                <li><a href="20.0.0/apidocs/index.html" target="javadocs">20.0.0</a></li>
-                <li><a href="development/apidocs/index.html" target="javadocs">Development (Latest)</a></li>
-            </ul>
-        </div>
-        </p>
-    </div>
-</nav>
-<iframe style="width: 100%; height: 100vh" src="25.0.0/apidocs/apidocs/index.html" name="javadocs"></iframe>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script>
+    $(function() {
+      $(".dropdown .dropdown-menu li a").click(function(){
+        $(this).parents(".dropdown").find('.dropdown-toggle').html($(this).text() + ' <span class="caret"></span>');
+        $(this).parents(".dropdown").find('.dropdown-toggle').val($(this).data('value'));
+      });
+    });
+</script>
+
+<div class="fill">
+    <ol class="breadcrumb" style="margin-bottom: 0;">
+        <li><a href="/"><img src="images/okta-dev-logo-48.png" style="height:1.7em"></a>
+            <a id="projectLink" href="https://github.com/okta/okta-sdk-java">Okta Java SDK</a>
+        </li>
+        <li class="dropdown">
+            <a id="currentSelection" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                Development [Current] <span class="caret"></span>
+            </a>
+            <ul id="versionsList" class="dropdown-menu">
+
+
+                <li><a href="development/apidocs/index.html" target="javadocs">Development [Current]</a></li>
+
+
+            </ul>
+        </li>
+    </ol>
+    <iframe style="width: 100%; height: 100vh" src="development/apidocs/index.html" name="javadocs"></iframe>
+</div>
 </body>
 </html>
