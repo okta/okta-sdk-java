@@ -115,6 +115,11 @@ public class TerraformHelper {
      * this method retrieves the data from the "create_application" key in Terraform outputs
      * (converts camelCase to snake_case and removes "test_" prefix).
      * 
+     * If the exact key is not found, tries common variations:
+     * - For "add_*" operations, also tries "create_*"
+     * - For "update_*" operations, also tries "replace_*" and "modify_*"
+     * - For "delete_*" operations, also tries "remove_*"
+     * 
      * @param testName the name of the test (e.g., "test_createApplication")
      * @return Map containing test data, or empty map if not found
      */
@@ -128,13 +133,52 @@ public class TerraformHelper {
         // Example: "test_createApplication" -> "create_application"
         String key = convertCamelCaseToSnakeCase(testName);
         
-        if (!terraformOutputs.containsKey(key)) {
-            return new HashMap<>();
+        // Try the exact key first
+        if (terraformOutputs.containsKey(key)) {
+            Object data = terraformOutputs.get(key);
+            if (data instanceof Map) {
+                return (Map<String, Object>) data;
+            }
         }
         
-        Object data = terraformOutputs.get(key);
-        if (data instanceof Map) {
-            return (Map<String, Object>) data;
+        // If exact key not found, try variations
+        java.util.List<String> keyVariations = new java.util.ArrayList<>();
+        
+        // Add operation variations
+        if (key.startsWith("add_")) {
+            // For add_* operations, also try create_*
+            keyVariations.add(key.replaceFirst("^add_", "create_"));
+        } else if (key.startsWith("create_")) {
+            // For create_* operations, also try add_*
+            keyVariations.add(key.replaceFirst("^create_", "add_"));
+        }
+        
+        if (key.startsWith("update_")) {
+            // For update_* operations, also try replace_* and modify_*
+            keyVariations.add(key.replaceFirst("^update_", "replace_"));
+            keyVariations.add(key.replaceFirst("^update_", "modify_"));
+        } else if (key.startsWith("replace_")) {
+            // For replace_* operations, also try update_* and modify_*
+            keyVariations.add(key.replaceFirst("^replace_", "update_"));
+            keyVariations.add(key.replaceFirst("^replace_", "modify_"));
+        }
+        
+        if (key.startsWith("delete_")) {
+            // For delete_* operations, also try remove_*
+            keyVariations.add(key.replaceFirst("^delete_", "remove_"));
+        } else if (key.startsWith("remove_")) {
+            // For remove_* operations, also try delete_*
+            keyVariations.add(key.replaceFirst("^remove_", "delete_"));
+        }
+        
+        // Try each variation
+        for (String variation : keyVariations) {
+            if (terraformOutputs.containsKey(variation)) {
+                Object data = terraformOutputs.get(variation);
+                if (data instanceof Map) {
+                    return (Map<String, Object>) data;
+                }
+            }
         }
         
         return new HashMap<>();

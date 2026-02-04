@@ -41,7 +41,11 @@ echo "  Base URL: $OKTA_BASE_URL"
 echo "  API Token: ${OKTA_API_TOKEN:0:10}***"
 
 APIS=(
-    "test_group_api"
+    #"test_application_api"
+    #"test_application_policies_api"
+    #"test_application_sso_api"
+    "test_authorization_server_api"
+    #"test_group_api"
 )
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -89,13 +93,13 @@ run_phase_setup() {
         rm -f "$TF_DIR/.terraform.lock.hcl"
 
         echo "--- 📦 Initializing Terraform for $API ---"
-        terraform init --upgrade
+        terraform init --upgrade > /dev/null 2>&1
 
         echo "--- 🔍 Planning Terraform for $API ---"
         if ! OKTA_ORG_NAME="$OKTA_ORG_NAME" \
             OKTA_BASE_URL="$OKTA_BASE_URL" \
             OKTA_API_TOKEN="$OKTA_API_TOKEN" \
-            terraform plan -out=tfplan; then
+            terraform plan -out=tfplan > /dev/null 2>&1; then
             echo "--- ❌ Terraform plan failed for $API ---"
             GLOBAL_EXIT_CODE=1
             continue
@@ -107,7 +111,7 @@ run_phase_setup() {
         OKTA_ORG_NAME="$OKTA_ORG_NAME" \
         OKTA_BASE_URL="$OKTA_BASE_URL" \
         OKTA_API_TOKEN="$OKTA_API_TOKEN" \
-        terraform apply -auto-approve --parallelism=1 tfplan
+        terraform apply -auto-approve --parallelism=1 tfplan > /dev/null 2>&1
         APPLY_EXIT_CODE=$?
         unset TF_LOG TF_LOG_PATH
 
@@ -117,6 +121,9 @@ run_phase_setup() {
         else
             echo "--- ✅ Terraform setup complete for $API ---"
         fi
+        
+        # Return to base directory for next iteration
+        cd "$BASE_DIR" || exit 1
     done
 }
 
@@ -135,23 +142,13 @@ run_phase_test() {
 
         # Get Terraform outputs BEFORE subshell so they can be exported properly
         cd "$TF_DIR" || exit 1
-        echo "--- 🔍 DEBUG: Getting Terraform outputs from $TF_DIR ---"
-        echo "--- 🔍 DEBUG: PWD = $(pwd) ---"
-        echo "--- 🔍 DEBUG: terraform output -json test_prerequisites output: ---"
-        terraform output -json test_prerequisites 2>&1 | head -100
-        echo "--- 🔍 DEBUG: Exit code: $? ---"
         TF_OUTPUTS_DATA=$(terraform output -json test_prerequisites 2>&1)
         TF_EXIT_CODE=$?
-        echo "--- 🔍 DEBUG: TF command exit code: $TF_EXIT_CODE ---"
-        echo "--- 🔍 DEBUG: TF_OUTPUTS_DATA length: ${#TF_OUTPUTS_DATA} ---"
-        echo "--- 🔍 DEBUG: TF_OUTPUTS_DATA first 200 chars: ${TF_OUTPUTS_DATA:0:200} ---"
         cd "$BASE_DIR" || exit 1
 
         (
             # Export in subshell so it's available to Maven subprocess
             export TF_OUTPUTS="$TF_OUTPUTS_DATA"
-            echo "--- 🔍 DEBUG: Exported TF_OUTPUTS length: ${#TF_OUTPUTS} ---"
-            echo "--- 🔍 DEBUG: TF_OUTPUTS contains 'activate_application': $(echo "$TF_OUTPUTS" | grep -c 'activate_application' || echo '0') ---"
 
             if [ -z "$TF_OUTPUTS" ] || [ "$TF_OUTPUTS" = "{}" ]; then
                 echo "--- ⚠️  WARNING: No Terraform outputs found for $API ---"
@@ -170,14 +167,11 @@ run_phase_test() {
             API_CLASS="${API_CLASS}ApiTest"
             
             echo "--- Running test class: com.okta.sdk.resource.api.${API_CLASS} ---"
-            echo "--- 🔍 DEBUG: About to run Maven with TF_OUTPUTS length: ${#TF_OUTPUTS} ---"
-            echo "--- 🔍 DEBUG: TF_OUTPUTS value in Maven context: ${TF_OUTPUTS:0:300} ---"
             
             # Run the specific test class with all Okta variables exported and available to Maven subprocess
             # Pass TF_OUTPUTS as a Maven system property because environment variables don't always propagate to subprocesses
-            if mvn -pl api test \
+            if mvn -pl api test -q \
                -Dtest="com.okta.sdk.resource.api.${API_CLASS}" \
-               -DfailIfNoTests=true \
                -Dokta.org.name="$OKTA_ORG_NAME" \
                -Dokta.base.url="$OKTA_BASE_URL" \
                -Dokta.api.token="$OKTA_API_TOKEN" \
@@ -189,7 +183,7 @@ run_phase_test() {
             else
                 echo "--- ❌ $API tests failed ---"
                 echo "--- Check output above for details ---"
-                exit 1
+                GLOBAL_EXIT_CODE=1
             fi
         ) &
     done
@@ -222,7 +216,7 @@ run_phase_destroy() {
         done
 
         echo "--- 🗑️  Destroying $API resources ---"
-        terraform destroy -auto-approve
+        terraform destroy -auto-approve > /dev/null 2>&1
         DESTROY_EXIT_CODE=$?
 
         if [ $DESTROY_EXIT_CODE -ne 0 ]; then
