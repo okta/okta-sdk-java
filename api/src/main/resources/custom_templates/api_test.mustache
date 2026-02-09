@@ -75,7 +75,7 @@ public class {{classname}}Test {
             {{#returnType}}
             {{{returnType}}} response = apiClient.{{operationId}}(
                 {{#allParams}}
-                {{#isBodyParam}}extractParameterWithType(prerequisiteData, "{{paramName}}", null, "{{datatype}}"){{/isBodyParam}}{{^isBodyParam}}extractParameter(prerequisiteData, "{{paramName}}", null){{/isBodyParam}}{{^-last}}, {{/-last}}
+                {{#isBodyParam}}extractParameterWithType(prerequisiteData, "{{paramName}}", null, "{{datatype}}", "{{paramName}}"){{/isBodyParam}}{{^isBodyParam}}extractParameter(prerequisiteData, "{{paramName}}", null){{/isBodyParam}}{{^-last}}, {{/-last}}
                 {{/allParams}}
             );
 
@@ -87,7 +87,7 @@ public class {{classname}}Test {
             {{^returnType}}
             apiClient.{{operationId}}(
                 {{#allParams}}
-                {{#isBodyParam}}extractParameterWithType(prerequisiteData, "{{paramName}}", null, "{{datatype}}"){{/isBodyParam}}{{^isBodyParam}}extractParameter(prerequisiteData, "{{paramName}}", null){{/isBodyParam}}{{^-last}}, {{/-last}}
+                {{#isBodyParam}}extractParameterWithType(prerequisiteData, "{{paramName}}", null, "{{datatype}}", "{{paramName}}"){{/isBodyParam}}{{^isBodyParam}}extractParameter(prerequisiteData, "{{paramName}}", null){{/isBodyParam}}{{^-last}}, {{/-last}}
                 {{/allParams}}
             );
             {{/returnType}}
@@ -126,11 +126,12 @@ public class {{classname}}Test {
      * @param paramName Name of the parameter to extract
      * @param defaultValue Default value if parameter is not found
      * @param targetClassName Fully qualified class name for deserialization
+     * @param typeHint Parameter name hint for intelligent type inference
      * @return The extracted parameter value deserialized to the target class, or default value
      */
     @SuppressWarnings("unchecked")
-    private <T> T extractParameterWithType(Map<String, Object> prerequisiteData, String paramName, T defaultValue, String targetClassName) {
-        Object value = TerraformHelper.extractParameter(prerequisiteData, paramName, defaultValue, targetClassName);
+    private <T> T extractParameterWithType(Map<String, Object> prerequisiteData, String paramName, T defaultValue, String targetClassName, String typeHint) {
+        Object value = TerraformHelper.extractParameter(prerequisiteData, paramName, defaultValue, targetClassName, typeHint);
         return (T) value;
     }
     
