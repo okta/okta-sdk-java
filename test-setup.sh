@@ -41,11 +41,46 @@ echo "  Base URL: $OKTA_BASE_URL"
 echo "  API Token: ${OKTA_API_TOKEN:0:10}***"
 
 APIS=(
-    #"test_application_api"
-    #"test_application_policies_api"
-    #"test_application_sso_api"
-    "test_authorization_server_api"
-    #"test_group_api"
+      "test_application_api"
+  "test_application_groups_api"
+  "test_application_policies_api"
+  "test_application_sso_api"
+  "test_application_users_api"
+  "test_authorization_server_api"
+   "test_behavior_api"
+   "test_captcha_api"
+   "test_custom_domain_api"
+   "test_customization_api"
+   "test_device_assurance_api"
+   "test_email_domain_api"
+   "test_email_server_api"
+  "test_event_hook_api"
+   "test_feature_api"
+   "test_group_api"
+   "test_identity_provider_api"
+   "test_inline_hook_api"
+   "test_linked_object_api"
+   "test_log_stream_api"
+  "test_network_zone_api"
+#   "test_org_setting_api"
+   "test_policy_api"
+  "test_profile_mapping_api"
+   "test_push_provider_api"
+   "test_rate_limit_settings_api"
+   "test_realm_api"
+   "test_resource_set_api"
+   "test_role_api"
+   "test_role_assignment_api"
+   "test_role_target_api"
+   "test_schema_api"
+   "test_subscription_api"
+   "test_system_log_api"
+    "test_template_api"
+   "test_threat_insight_api"
+   "test_trusted_origin_api"
+#  "test_user_api"
+   "test_user_type_api"
+#   "test_authenticator_api"
 )
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -111,7 +146,7 @@ run_phase_setup() {
         OKTA_ORG_NAME="$OKTA_ORG_NAME" \
         OKTA_BASE_URL="$OKTA_BASE_URL" \
         OKTA_API_TOKEN="$OKTA_API_TOKEN" \
-        terraform apply -auto-approve --parallelism=1 tfplan > /dev/null 2>&1
+        terraform apply -auto-approve --parallelism=1 tfplan 
         APPLY_EXIT_CODE=$?
         unset TF_LOG TF_LOG_PATH
 
@@ -132,6 +167,11 @@ run_phase_test() {
     echo "=========================================="
     echo "--- Phase 2: Running tests in parallel ---"
     echo "=========================================="
+    
+    # Clear Maven cache to avoid certificate issues
+    echo "--- Clearing Maven local repository cache ---"
+    find ~/.m2/repository -name "_remote.repositories" -delete 2>/dev/null || true
+    find ~/.m2/repository -name "*.lastUpdated" -delete 2>/dev/null || true
 
     for API in "${APIS[@]}"; do
         TF_DIR="$TERRAFORM_DIR/${API}"
@@ -170,7 +210,8 @@ run_phase_test() {
             
             # Run the specific test class with all Okta variables exported and available to Maven subprocess
             # Pass TF_OUTPUTS as a Maven system property because environment variables don't always propagate to subprocesses
-            if mvn -pl api test -q \
+            # Note: We don't fail on test failures anymore so coverage reports are still generated
+            mvn -U -pl api test \
                -Dtest="com.okta.sdk.resource.api.${API_CLASS}" \
                -Dokta.org.name="$OKTA_ORG_NAME" \
                -Dokta.base.url="$OKTA_BASE_URL" \
@@ -178,17 +219,41 @@ run_phase_test() {
                -Dokta.client.orgurl="$OKTA_CLIENT_ORGURL" \
                -Dokta.client.token="$OKTA_CLIENT_TOKEN" \
                -Dtf.outputs="$TF_OUTPUTS" \
-               -e 2>&1; then
+               -e 2>&1
+            
+            TEST_EXIT_CODE=$?
+            if [ $TEST_EXIT_CODE -eq 0 ]; then
                 echo "--- ✅ $API tests passed ---"
             else
-                echo "--- ❌ $API tests failed ---"
+                echo "--- ⚠️  $API tests failed (exit code: $TEST_EXIT_CODE) ---"
                 echo "--- Check output above for details ---"
+                echo "--- Continuing to next test and coverage report generation ---"
                 GLOBAL_EXIT_CODE=1
             fi
         ) &
     done
 
     wait
+    
+    echo "=========================================="
+    echo "--- Phase 2b: Generating combined coverage report ---"
+    echo "=========================================="
+    
+    # Run coverage report generation without failing on test failures
+    # This aggregates all the coverage data from individual test runs
+    mvn -U -pl coverage \
+        jacoco:report-aggregate \
+        -DskipTests \
+        2>&1
+    
+    COVERAGE_EXIT_CODE=$?
+    if [ $COVERAGE_EXIT_CODE -eq 0 ]; then
+        echo "--- ✅ Coverage report generated successfully ---"
+        echo "--- Coverage report available at: $BASE_DIR/coverage/target/site/jacoco/index.html ---"
+    else
+        echo "--- ⚠️  Coverage report generation had issues (exit code: $COVERAGE_EXIT_CODE) ---"
+        echo "--- Check the coverage module configuration ---"
+    fi
 }
 
 # Phase 3: Cleanup Terraform
@@ -254,8 +319,12 @@ esac
 echo "=========================================="
 if [ $GLOBAL_EXIT_CODE -eq 0 ]; then
     echo "--- ✅ Phase '$PHASE' completed successfully! ---"
+    echo "--- Coverage report available at: ./coverage/target/site/jacoco/index.html ---"
 else
-    echo "--- ❌ Phase '$PHASE' failed. Check logs above. ---"
+    echo "--- ⚠️  Phase '$PHASE' completed with some test failures. ---"
+    echo "--- Coverage report has been generated regardless of test results. ---"
+    echo "--- Coverage report available at: ./coverage/target/site/jacoco/index.html ---"
+    echo "--- Review test output above for failure details. ---"
 fi
 echo "=========================================="
 

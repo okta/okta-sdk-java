@@ -145,7 +145,6 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit-version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -232,7 +231,7 @@
                             <additionalProperties>serializableModel=true</additionalProperties>
                             <skipValidateSpec>true</skipValidateSpec>
                             <generateModelTests>false</generateModelTests>
-                            <generateApiTests>false</generateApiTests>
+                            <generateApiTests>true</generateApiTests>
                             <templateDirectory>src/main/resources/custom_templates</templateDirectory>
                             <library>apache-httpclient</library>
                         </configuration>
