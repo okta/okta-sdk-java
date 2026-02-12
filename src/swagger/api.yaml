@@ -11508,7 +11508,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EmailServerListResponse'
+                $ref: '#/components/schemas/EmailServerResponse'
         '403':
           $ref: '#/components/responses/ErrorAccessDenied403'
         '404':
@@ -64672,12 +64672,9 @@ components:
                 defaultContent:
                   $ref: '#/components/schemas/HrefObject'
     EmailServerListResponse:
-      type: object
-      properties:
-        email-servers:
-          type: array
-          items:
-            $ref: '#/components/schemas/EmailServerResponse'
+      type: array
+      items:
+        $ref: '#/components/schemas/EmailServerResponse'
     EmailServerPost:
       allOf:
         - $ref: '#/components/schemas/EmailServerRequest'
