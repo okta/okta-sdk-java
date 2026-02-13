@@ -508,4 +508,71 @@ class UserResourcesIT extends ITSupport {
             assertThat(e.getCode(), anyOf(equalTo(403), equalTo(404)))
         }
     }
+
+    // ========== Negative Tests ==========
+
+    @Test(groups = "group3")
+    void listAppLinksWithInvalidUserIdTest() {
+        try {
+            userResourcesApi.listAppLinks("INVALID_USER_ID_12345")
+            assertThat("Should throw exception for invalid user ID", false)
+        } catch (ApiException e) {
+            assertThat("Should return 404 for invalid user ID",
+                e.getCode(), equalTo(404))
+        }
+    }
+
+    @Test(groups = "group3")
+    void listUserClientsWithInvalidUserIdTest() {
+        try {
+            userResourcesApi.listUserClients("INVALID_USER_ID_12345")
+            assertThat("Should throw exception for invalid user ID", false)
+        } catch (ApiException e) {
+            assertThat("Should return 404 for invalid user ID",
+                e.getCode(), equalTo(404))
+        }
+    }
+
+    @Test(groups = "group3")
+    void listUserDevicesWithInvalidUserIdTest() {
+        try {
+            userResourcesApi.listUserDevices("INVALID_USER_ID_12345")
+            assertThat("Should throw exception for invalid user ID", false)
+        } catch (ApiException e) {
+            // Devices API returns 400 (invalid cursor) for invalid user IDs
+            assertThat("Should return error for invalid user ID",
+                e.getCode(), anyOf(equalTo(400), equalTo(404)))
+        }
+    }
+
+    @Test(groups = "group3")
+    void listUserGroupsWithInvalidUserIdTest() {
+        try {
+            userResourcesApi.listUserGroups("INVALID_USER_ID_12345")
+            assertThat("Should throw exception for invalid user ID", false)
+        } catch (ApiException e) {
+            assertThat("Should return 404 for invalid user ID",
+                e.getCode(), equalTo(404))
+        }
+    }
+
+    @Test(groups = "group3")
+    void listAppLinksWithEmptyUserIdTest() {
+        try {
+            userResourcesApi.listAppLinks("")
+            assertThat("Should throw exception for empty user ID", false)
+        } catch (Exception e) {
+            // May be ApiException or IllegalArgumentException
+        }
+    }
+
+    @Test(groups = "group3")
+    void listUserGroupsWithEmptyUserIdTest() {
+        try {
+            userResourcesApi.listUserGroups("")
+            assertThat("Should throw exception for empty user ID", false)
+        } catch (Exception e) {
+            // May be ApiException or IllegalArgumentException
+        }
+    }
 }
