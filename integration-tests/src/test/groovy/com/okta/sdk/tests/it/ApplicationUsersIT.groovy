@@ -27,6 +27,8 @@ import org.testng.annotations.AfterClass
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 
+import java.util.concurrent.TimeUnit
+
 import static com.okta.sdk.tests.it.util.Util.expect
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
@@ -494,11 +496,21 @@ class ApplicationUsersIT extends ITSupport {
             logger.debug("Assigned user ${i + 1}/5")
         }
 
-        // Test pagination with limit
-        List<AppUser> firstPage = appUsersApi.listApplicationUsers(testApp.getId(), null, 20, null, null)
+        // Test pagination with limit (retry for eventual consistency — all 5 users may not be visible immediately)
+        List<AppUser> firstPage = null
+        int maxRetries = 15
+        int retryCount = 0
+        while (retryCount < maxRetries) {
+            firstPage = appUsersApi.listApplicationUsers(testApp.getId(), null, 20, null, null)
+            if (firstPage != null && firstPage.size() >= 5) {
+                break
+            }
+            TimeUnit.MILLISECONDS.sleep(1000)
+            retryCount++
+        }
 
         assertThat("First page should not be null", firstPage, notNullValue())
-        assertThat("First page should have at least 5 users", firstPage.size(), greaterThanOrEqualTo(5))
+        assertThat("First page should have at least 5 users after ${retryCount} retries", firstPage.size(), greaterThanOrEqualTo(5))
         logger.debug("First page retrieved with ${firstPage.size()} users")
 
         // Test listing all users
