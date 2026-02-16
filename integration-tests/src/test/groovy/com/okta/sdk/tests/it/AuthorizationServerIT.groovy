@@ -1103,7 +1103,79 @@ class AuthorizationServerIT extends ITSupport {
             println "   ✓ Correctly returned 404 for deleting non-existent policy"
         }
 
+        // Test 16: Create authorization server with empty name
+        println "\n16. Testing create with empty name..."
+        try {
+            def invalidServer = new AuthorizationServer()
+                .name("")  // Empty name should fail validation
+                .description("Invalid server")
+                .audiences(["api://test".toString()])
+            authorizationServerApi.createAuthorizationServer(invalidServer)
+            assert false, "Should have thrown ApiException for empty name"
+        } catch (ApiException e) {
+            assertThat "Should return 400 for empty name", e.code, equalTo(400)
+            println "   ✓ Correctly returned 400 for empty authorization server name"
+        }
+
+        // Test 17: Create authorization server with missing audiences
+        println "\n17. Testing create with missing audiences..."
+        try {
+            def invalidServer = new AuthorizationServer()
+                .name("test-server-invalid")
+                .description("Invalid server without audiences")
+                // Missing audiences
+            authorizationServerApi.createAuthorizationServer(invalidServer)
+            assert false, "Should have thrown ApiException for missing audiences"
+        } catch (ApiException e) {
+            assertThat "Should return 400 for missing audiences", e.code, equalTo(400)
+            println "   ✓ Correctly returned 400 for missing audiences"
+        }
+
         println "\n✅ All negative test cases passed successfully!"
+    }
+
+    /**
+     * Debug test - List authorization servers
+     */
+    @Test(groups = "group3")
+    @Scenario("authorization-server-debug-list-test")
+    void debugListAuthorizationServers() {
+        println "Calling listAuthorizationServersPaged..."
+        def result = []
+        for (def server : authorizationServerApi.listAuthorizationServersPaged(null, null, null)) {
+            result.add(server)
+            println "  - Found server: ${server.name} (${server.id})"
+        }
+
+        println "Total servers found: ${result.size()}"
+
+        assertThat "Result should not be empty", result.size(), greaterThan(0)
+    }
+
+    /**
+     * Test basic authorization server CRUD operations
+     */
+    @Test(groups = "group3")
+    @Scenario("authorization-server-debug-basic")
+    void testBasicAuthServerOperations() {
+        // Test 1: Create an auth server
+        println "Creating new authorization server..."
+        def authServer = new AuthorizationServer()
+            .name("test-server-${UUID.randomUUID().toString().substring(0, 8)}")
+            .description("Debug test server")
+            .audiences(["api://default"])
+
+        def created = authorizationServerApi.createAuthorizationServer(authServer)
+        createdAuthServerIds.add(created.id)
+        println "Created: ${created.id} - ${created.name}"
+        assertThat "Should have ID", created.id, notNullValue()
+
+        // Test 2: Get the auth server
+        def retrieved = authorizationServerApi.getAuthorizationServer(created.id)
+        println "Retrieved: ${retrieved.id} - ${retrieved.name}"
+        assertThat "IDs should match", retrieved.id, equalTo(created.id)
+
+        println "✅ Basic operations test passed!"
     }
 
     /**
