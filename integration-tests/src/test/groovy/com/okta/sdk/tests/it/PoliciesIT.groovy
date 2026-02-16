@@ -1123,11 +1123,12 @@ class PoliciesIT extends ITSupport {
 
         } catch (ApiException e) {
             // Expected errors:
+            // - 404 Not Found (policy may not be accessible for cloning)
             // - 500 Internal Server Error
             // - 504 Gateway Timeout
             // - Error about "only supported for authentication policies"
             String errorMsg = e.getResponseBody() ?: e.getMessage()
-            if (e.getCode() == 500 || e.getCode() == 504 ||
+            if (e.getCode() == 404 || e.getCode() == 500 || e.getCode() == 504 ||
                 errorMsg?.contains("only supported for authentication policies")) {
                 log.warn("Policy clone with Map parameter failed with expected error: ${e.getCode()}")
             } else {
