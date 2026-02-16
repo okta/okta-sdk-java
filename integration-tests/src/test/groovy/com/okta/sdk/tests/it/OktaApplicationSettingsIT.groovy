@@ -190,8 +190,16 @@ class OktaApplicationSettingsIT extends ITSupport {
         assertThat("Third update idle timeout should match", result3.getSessionIdleTimeoutMinutes(), is(60))
         assertThat("Third update max lifetime should match", result3.getSessionMaxLifetimeMinutes(), is(360))
         
-        // Verify final state
-        AdminConsoleSettings finalSettings = settingsApi.getFirstPartyAppSettings(APP_NAME)
+        // Verify final state (retry for eventual consistency)
+        AdminConsoleSettings finalSettings = null
+        int maxRetries = 10
+        for (int i = 0; i < maxRetries; i++) {
+            finalSettings = settingsApi.getFirstPartyAppSettings(APP_NAME)
+            if (finalSettings.getSessionIdleTimeoutMinutes() == 60) {
+                break
+            }
+            TimeUnit.MILLISECONDS.sleep(2000)
+        }
         assertThat("Final idle timeout should match last update", 
             finalSettings.getSessionIdleTimeoutMinutes(), is(60))
         assertThat("Final max lifetime should match last update", 
@@ -216,10 +224,18 @@ class OktaApplicationSettingsIT extends ITSupport {
         assertThat("Minimum max lifetime should be accepted", 
             result.getSessionMaxLifetimeMinutes(), is(5))
         
-        TimeUnit.MILLISECONDS.sleep(getTestOperationDelay())
+        TimeUnit.MILLISECONDS.sleep(Math.max(getTestOperationDelay(), 2000))
         
-        // Verify persistence
-        AdminConsoleSettings verifySettings = settingsApi.getFirstPartyAppSettings(APP_NAME)
+        // Verify persistence (retry for eventual consistency)
+        AdminConsoleSettings verifySettings = null
+        int maxRetries = 10
+        for (int i = 0; i < maxRetries; i++) {
+            verifySettings = settingsApi.getFirstPartyAppSettings(APP_NAME)
+            if (verifySettings.getSessionIdleTimeoutMinutes() == 5) {
+                break
+            }
+            TimeUnit.MILLISECONDS.sleep(2000)
+        }
         assertThat("Persisted minimum idle timeout should match", 
             verifySettings.getSessionIdleTimeoutMinutes(), is(5))
         assertThat("Persisted minimum max lifetime should match", 
@@ -244,14 +260,22 @@ class OktaApplicationSettingsIT extends ITSupport {
         assertThat("Maximum max lifetime should be accepted", 
             result.getSessionMaxLifetimeMinutes(), is(1440))
         
-        TimeUnit.MILLISECONDS.sleep(getTestOperationDelay())
+        TimeUnit.MILLISECONDS.sleep(Math.max(getTestOperationDelay(), 2000))
         
-        // Verify persistence
-        AdminConsoleSettings verifySettings = settingsApi.getFirstPartyAppSettings(APP_NAME)
+        // Verify persistence (retry for eventual consistency)
+        AdminConsoleSettings verifyMaxSettings = null
+        int maxRetries2 = 10
+        for (int i = 0; i < maxRetries2; i++) {
+            verifyMaxSettings = settingsApi.getFirstPartyAppSettings(APP_NAME)
+            if (verifyMaxSettings.getSessionIdleTimeoutMinutes() == 120) {
+                break
+            }
+            TimeUnit.MILLISECONDS.sleep(2000)
+        }
         assertThat("Persisted maximum idle timeout should match", 
-            verifySettings.getSessionIdleTimeoutMinutes(), is(120))
+            verifyMaxSettings.getSessionIdleTimeoutMinutes(), is(120))
         assertThat("Persisted maximum max lifetime should match", 
-            verifySettings.getSessionMaxLifetimeMinutes(), is(1440))
+            verifyMaxSettings.getSessionMaxLifetimeMinutes(), is(1440))
     }
 
     // ========================================
@@ -488,10 +512,18 @@ class OktaApplicationSettingsIT extends ITSupport {
         newSettings.setSessionMaxLifetimeMinutes(900)
         
         settingsApi.replaceFirstPartyAppSettings(APP_NAME, newSettings)
-        TimeUnit.MILLISECONDS.sleep(getTestOperationDelay())
+        TimeUnit.MILLISECONDS.sleep(Math.max(getTestOperationDelay(), 2000))
         
-        // Verify change applied
-        AdminConsoleSettings changedSettings = settingsApi.getFirstPartyAppSettings(APP_NAME)
+        // Verify change applied (retry for eventual consistency)
+        AdminConsoleSettings changedSettings = null
+        int maxRetries = 10
+        for (int i = 0; i < maxRetries; i++) {
+            changedSettings = settingsApi.getFirstPartyAppSettings(APP_NAME)
+            if (changedSettings.getSessionIdleTimeoutMinutes() == 45) {
+                break
+            }
+            TimeUnit.MILLISECONDS.sleep(2000)
+        }
         assertThat("Changed idle timeout should match", 
             changedSettings.getSessionIdleTimeoutMinutes(), is(45))
         
