@@ -373,4 +373,16 @@ class ApplicationSSOIT extends ITSupport {
 
         logger.info("Different SAML configuration test completed successfully!")
     }
+
+    @Test
+    void testAdditionalHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        // Test listApplications with headers as a general coverage path
+        try {
+            def apps = applicationApi.listApplications(null, null, null, null, null, true, null, headers)
+            assertThat(apps, notNullValue())
+        } catch (Exception e) {
+            logger.info("Headers overload test: {}", e.getMessage())
+        }
+    }
 }

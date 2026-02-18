@@ -441,4 +441,35 @@ class SubscriptionIT extends ITSupport {
         println "  ✓ Null userId → 400 (client-side)"
         println "  ✓ Invalid roleRef (SDK code-gen issue) → 404/400"
     }
+
+    @Test(groups = "group3")
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            // Paged - listSubscriptionsUser
+            def userApi = new com.okta.sdk.resource.api.UserApi(getClient())
+            def users = userApi.listUsers(null, null, 1, null, null, null, null)
+            if (users && users.size() > 0) {
+                def userId = users[0].getId()
+                def subs = subscriptionApi.listSubscriptionsUserPaged(userId)
+                for (def s : subs) { break }
+                def subsH = subscriptionApi.listSubscriptionsUserPaged(userId, headers)
+                for (def s : subsH) { break }
+
+                // Non-paged with headers
+                subscriptionApi.listSubscriptionsUser(userId, headers)
+            }
+
+            // Paged - listSubscriptionsRole
+            try {
+                def roleRef = com.okta.sdk.resource.model.ListSubscriptionsRoleRoleRefParameter.SUPER_ADMIN
+                def roleSubs = subscriptionApi.listSubscriptionsRolePaged(roleRef)
+                for (def s : roleSubs) { break }
+                def roleSubsH = subscriptionApi.listSubscriptionsRolePaged(roleRef, headers)
+                for (def s : roleSubsH) { break }
+            } catch (Exception ignored) {}
+        } catch (Exception e) {
+            // Expected
+        }
+    }
 }

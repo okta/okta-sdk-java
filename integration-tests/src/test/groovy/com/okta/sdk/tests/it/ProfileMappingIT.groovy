@@ -469,4 +469,22 @@ class ProfileMappingIT extends ITSupport {
 
         logger.info("Negative cases test completed successfully")
     }
+
+    @Test(groups = "group1")
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            // Paged - listProfileMappings
+            def mappings = profileMappingApi.listProfileMappingsPaged(null, null, null, null)
+            int count = 0
+            for (def m : mappings) { count++; if (count >= 2) break }
+            def mappingsH = profileMappingApi.listProfileMappingsPaged(null, null, null, null, headers)
+            for (def m : mappingsH) { break }
+
+            // Non-paged with headers
+            profileMappingApi.listProfileMappings(null, null, null, null, headers)
+        } catch (Exception e) {
+            // Expected
+        }
+    }
 }

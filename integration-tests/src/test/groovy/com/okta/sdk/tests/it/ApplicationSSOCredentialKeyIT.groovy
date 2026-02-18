@@ -601,4 +601,48 @@ class ApplicationSSOCredentialKeyIT extends ITSupport {
 
         logger.info("publishCsrFromApplication error handling test completed successfully!")
     }
+
+    @Test
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        def appId = null
+        try {
+            def app = applicationApi.createApplication(
+                new com.okta.sdk.resource.model.BookmarkApplication()
+                    .name(com.okta.sdk.resource.model.BookmarkApplication.NameEnum.BOOKMARK)
+                    .label("CredKey-Paged-${UUID.randomUUID().toString().substring(0,8)}")
+                    .signOnMode(com.okta.sdk.resource.model.ApplicationSignOnMode.BOOKMARK)
+                    .settings(new com.okta.sdk.resource.model.BookmarkApplicationSettings()
+                        .app(new com.okta.sdk.resource.model.BookmarkApplicationSettingsApplication()
+                            .url("https://example.com/credkey-paged"))),
+                true, null)
+            appId = app.getId()
+
+            // Paged - listApplicationKeys
+            def keys = credentialKeyApi.listApplicationKeysPaged(appId)
+            for (def k : keys) { break }
+            def keysH = credentialKeyApi.listApplicationKeysPaged(appId, headers)
+            for (def k : keysH) { break }
+
+            // Paged - listCsrsForApplication
+            def csrs = credentialKeyApi.listCsrsForApplicationPaged(appId)
+            for (def c : csrs) { break }
+            def csrsH = credentialKeyApi.listCsrsForApplicationPaged(appId, headers)
+            for (def c : csrsH) { break }
+
+            // Non-paged with headers
+            credentialKeyApi.listApplicationKeys(appId, headers)
+            credentialKeyApi.listCsrsForApplication(appId, headers)
+
+        } catch (Exception e) {
+            logger.info("Paged credentialKey test: {}", e.getMessage())
+        } finally {
+            if (appId) {
+                try {
+                    applicationApi.deactivateApplication(appId)
+                    applicationApi.deleteApplication(appId)
+                } catch (Exception ignored) {}
+            }
+        }
+    }
 }

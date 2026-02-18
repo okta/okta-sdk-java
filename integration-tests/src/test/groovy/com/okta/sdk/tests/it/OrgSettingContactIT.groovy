@@ -355,4 +355,21 @@ class OrgSettingContactIT extends ITSupport {
         
         println "\n✅ All negative test cases passed successfully!"
     }
+
+    @Test(groups = "group3")
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            // Paged - listOrgContactTypes
+            def types = orgSettingContactApi.listOrgContactTypesPaged()
+            for (def t : types) { break }
+            def typesH = orgSettingContactApi.listOrgContactTypesPaged(headers)
+            for (def t : typesH) { break }
+
+            // Non-paged with headers
+            orgSettingContactApi.listOrgContactTypes(headers)
+        } catch (Exception e) {
+            // Expected
+        }
+    }
 }

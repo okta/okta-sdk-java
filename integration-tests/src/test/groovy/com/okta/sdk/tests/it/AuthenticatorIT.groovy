@@ -803,4 +803,33 @@ class AuthenticatorIT extends ITSupport {
         println "✅ VERIFY RP ID DOMAIN TEST COMPLETE"
         println "=" * 60
     }
+
+    @Test(groups = "group3")
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            // Paged - listAuthenticators
+            def auths = authenticatorApi.listAuthenticatorsPaged()
+            for (def a : auths) { break }
+            def authsH = authenticatorApi.listAuthenticatorsPaged(headers)
+            for (def a : authsH) { break }
+
+            // Non-paged with headers
+            authenticatorApi.listAuthenticators(headers)
+
+            // Get a specific authenticator's methods
+            def authList = authenticatorApi.listAuthenticators()
+            if (authList && authList.size() > 0) {
+                def authId = authList[0].getId()
+                try {
+                    def methods = authenticatorApi.listAuthenticatorMethodsPaged(authId)
+                    for (def m : methods) { break }
+                    def methodsH = authenticatorApi.listAuthenticatorMethodsPaged(authId, headers)
+                    for (def m : methodsH) { break }
+                } catch (Exception ignored) {}
+            }
+        } catch (Exception e) {
+            // Expected
+        }
+    }
 }

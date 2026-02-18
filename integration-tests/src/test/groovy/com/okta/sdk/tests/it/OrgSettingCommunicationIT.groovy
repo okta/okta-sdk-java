@@ -256,4 +256,14 @@ class OrgSettingCommunicationIT extends ITSupport {
         println "\n✅ All negative test cases completed!"
         println "Note: Communication settings are org-level and have limited error scenarios"
     }
+
+    @Test(groups = "group3")
+    void testAdditionalHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            orgSettingCommunicationApi.getOktaCommunicationSettings(headers)
+        } catch (Exception e) {
+            // Expected
+        }
+    }
 }

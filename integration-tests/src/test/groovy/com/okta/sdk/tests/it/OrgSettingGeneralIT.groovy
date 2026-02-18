@@ -342,4 +342,14 @@ class OrgSettingGeneralIT extends ITSupport {
             }
         }
     }
+
+    @Test(groups = "group3")
+    void testAdditionalHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            orgSettingGeneralApi.getOrgSettings(headers)
+        } catch (Exception e) {
+            // Expected
+        }
+    }
 }

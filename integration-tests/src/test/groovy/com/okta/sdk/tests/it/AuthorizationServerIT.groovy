@@ -1179,6 +1179,276 @@ class AuthorizationServerIT extends ITSupport {
     }
 
     /**
+     * Test non-paged list overloads and paged overloads with additionalHeaders.
+     * Covers the convenience methods that delegate to the main implementations,
+     * and paged lambdas including subsequent-page branches.
+     */
+    @Test(groups = "group3")
+    @Scenario("authorization-server-list-overloads-coverage")
+    void testListOverloadsAndPagedVariants() {
+        String testId = UUID.randomUUID().toString().substring(0, 8)
+        String authServerId = null
+
+        try {
+            println "Testing list overloads and paged variants..."
+
+            // Create auth server with scope, claim, policy, rule
+            def authServer = new AuthorizationServer()
+                .name("test-overloads-${testId}")
+                .description("Auth server for list overload coverage")
+                .audiences(["api://test-overloads-${testId}".toString()])
+
+            def created = authorizationServerApi.createAuthorizationServer(authServer)
+            authServerId = created.id
+            createdAuthServerIds.add(authServerId)
+
+            // Create scope
+            def scope = authorizationServerScopesApi.createOAuth2Scope(authServerId,
+                new OAuth2Scope().name("cov:scope:${testId}".toString()).displayName("Coverage Scope"))
+
+            // Create claim
+            def claim = authorizationServerClaimsApi.createOAuth2Claim(authServerId,
+                new OAuth2Claim().name("cov_claim_${testId}".toString())
+                    .status(LifecycleStatus.ACTIVE)
+                    .claimType(OAuth2ClaimType.RESOURCE)
+                    .valueType(OAuth2ClaimValueType.EXPRESSION)
+                    .value("user.email"))
+
+            // Create policy
+            def policy = authorizationServerPoliciesApi.createAuthorizationServerPolicy(authServerId,
+                new AuthorizationServerPolicy()
+                    .type(AuthorizationServerPolicy.TypeEnum.OAUTH_AUTHORIZATION_POLICY)
+                    .name("Cov Policy ${testId}".toString())
+                    .description("Coverage policy")
+                    .priority(1)
+                    .conditions(new AuthorizationServerPolicyConditions()
+                        .clients(new ClientPolicyCondition().include(["ALL_CLIENTS"]))))
+
+            // Create rule
+            def rule = authorizationServerRulesApi.createAuthorizationServerPolicyRule(authServerId, policy.id,
+                new AuthorizationServerPolicyRuleRequest()
+                    .name("Cov Rule ${testId}".toString())
+                    .priority(1)
+                    .type(AuthorizationServerPolicyRuleRequest.TypeEnum.RESOURCE_ACCESS)
+                    .conditions(new AuthorizationServerPolicyRuleConditions()
+                        .people(new AuthorizationServerPolicyPeopleCondition()
+                            .groups(new AuthorizationServerPolicyRuleGroupCondition().include(["EVERYONE"])))
+                        .grantTypes(new GrantTypePolicyRuleCondition().include(["authorization_code"]))
+                        .scopes(new OAuth2ScopesMediationPolicyRuleCondition().include([scope.name])))
+                    .actions(new AuthorizationServerPolicyRuleActions()
+                        .token(new TokenAuthorizationServerPolicyRuleAction()
+                            .accessTokenLifetimeMinutes(60)
+                            .refreshTokenLifetimeMinutes(0)
+                            .refreshTokenWindowMinutes(10080))))
+
+            def headers = Collections.emptyMap()
+
+            // ===== NON-PAGED LIST OVERLOADS =====
+            println "\n1. Testing non-paged list overloads..."
+
+            def servers = authorizationServerApi.listAuthorizationServers(null, null, null)
+            assertThat "Should list servers", servers.size(), greaterThan(0)
+            def serversH = authorizationServerApi.listAuthorizationServers(null, null, null, headers)
+            println "   ✓ listAuthorizationServers"
+
+            def scopesList = authorizationServerScopesApi.listOAuth2Scopes(authServerId, null, null, null, null)
+            assertThat "Should list scopes", scopesList.size(), greaterThan(0)
+            authorizationServerScopesApi.listOAuth2Scopes(authServerId, null, null, null, null, headers)
+            println "   ✓ listOAuth2Scopes"
+
+            def claimsList = authorizationServerClaimsApi.listOAuth2Claims(authServerId)
+            assertThat "Should list claims", claimsList.size(), greaterThan(0)
+            authorizationServerClaimsApi.listOAuth2Claims(authServerId, headers)
+            println "   ✓ listOAuth2Claims"
+
+            def policiesList = authorizationServerPoliciesApi.listAuthorizationServerPolicies(authServerId)
+            assertThat "Should list policies", policiesList.size(), greaterThan(0)
+            authorizationServerPoliciesApi.listAuthorizationServerPolicies(authServerId, headers)
+            println "   ✓ listAuthorizationServerPolicies"
+
+            def rulesList = authorizationServerRulesApi.listAuthorizationServerPolicyRules(authServerId, policy.id)
+            assertThat "Should list rules", rulesList.size(), greaterThan(0)
+            authorizationServerRulesApi.listAuthorizationServerPolicyRules(authServerId, policy.id, headers)
+            println "   ✓ listAuthorizationServerPolicyRules"
+
+            def keysList = authorizationServerKeysApi.listAuthorizationServerKeys(authServerId)
+            assertThat "Should list keys", keysList.size(), greaterThan(0)
+            authorizationServerKeysApi.listAuthorizationServerKeys(authServerId, headers)
+            println "   ✓ listAuthorizationServerKeys"
+
+            authorizationServerClientsApi.listOAuth2ClientsForAuthorizationServer(authServerId)
+            authorizationServerClientsApi.listOAuth2ClientsForAuthorizationServer(authServerId, headers)
+            println "   ✓ listOAuth2ClientsForAuthorizationServer"
+
+            oAuth2ResourceServerCredentialsKeysApi.listOAuth2ResourceServerJsonWebKeys(authServerId)
+            oAuth2ResourceServerCredentialsKeysApi.listOAuth2ResourceServerJsonWebKeys(authServerId, headers)
+            println "   ✓ listOAuth2ResourceServerJsonWebKeys"
+
+            // ===== PAGED VARIANTS WITH HEADERS =====
+            println "\n2. Testing paged variants with additionalHeaders..."
+            int count = 0
+
+            for (def s : authorizationServerApi.listAuthorizationServersPaged(null, null, null, headers)) { count++; if (count >= 2) break }
+            println "   ✓ listAuthorizationServersPaged(headers)"
+
+            count = 0
+            for (def s : authorizationServerScopesApi.listOAuth2ScopesPaged(authServerId, null, null, null, null, headers)) { count++; if (count >= 2) break }
+            println "   ✓ listOAuth2ScopesPaged(headers)"
+
+            count = 0
+            for (def c : authorizationServerClaimsApi.listOAuth2ClaimsPaged(authServerId, headers)) { count++; if (count >= 2) break }
+            println "   ✓ listOAuth2ClaimsPaged(headers)"
+
+            count = 0
+            for (def p : authorizationServerPoliciesApi.listAuthorizationServerPoliciesPaged(authServerId, headers)) { count++; if (count >= 2) break }
+            println "   ✓ listAuthorizationServerPoliciesPaged(headers)"
+
+            count = 0
+            for (def r : authorizationServerRulesApi.listAuthorizationServerPolicyRulesPaged(authServerId, policy.id, headers)) { count++; if (count >= 2) break }
+            println "   ✓ listAuthorizationServerPolicyRulesPaged(headers)"
+
+            count = 0
+            for (def k : authorizationServerKeysApi.listAuthorizationServerKeysPaged(authServerId, headers)) { count++; if (count >= 2) break }
+            println "   ✓ listAuthorizationServerKeysPaged(headers)"
+
+            count = 0
+            for (def c : authorizationServerClientsApi.listOAuth2ClientsForAuthorizationServerPaged(authServerId, headers)) { count++; if (count >= 2) break }
+            println "   ✓ listOAuth2ClientsForAuthorizationServerPaged(headers)"
+
+            count = 0
+            for (def k : oAuth2ResourceServerCredentialsKeysApi.listOAuth2ResourceServerJsonWebKeysPaged(authServerId, headers)) { count++; if (count >= 2) break }
+            println "   ✓ listOAuth2ResourceServerJsonWebKeysPaged(headers)"
+
+            // ===== CRUD WITH additionalHeaders =====
+            println "\n3. Testing CRUD with additionalHeaders..."
+
+            authorizationServerApi.getAuthorizationServer(authServerId, headers)
+            println "   ✓ getAuthorizationServer(headers)"
+
+            authorizationServerScopesApi.getOAuth2Scope(authServerId, scope.id, headers)
+            println "   ✓ getOAuth2Scope(headers)"
+
+            authorizationServerClaimsApi.getOAuth2Claim(authServerId, claim.id, headers)
+            println "   ✓ getOAuth2Claim(headers)"
+
+            authorizationServerPoliciesApi.getAuthorizationServerPolicy(authServerId, policy.id, headers)
+            println "   ✓ getAuthorizationServerPolicy(headers)"
+
+            authorizationServerRulesApi.getAuthorizationServerPolicyRule(authServerId, policy.id, rule.id, headers)
+            println "   ✓ getAuthorizationServerPolicyRule(headers)"
+
+            // Lifecycle with headers
+            authorizationServerRulesApi.deactivateAuthorizationServerPolicyRule(authServerId, policy.id, rule.id, headers)
+            authorizationServerRulesApi.activateAuthorizationServerPolicyRule(authServerId, policy.id, rule.id, headers)
+            authorizationServerRulesApi.deleteAuthorizationServerPolicyRule(authServerId, policy.id, rule.id, headers)
+            println "   ✓ rule lifecycle with headers (deactivate/activate/delete)"
+
+            authorizationServerPoliciesApi.deactivateAuthorizationServerPolicy(authServerId, policy.id, headers)
+            authorizationServerPoliciesApi.activateAuthorizationServerPolicy(authServerId, policy.id, headers)
+            authorizationServerPoliciesApi.deleteAuthorizationServerPolicy(authServerId, policy.id, headers)
+            println "   ✓ policy lifecycle with headers"
+
+            authorizationServerScopesApi.deleteOAuth2Scope(authServerId, scope.id, headers)
+            authorizationServerClaimsApi.deleteOAuth2Claim(authServerId, claim.id, headers)
+            println "   ✓ scope/claim delete with headers"
+
+            authorizationServerKeysApi.rotateAuthorizationServerKeys(authServerId, new JwkUse().use(JwkUseType.SIG), headers)
+            println "   ✓ rotateAuthorizationServerKeys(headers)"
+
+            try {
+                count = 0
+                for (def k : authorizationServerKeysApi.rotateAuthorizationServerKeysPaged(authServerId, new JwkUse().use(JwkUseType.SIG))) { count++; if (count >= 2) break }
+                println "   ✓ rotateAuthorizationServerKeysPaged"
+            } catch (Exception e) {
+                println "   ⚠ rotateAuthorizationServerKeysPaged: ${e.message}"
+            }
+
+            // Create/replace with headers
+            def scope2 = authorizationServerScopesApi.createOAuth2Scope(authServerId,
+                new OAuth2Scope().name("cov2:scope:${testId}".toString()), headers)
+            scope2.description = "Updated"
+            authorizationServerScopesApi.replaceOAuth2Scope(authServerId, scope2.id, scope2, headers)
+            println "   ✓ scope create/replace with headers"
+
+            def claim2 = authorizationServerClaimsApi.createOAuth2Claim(authServerId,
+                new OAuth2Claim().name("cov2_claim_${testId}".toString())
+                    .status(LifecycleStatus.ACTIVE).claimType(OAuth2ClaimType.RESOURCE)
+                    .valueType(OAuth2ClaimValueType.EXPRESSION).value("user.email"), headers)
+            claim2.value = "user.login"
+            authorizationServerClaimsApi.replaceOAuth2Claim(authServerId, claim2.id, claim2, headers)
+            println "   ✓ claim create/replace with headers"
+
+            def policy2 = authorizationServerPoliciesApi.createAuthorizationServerPolicy(authServerId,
+                new AuthorizationServerPolicy()
+                    .type(AuthorizationServerPolicy.TypeEnum.OAUTH_AUTHORIZATION_POLICY)
+                    .name("Cov2 Policy ${testId}".toString()).description("Coverage 2").priority(2)
+                    .conditions(new AuthorizationServerPolicyConditions()
+                        .clients(new ClientPolicyCondition().include(["ALL_CLIENTS"]))), headers)
+            policy2.description = "Updated"
+            authorizationServerPoliciesApi.replaceAuthorizationServerPolicy(authServerId, policy2.id, policy2, headers)
+            println "   ✓ policy create/replace with headers"
+
+            def rule2 = authorizationServerRulesApi.createAuthorizationServerPolicyRule(authServerId, policy2.id,
+                new AuthorizationServerPolicyRuleRequest()
+                    .name("Cov2 Rule ${testId}".toString()).priority(1)
+                    .type(AuthorizationServerPolicyRuleRequest.TypeEnum.RESOURCE_ACCESS)
+                    .conditions(new AuthorizationServerPolicyRuleConditions()
+                        .people(new AuthorizationServerPolicyPeopleCondition()
+                            .groups(new AuthorizationServerPolicyRuleGroupCondition().include(["EVERYONE"])))
+                        .grantTypes(new GrantTypePolicyRuleCondition().include(["authorization_code"]))
+                        .scopes(new OAuth2ScopesMediationPolicyRuleCondition().include([scope2.name])))
+                    .actions(new AuthorizationServerPolicyRuleActions()
+                        .token(new TokenAuthorizationServerPolicyRuleAction()
+                            .accessTokenLifetimeMinutes(60).refreshTokenLifetimeMinutes(0).refreshTokenWindowMinutes(10080))), headers)
+
+            def updateRule = new AuthorizationServerPolicyRuleRequest()
+                .name(rule2.name).priority(2)
+                .type(AuthorizationServerPolicyRuleRequest.TypeEnum.RESOURCE_ACCESS)
+                .conditions(rule2.conditions).actions(rule2.actions)
+            authorizationServerRulesApi.replaceAuthorizationServerPolicyRule(authServerId, policy2.id, rule2.id, updateRule, headers)
+            println "   ✓ rule create/replace with headers"
+
+            created.description = "Updated via headers"
+            authorizationServerApi.replaceAuthorizationServer(authServerId, created, headers)
+            println "   ✓ replaceAuthorizationServer(headers)"
+
+            // AssocApi overloads
+            def assocServers = authorizationServerAssocApi.listAssociatedServersByTrustedType(authServerId, true, null, null, null)
+            authorizationServerAssocApi.listAssociatedServersByTrustedType(authServerId, true, null, null, null, headers)
+            println "   ✓ listAssociatedServersByTrustedType"
+
+            // ClientsApi token overloads
+            try { authorizationServerClientsApi.revokeRefreshTokensForAuthorizationServerAndClient(authServerId, "nonexistent", headers) } catch (ApiException e) { }
+            try { authorizationServerClientsApi.revokeRefreshTokenForAuthorizationServerAndClient(authServerId, "nonexistent", "nonexistent", headers) } catch (ApiException e) { }
+            try { authorizationServerClientsApi.getRefreshTokenForAuthorizationServerAndClient(authServerId, "nonexistent", "nonexistent", null, headers) } catch (ApiException e) { }
+            try { authorizationServerClientsApi.listRefreshTokensForAuthorizationServerAndClient(authServerId, "nonexistent", null, null, null) } catch (ApiException e) { }
+            try { authorizationServerClientsApi.listRefreshTokensForAuthorizationServerAndClient(authServerId, "nonexistent", null, null, null, headers) } catch (ApiException e) { }
+            println "   ✓ ClientsApi token overloads (with headers)"
+
+            // Paged refresh token overloads
+            try { for (def t : authorizationServerClientsApi.listRefreshTokensForAuthorizationServerAndClientPaged(authServerId, "nonexistent")) { break } } catch (Exception e) { }
+            try { for (def t : authorizationServerClientsApi.listRefreshTokensForAuthorizationServerAndClientPaged(authServerId, "nonexistent", headers)) { break } } catch (Exception e) { }
+            println "   ✓ ClientsApi paged refresh token overloads"
+
+            // OAuth2ResourceServerCredentialsKeysApi overloads
+            try { oAuth2ResourceServerCredentialsKeysApi.getOAuth2ResourceServerJsonWebKey(authServerId, "nonexistent", headers) } catch (ApiException e) { }
+            println "   ✓ OAuth2ResourceServerCredentialsKeysApi get(headers)"
+
+            // Server lifecycle + delete with headers
+            authorizationServerApi.deactivateAuthorizationServer(authServerId, headers)
+            authorizationServerApi.activateAuthorizationServer(authServerId, headers)
+            println "   ✓ server lifecycle with headers"
+
+            println "\n✅ All list overloads and paged variant tests passed!"
+
+        } catch (ApiException e) {
+            println "❌ Test failed with ApiException: ${e.message}"
+            println "Response body: ${e.responseBody}"
+            throw e
+        }
+    }
+
+    /**
      * Cleanup method to remove all created resources
      */
     @AfterMethod(alwaysRun = true)

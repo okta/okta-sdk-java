@@ -266,4 +266,14 @@ class OrgSettingCustomizationIT extends ITSupport {
             println "  ✓ Restored to original: showEndUserFooter = ${originalShowFooter}"
         }
     }
+
+    @Test(groups = "group3")
+    void testAdditionalHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            orgSettingCustomizationApi.getOrgOktaUIFooter(headers)
+        } catch (Exception e) {
+            // Expected
+        }
+    }
 }

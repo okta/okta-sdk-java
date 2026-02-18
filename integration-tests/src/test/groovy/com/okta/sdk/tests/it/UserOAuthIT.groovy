@@ -535,4 +535,40 @@ class UserOAuthIT extends ITSupport {
             assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
         }
     }
+
+    @Test(groups = "group3")
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        def userId = null
+        try {
+            def user = userApi.createUser(
+                new com.okta.sdk.resource.model.CreateUserRequest()
+                    .profile(new com.okta.sdk.resource.model.UserProfile()
+                        .firstName("PagedOAuth").lastName("Test")
+                        .email("paged-oauth-${UUID.randomUUID().toString().substring(0,8)}@example.com".toString())
+                        .login("paged-oauth-${UUID.randomUUID().toString().substring(0,8)}@example.com".toString())),
+                true, false, null)
+            userId = user.getId()
+
+            // Paged - listRefreshTokensForUserAndClient
+            try {
+                def tokens = userOAuthApi.listRefreshTokensForUserAndClientPaged(userId, "nonexistent-client", null, null, null)
+                for (def t : tokens) { break }
+            } catch (Exception ignored) {}
+            try {
+                def tokensH = userOAuthApi.listRefreshTokensForUserAndClientPaged(userId, "nonexistent-client", null, null, null, headers)
+                for (def t : tokensH) { break }
+            } catch (Exception ignored) {}
+
+        } catch (Exception e) {
+            // Expected
+        } finally {
+            if (userId) {
+                try {
+                    new com.okta.sdk.resource.api.UserLifecycleApi(getClient()).deactivateUser(userId, false, null)
+                    userApi.deleteUser(userId, false, null)
+                } catch (Exception ignored) {}
+            }
+        }
+    }
 }

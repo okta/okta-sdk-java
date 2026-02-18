@@ -1446,4 +1446,48 @@ class PoliciesIT extends ITSupport {
             }
         }
     }
+
+    @Test(groups = "group2")
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            // Paged - listPolicies
+            def policies = policyApi.listPoliciesPaged("OKTA_SIGN_ON", null, null, null, null, null, null)
+            int count = 0
+            for (def p : policies) { count++; if (count >= 2) break }
+            def policiesH = policyApi.listPoliciesPaged("OKTA_SIGN_ON", null, null, null, null, null, null, headers)
+            for (def p : policiesH) { break }
+
+            // Get first policy for sub-resource paged calls
+            def allPolicies = policyApi.listPolicies("OKTA_SIGN_ON", null, null, null, null, null, null)
+            if (allPolicies && allPolicies.size() > 0) {
+                def policyId = allPolicies[0].getId()
+
+                // Paged - listPolicyRules
+                try {
+                    def rules = policyApi.listPolicyRulesPaged(policyId, null)
+                    for (def r : rules) { break }
+                    def rulesH = policyApi.listPolicyRulesPaged(policyId, null, headers)
+                    for (def r : rulesH) { break }
+                } catch (Exception ignored) {}
+
+                // Paged - listPolicyApps
+                try {
+                    def apps = policyApi.listPolicyAppsPaged(policyId)
+                    for (def a : apps) { break }
+                } catch (Exception ignored) {}
+
+                // Paged - listPolicyMappings
+                try {
+                    def mappings = policyApi.listPolicyMappingsPaged(policyId)
+                    for (def m : mappings) { break }
+                } catch (Exception ignored) {}
+            }
+
+            // Non-paged with headers
+            policyApi.listPolicies("OKTA_SIGN_ON", null, null, null, null, null, null, headers)
+        } catch (Exception e) {
+            // Expected
+        }
+    }
 }

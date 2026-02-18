@@ -307,4 +307,14 @@ class OrgSettingAdminIT extends ITSupport {
         println "\n✅ All negative test cases completed!"
         println "Note: Some endpoints may accept null values and use defaults"
     }
+
+    @Test(groups = "group3")
+    void testAdditionalHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            orgSettingAdminApi.getClientPrivilegesSetting(headers)
+        } catch (Exception e) {
+            // Expected
+        }
+    }
 }

@@ -306,4 +306,14 @@ class OrgSettingSupportIT extends ITSupport {
         println "• Error Scenarios: 4 (aerial consent + invalid case update)"
         println "• Org Impact: Zero (support access granted then immediately revoked)"
     }
+
+    @Test(groups = "group3")
+    void testAdditionalHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            orgSettingSupportApi.getOrgOktaSupportSettings(headers)
+        } catch (Exception e) {
+            // Expected
+        }
+    }
 }

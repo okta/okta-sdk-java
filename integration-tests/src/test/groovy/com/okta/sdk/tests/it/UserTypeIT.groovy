@@ -355,4 +355,26 @@ class UserTypeIT extends ITSupport {
             }
         }
     }
+
+    @Test(groups = "group3")
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+
+        // Paged - listUserTypes (no params)
+        def types = userTypeApi.listUserTypesPaged()
+        int count = 0
+        for (def t : types) {
+            count++
+            if (count >= 3) break
+        }
+        assertThat("Should have at least 1 user type (default)", count, greaterThanOrEqualTo(1))
+
+        // Paged with headers
+        def typesH = userTypeApi.listUserTypesPaged(headers)
+        for (def t : typesH) { break }
+
+        // Non-paged with headers
+        def listResult = userTypeApi.listUserTypes(headers)
+        assertThat(listResult, notNullValue())
+    }
 }

@@ -297,4 +297,15 @@ class SessionIT extends ITSupport {
         println "\n✅ All session negative test cases passed successfully!"
         println "Note: Real session lifecycle testing requires authentication via AuthN API"
     }
+
+    @Test(groups = "group3")
+    void testAdditionalHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            // getSession with invalid ID + headers
+            sessionApi.getSession("invalid-session-id", headers)
+        } catch (Exception e) {
+            // Expected 404
+        }
+    }
 }

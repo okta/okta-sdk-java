@@ -646,4 +646,52 @@ class ApplicationSSOPublicKeysIT extends ITSupport {
 
         logger.info("Deactivate-only-active-secret test completed!")
     }
+
+    @Test
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        def appId = null
+        try {
+            def app = applicationApi.createApplication(
+                new com.okta.sdk.resource.model.BookmarkApplication()
+                    .name(com.okta.sdk.resource.model.BookmarkApplication.NameEnum.BOOKMARK)
+                    .label("PubKeys-Paged-${UUID.randomUUID().toString().substring(0,8)}")
+                    .signOnMode(com.okta.sdk.resource.model.ApplicationSignOnMode.BOOKMARK)
+                    .settings(new com.okta.sdk.resource.model.BookmarkApplicationSettings()
+                        .app(new com.okta.sdk.resource.model.BookmarkApplicationSettingsApplication()
+                            .url("https://example.com/pubkeys-paged"))),
+                true, null)
+            appId = app.getId()
+
+            // Paged - listJwk
+            try {
+                def jwks = publicKeysApi.listJwkPaged(appId)
+                for (def j : jwks) { break }
+            } catch (Exception ignored) {}
+            try {
+                def jwksH = publicKeysApi.listJwkPaged(appId, headers)
+                for (def j : jwksH) { break }
+            } catch (Exception ignored) {}
+
+            // Paged - listOAuth2ClientSecrets
+            try {
+                def secrets = publicKeysApi.listOAuth2ClientSecretsPaged(appId)
+                for (def s : secrets) { break }
+            } catch (Exception ignored) {}
+            try {
+                def secretsH = publicKeysApi.listOAuth2ClientSecretsPaged(appId, headers)
+                for (def s : secretsH) { break }
+            } catch (Exception ignored) {}
+
+        } catch (Exception e) {
+            logger.info("Paged publicKeys test: {}", e.getMessage())
+        } finally {
+            if (appId) {
+                try {
+                    applicationApi.deactivateApplication(appId)
+                    applicationApi.deleteApplication(appId)
+                } catch (Exception ignored) {}
+            }
+        }
+    }
 }

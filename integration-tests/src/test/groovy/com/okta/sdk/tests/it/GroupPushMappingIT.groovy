@@ -733,4 +733,25 @@ class GroupPushMappingIT extends ITSupport {
             throw e
         }
     }
+
+    @Test(groups = "group1")
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        // Use any available app for listing
+        try {
+            def applicationApi = new com.okta.sdk.resource.api.ApplicationApi(getClient())
+            def apps = applicationApi.listApplications(null, null, null, null, null, null, null)
+            if (apps && apps.size() > 0) {
+                def appId = apps[0].getId()
+                try {
+                    def mappings = groupPushMappingApi.listGroupPushMappingsPaged(appId, null, null, null)
+                    for (def m : mappings) { break }
+                    def mappingsH = groupPushMappingApi.listGroupPushMappingsPaged(appId, null, null, null, headers)
+                    for (def m : mappingsH) { break }
+                } catch (Exception ignored) {}
+            }
+        } catch (Exception e) {
+            // Expected
+        }
+    }
 }

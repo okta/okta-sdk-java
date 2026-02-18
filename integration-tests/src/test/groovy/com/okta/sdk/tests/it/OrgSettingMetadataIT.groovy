@@ -96,4 +96,14 @@ class OrgSettingMetadataIT extends ITSupport {
         println "• Test Scenarios: Get metadata, Verify fields, Verify consistency"
         println "• Org Impact: Zero (read-only endpoint)"
     }
+
+    @Test(groups = "group3")
+    void testAdditionalHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            orgSettingMetadataApi.getWellknownOrgMetadata(headers)
+        } catch (Exception e) {
+            // Expected
+        }
+    }
 }

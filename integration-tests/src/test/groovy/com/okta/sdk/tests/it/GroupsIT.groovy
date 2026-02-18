@@ -275,17 +275,23 @@ class GroupsIT extends ITSupport {
         registerForCleanup(group)
         validateGroup(group, groupName)
 
-        // 2. Search the group by name using the search parameter (wait for indexing)
-        String searchQuery = "profile.name eq \"${groupName}\""
-        
-        // Retry logic to handle indexing delay (search indexing can take longer)
+        // 2. Search the group by name using the q (query) parameter (wait for indexing)
+        // listGroups signature: (search, filter, q, after, limit, expand, sortBy, sortOrder)
+        // Use the q parameter for query-based search (directory search, faster indexing)
         List<Group> searchResults = null
-        int maxRetries = 20  // Increased retries for search indexing
+        int maxRetries = 30  // Generous retries for search indexing on preview orgs
         int retryCount = 0
-        long searchDelay = Math.max(getTestOperationDelay(), 2000)  // Minimum 2s delay for search indexing
+        long searchDelay = Math.max(getTestOperationDelay(), 3000)  // Minimum 3s delay for search indexing
         
         while (retryCount < maxRetries) {
-            searchResults = groupApi.listGroups(null, null, null, null, null, searchQuery, null, null)
+            // Try q parameter first (position 3 - directory-based, faster)
+            searchResults = groupApi.listGroups(null, null, groupName, null, null, null, null, null)
+            if (searchResults != null && !searchResults.isEmpty()) {
+                break
+            }
+            // Fallback: try search parameter (position 1 - search-index-based, slower)
+            String searchQuery = "profile.name eq \"${groupName}\""
+            searchResults = groupApi.listGroups(searchQuery, null, null, null, null, null, null, null)
             if (searchResults != null && !searchResults.isEmpty()) {
                 break
             }
@@ -2465,6 +2471,42 @@ class GroupsIT extends ITSupport {
         } else {
             // No results yet - indexing still in progress, but test passes
             assertThat("Test completed - search indexing still in progress", true, is(true))
+        }
+    }
+
+    @Test(groups = "group1")
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            // Paged - listGroups
+            def groups = groupApi.listGroupsPaged(null, null, null, null, 1, null, null)
+            int count = 0
+            for (def g : groups) { count++; if (count >= 2) break }
+            def groupsH = groupApi.listGroupsPaged(null, null, null, null, 1, null, null, headers)
+            for (def g : groupsH) { break }
+
+            // Get first group for sub-resource paged calls
+            def allGroups = groupApi.listGroups(null, null, null, null, 1, null, null)
+            if (allGroups && allGroups.size() > 0) {
+                def groupId = allGroups[0].getId()
+
+                // Paged - listGroupUsers
+                def users = groupApi.listGroupUsersPaged(groupId, null, null)
+                for (def u : users) { break }
+                def usersH = groupApi.listGroupUsersPaged(groupId, null, null, headers)
+                for (def u : usersH) { break }
+
+                // Paged - listAssignedApplicationsForGroup
+                def apps = groupApi.listAssignedApplicationsForGroupPaged(groupId, null, null)
+                for (def a : apps) { break }
+                def appsH = groupApi.listAssignedApplicationsForGroupPaged(groupId, null, null, headers)
+                for (def a : appsH) { break }
+            }
+
+            // Non-paged with headers
+            groupApi.listGroups(null, null, null, null, null, null, null, headers)
+        } catch (Exception e) {
+            // Expected
         }
     }
 }

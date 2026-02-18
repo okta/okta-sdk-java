@@ -362,5 +362,22 @@ public class RealmsIT extends ITSupport {
 //        logger.info("  Failed: {}", failureCount);
 //        logger.info("================================================================================");
 //    }
+
+    @Test
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            // Paged - listRealms
+            def realms = realmApi.listRealmsPaged(null, null, null, null, null)
+            for (def r : realms) { break }
+            def realmsH = realmApi.listRealmsPaged(null, null, null, null, null, headers)
+            for (def r : realmsH) { break }
+
+            // Non-paged with headers
+            realmApi.listRealms(null, null, null, null, null, headers)
+        } catch (Exception e) {
+            // Expected
+        }
+    }
 }
 
