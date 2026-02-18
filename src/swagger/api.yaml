@@ -64847,9 +64847,9 @@ components:
               description: The list of geolocations to include or exclude for an Enhanced Dynamic Network Zone
               properties:
                 include:
-                    - $ref: '#/components/schemas/NetworkZoneLocationArray'
+                  $ref: '#/components/schemas/NetworkZoneLocationArray'
                 exclude:
-                    - $ref: '#/components/schemas/NetworkZoneLocationArray'
+                  $ref: '#/components/schemas/NetworkZoneLocationArray'
             ipServiceCategories:
               x-okta-lifecycle:
                 lifecycle: GA
@@ -70184,15 +70184,15 @@ components:
           nullable: false
           enum:
             - sig
-        discriminator:
-          propertyName: kty
-          mapping:
-            RSA: '#/components/schemas/OAuth2ClientJsonWebKeyRsaRequest'
-            EC: '#/components/schemas/OAuth2ClientJsonWebKeyECRequest'
-        required:
-          - kty
-          - alg
-          - use
+      discriminator:
+        propertyName: kty
+        mapping:
+          RSA: '#/components/schemas/OAuth2ClientJsonWebKeyRsaRequest'
+          EC: '#/components/schemas/OAuth2ClientJsonWebKeyECRequest'
+      required:
+        - kty
+        - alg
+        - use
     OAuth2ClientJsonSigningKeyResponse:
       title: Signing Key
       description: A [JSON Web Key (JWK)](https://tools.ietf.org/html/rfc7517) is a JSON representation of a cryptographic key. Okta uses signing keys to verify the signature of a JWT when provided for the `private_key_jwt` client authentication method or for a signed authorize request object. Okta supports both RSA and Elliptic Curve (EC) keys for signing tokens.
@@ -70284,7 +70284,7 @@ components:
         y:
           type: string
           description: The public y coordinate for the elliptic curve point
-          nullabe: false
+          nullable: false
         crv:
           type: string
           description: The cryptographic curve used with the key
