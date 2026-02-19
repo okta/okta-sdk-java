@@ -181,10 +181,22 @@ class GroupsIT extends ITSupport {
             List<String> usersCopy = new ArrayList<>(usersToCleanup)
             for (String userId : usersCopy) {
                 try {
-                    logger.debug("Deactivating and deleting user: {}", userId)
-                    userLifecycleApi.deactivateUser(userId, false, null)
-                    TimeUnit.MILLISECONDS.sleep(500)
-                    userApi.deleteUser(userId, false, null)
+                    logger.debug("Deleting user: {}", userId)
+                    User currentUser = userApi.getUser(userId, null, null)
+                    if (currentUser.getStatus() == UserStatus.STAGED) {
+                        // STAGED users cannot be deactivated via lifecycle endpoint;
+                        // call deleteUser twice: first deactivates, second permanently deletes
+                        userApi.deleteUser(userId, false, null)
+                        userApi.deleteUser(userId, false, null)
+                    } else if (currentUser.getStatus() == UserStatus.DEPROVISIONED) {
+                        // Already deactivated - permanently delete
+                        userApi.deleteUser(userId, false, null)
+                    } else {
+                        // ACTIVE, LOCKED_OUT, RECOVERY, SUSPENDED, etc.
+                        userLifecycleApi.deactivateUser(userId, false, null)
+                        TimeUnit.MILLISECONDS.sleep(500)
+                        userApi.deleteUser(userId, false, null)
+                    }
                     logger.debug("Successfully deleted user: {}", userId)
                 } catch (ApiException e) {
                     if (e.getCode() == 404) {

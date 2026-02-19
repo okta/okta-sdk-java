@@ -23,6 +23,8 @@ import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Integration tests for OrgSettingCustomization API
@@ -35,6 +37,9 @@ import static org.hamcrest.Matchers.*
  * Note: These are org-wide UI preferences. Tests restore original values after testing.
  */
 class OrgSettingCustomizationIT extends ITSupport {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrgSettingCustomizationIT)
+
 
     private OrgSettingCustomizationApi orgSettingCustomizationApi
 
@@ -60,15 +65,15 @@ class OrgSettingCustomizationIT extends ITSupport {
         Boolean originalShowFooter = null
 
         try {
-            println "\n" + "=".multiply(60)
-            println "TESTING ORG CUSTOMIZATION PREFERENCES API"
-            println "=".multiply(60)
-            println "Note: All settings will be restored to original values"
+            logger.debug("\n" + "=".multiply(60))
+            logger.debug("TESTING ORG CUSTOMIZATION PREFERENCES API")
+            logger.debug("=".multiply(60))
+            logger.debug("Note: All settings will be restored to original values")
 
             // ========================================
             // Step 1: Get current org preferences
             // ========================================
-            println "\n1. GET /api/v1/org/preferences"
+            logger.debug("\n1. GET /api/v1/org/preferences")
             OrgPreferences currentPrefs = orgSettingCustomizationApi.getOrgPreferences()
             originalShowFooter = currentPrefs.getShowEndUserFooter()
 
@@ -76,21 +81,21 @@ class OrgSettingCustomizationIT extends ITSupport {
             assertThat "showEndUserFooter should not be null",
                        currentPrefs.getShowEndUserFooter(), notNullValue()
 
-            println "  ✓ Current setting: showEndUserFooter = ${originalShowFooter}"
+            logger.debug("   Current setting: showEndUserFooter = {}", originalShowFooter)
 
             if (originalShowFooter) {
-                println "  → Footer is currently VISIBLE"
+                logger.debug("   Footer is currently VISIBLE")
             } else {
-                println "  → Footer is currently HIDDEN"
+                logger.debug("   Footer is currently HIDDEN")
             }
 
             // ========================================
             // Step 2: Toggle footer visibility
             // ========================================
             if (originalShowFooter) {
-                // Currently showing footer → hide it first, then restore
-                println "\n2. POST /api/v1/org/preferences/hideEndUserFooter"
-                println "   (Hiding the end user dashboard footer)"
+                // Currently showing footer  hide it first, then restore
+                logger.debug("\n2. POST /api/v1/org/preferences/hideEndUserFooter")
+                logger.debug("   (Hiding the end user dashboard footer)")
 
                 OrgPreferences hiddenPrefs = orgSettingCustomizationApi.setOrgHideOktaUIFooter()
 
@@ -98,23 +103,23 @@ class OrgSettingCustomizationIT extends ITSupport {
                 assertThat "showEndUserFooter should be false after hiding",
                            hiddenPrefs.getShowEndUserFooter(), equalTo(false)
 
-                println "  ✓ Successfully hidden: showEndUserFooter = ${hiddenPrefs.getShowEndUserFooter()}"
+                logger.debug("   Successfully hidden: showEndUserFooter = {}", hiddenPrefs.getShowEndUserFooter())
 
                 // Verify the change persisted via GET
                 // Note: The POST response already validated the value. The GET may return
                 // a stale cached value due to SDK caching / eventual consistency.
-                println "\n   Verifying change via GET..."
+                logger.debug("\n   Verifying change via GET...")
                 OrgPreferences verifyPrefs = orgSettingCustomizationApi.getOrgPreferences()
                 assertThat "GET should return preferences", verifyPrefs, notNullValue()
                 if (verifyPrefs.getShowEndUserFooter() == false) {
-                    println "  ✓ Verified: footer is hidden"
+                    logger.debug("   Verified: footer is hidden")
                 } else {
-                    println "  ⚠ GET returned showEndUserFooter=${verifyPrefs.getShowEndUserFooter()} (stale cache); POST response already confirmed hide succeeded"
+                    logger.debug("   GET returned showEndUserFooter={} (stale cache); POST response already confirmed hide succeeded", verifyPrefs.getShowEndUserFooter())
                 }
 
                 // Restore: show footer again
-                println "\n3. POST /api/v1/org/preferences/showEndUserFooter"
-                println "   (Restoring footer to original visible state)"
+                logger.debug("\n3. POST /api/v1/org/preferences/showEndUserFooter")
+                logger.debug("   (Restoring footer to original visible state)")
 
                 OrgPreferences restoredPrefs = orgSettingCustomizationApi.setOrgShowOktaUIFooter()
 
@@ -122,13 +127,13 @@ class OrgSettingCustomizationIT extends ITSupport {
                 assertThat "showEndUserFooter should be true after showing",
                            restoredPrefs.getShowEndUserFooter(), equalTo(true)
 
-                println "  ✓ Restored: showEndUserFooter = ${restoredPrefs.getShowEndUserFooter()}"
-                println "  ✅ Restored to original state (footer visible)"
+                logger.debug("   Restored: showEndUserFooter = {}", restoredPrefs.getShowEndUserFooter())
+                logger.debug("   Restored to original state (footer visible)")
 
             } else {
-                // Currently hidden → show it first, then restore
-                println "\n2. POST /api/v1/org/preferences/showEndUserFooter"
-                println "   (Showing the end user dashboard footer)"
+                // Currently hidden  show it first, then restore
+                logger.debug("\n2. POST /api/v1/org/preferences/showEndUserFooter")
+                logger.debug("   (Showing the end user dashboard footer)")
 
                 OrgPreferences shownPrefs = orgSettingCustomizationApi.setOrgShowOktaUIFooter()
 
@@ -136,23 +141,23 @@ class OrgSettingCustomizationIT extends ITSupport {
                 assertThat "showEndUserFooter should be true after showing",
                            shownPrefs.getShowEndUserFooter(), equalTo(true)
 
-                println "  ✓ Successfully shown: showEndUserFooter = ${shownPrefs.getShowEndUserFooter()}"
+                logger.debug("   Successfully shown: showEndUserFooter = {}", shownPrefs.getShowEndUserFooter())
 
                 // Verify the change persisted via GET
                 // Note: The POST response already validated the value. The GET may return
                 // a stale cached value due to SDK caching / eventual consistency.
-                println "\n   Verifying change via GET..."
+                logger.debug("\n   Verifying change via GET...")
                 OrgPreferences verifyPrefs = orgSettingCustomizationApi.getOrgPreferences()
                 assertThat "GET should return preferences", verifyPrefs, notNullValue()
                 if (verifyPrefs.getShowEndUserFooter() == true) {
-                    println "  ✓ Verified: footer is visible"
+                    logger.debug("   Verified: footer is visible")
                 } else {
-                    println "  ⚠ GET returned showEndUserFooter=${verifyPrefs.getShowEndUserFooter()} (stale cache); POST response already confirmed show succeeded"
+                    logger.debug("   GET returned showEndUserFooter={} (stale cache); POST response already confirmed show succeeded", verifyPrefs.getShowEndUserFooter())
                 }
 
                 // Restore: hide footer again
-                println "\n3. POST /api/v1/org/preferences/hideEndUserFooter"
-                println "   (Restoring footer to original hidden state)"
+                logger.debug("\n3. POST /api/v1/org/preferences/hideEndUserFooter")
+                logger.debug("   (Restoring footer to original hidden state)")
 
                 OrgPreferences restoredPrefs = orgSettingCustomizationApi.setOrgHideOktaUIFooter()
 
@@ -160,61 +165,61 @@ class OrgSettingCustomizationIT extends ITSupport {
                 assertThat "showEndUserFooter should be false after hiding",
                            restoredPrefs.getShowEndUserFooter(), equalTo(false)
 
-                println "  ✓ Restored: showEndUserFooter = ${restoredPrefs.getShowEndUserFooter()}"
-                println "  ✅ Restored to original state (footer hidden)"
+                logger.debug("   Restored: showEndUserFooter = {}", restoredPrefs.getShowEndUserFooter())
+                logger.debug("   Restored to original state (footer hidden)")
             }
 
             // ========================================
             // Summary
             // ========================================
-            println "\n" + "=".multiply(60)
-            println "✅ ALL ORG CUSTOMIZATION PREFERENCES API TESTS COMPLETE"
-            println "=".multiply(60)
-            println "\n=== API Coverage Summary ==="
-            println "All 3 OrgSettingCustomization API endpoints tested:"
-            println "  ✓ GET  /api/v1/org/preferences"
-            println "  ✓ POST /api/v1/org/preferences/hideEndUserFooter"
-            println "  ✓ POST /api/v1/org/preferences/showEndUserFooter"
-            println "\n=== Cleanup Summary ==="
-            println "  ✓ Footer Preference: Restored to showEndUserFooter = ${originalShowFooter}"
-            println "\n=== Test Results ==="
-            println "• Total Endpoints: 3"
-            println "• Endpoints Tested: 3 (100%)"
-            println "• Test Scenarios: Get current, Toggle settings, Verify responses, Restore"
-            println "• Org Impact: Zero (settings restored to original)"
+            logger.debug("\n" + "=".multiply(60))
+            logger.debug(" ALL ORG CUSTOMIZATION PREFERENCES API TESTS COMPLETE")
+            logger.debug("=".multiply(60))
+            logger.debug("\n=== API Coverage Summary ===")
+            logger.debug("All 3 OrgSettingCustomization API endpoints tested:")
+            logger.debug("   GET  /api/v1/org/preferences")
+            logger.debug("   POST /api/v1/org/preferences/hideEndUserFooter")
+            logger.debug("   POST /api/v1/org/preferences/showEndUserFooter")
+            logger.debug("\n=== Cleanup Summary ===")
+            logger.debug("   Footer Preference: Restored to showEndUserFooter = {}", originalShowFooter)
+            logger.debug("\n=== Test Results ===")
+            logger.debug(" Total Endpoints: 3")
+            logger.debug(" Endpoints Tested: 3 (100%)")
+            logger.debug(" Test Scenarios: Get current, Toggle settings, Verify responses, Restore")
+            logger.debug(" Org Impact: Zero (settings restored to original)")
 
         } catch (Exception e) {
-            println "\n❌ Test failed with exception: ${e.message}"
+            logger.debug("\n Test failed with exception: {}", e.message)
             if (e instanceof ApiException) {
-                println "Response code: ${((ApiException) e).code}"
-                println "Response body: ${((ApiException) e).responseBody}"
+                logger.debug("Response code: {}", ((ApiException) e).code)
+                logger.debug("Response body: {}", ((ApiException) e).responseBody)
             }
 
             // Attempt emergency restoration
-            println "\n=== Emergency Cleanup Attempt ==="
+            logger.debug("\n=== Emergency Cleanup Attempt ===")
             try {
                 if (originalShowFooter != null) {
-                    println "Restoring footer preference to original value..."
+                    logger.debug("Restoring footer preference to original value...")
 
                     if (originalShowFooter) {
                         orgSettingCustomizationApi.setOrgShowOktaUIFooter()
-                        println "  ✓ Restored to visible"
+                        logger.debug("   Restored to visible")
                     } else {
                         orgSettingCustomizationApi.setOrgHideOktaUIFooter()
-                        println "  ✓ Restored to hidden"
+                        logger.debug("   Restored to hidden")
                     }
 
                     // Verify restoration
                     OrgPreferences restoredPrefs = orgSettingCustomizationApi.getOrgPreferences()
                     if (restoredPrefs.getShowEndUserFooter() == originalShowFooter) {
-                        println "  ✓ Emergency restoration verified"
+                        logger.debug("   Emergency restoration verified")
                     } else {
-                        println "  ⚠ Emergency restoration may have failed"
+                        logger.debug("   Emergency restoration may have failed")
                     }
                 }
-                println "=== Emergency Cleanup Complete ==="
+                logger.debug("=== Emergency Cleanup Complete ===")
             } catch (Exception cleanupException) {
-                println "⚠ Emergency cleanup failed: ${cleanupException.message}"
+                logger.debug(" Emergency cleanup failed: {}", cleanupException.message)
             }
 
             throw e
@@ -225,9 +230,7 @@ class OrgSettingCustomizationIT extends ITSupport {
     void testOrgCustomizationIdempotency() {
         orgSettingCustomizationApi = new OrgSettingCustomizationApi(getClient())
 
-        println "\n" + "=" * 60
-        println "TESTING ORG CUSTOMIZATION IDEMPOTENCY"
-        println "=" * 60
+        logger.debug("TESTING ORG CUSTOMIZATION IDEMPOTENCY")
 
         // Save original state
         OrgPreferences original = orgSettingCustomizationApi.getOrgPreferences()
@@ -235,26 +238,26 @@ class OrgSettingCustomizationIT extends ITSupport {
 
         try {
             // Test 1: Calling setOrgShowOktaUIFooter twice should be idempotent
-            println "\n1. Testing show footer idempotency (calling twice)..."
+            logger.debug("\n1. Testing show footer idempotency (calling twice)...")
             OrgPreferences result1 = orgSettingCustomizationApi.setOrgShowOktaUIFooter()
             OrgPreferences result2 = orgSettingCustomizationApi.setOrgShowOktaUIFooter()
             assertThat "Both show calls should return same state",
                        result1.getShowEndUserFooter(), equalTo(result2.getShowEndUserFooter())
             assertThat "Both should show footer as true",
                        result2.getShowEndUserFooter(), equalTo(true)
-            println "   ✓ Show footer is idempotent"
+            logger.debug("    Show footer is idempotent")
 
             // Test 2: Calling setOrgHideOktaUIFooter twice should be idempotent
-            println "\n2. Testing hide footer idempotency (calling twice)..."
+            logger.debug("\n2. Testing hide footer idempotency (calling twice)...")
             OrgPreferences result3 = orgSettingCustomizationApi.setOrgHideOktaUIFooter()
             OrgPreferences result4 = orgSettingCustomizationApi.setOrgHideOktaUIFooter()
             assertThat "Both hide calls should return same state",
                        result3.getShowEndUserFooter(), equalTo(result4.getShowEndUserFooter())
             assertThat "Both should show footer as false",
                        result4.getShowEndUserFooter(), equalTo(false)
-            println "   ✓ Hide footer is idempotent"
+            logger.debug("    Hide footer is idempotent")
 
-            println "\n✅ All idempotency tests passed!"
+            logger.debug("\n All idempotency tests passed!")
 
         } finally {
             // Restore original state
@@ -263,7 +266,7 @@ class OrgSettingCustomizationIT extends ITSupport {
             } else {
                 orgSettingCustomizationApi.setOrgHideOktaUIFooter()
             }
-            println "  ✓ Restored to original: showEndUserFooter = ${originalShowFooter}"
+            logger.debug("   Restored to original: showEndUserFooter = {}", originalShowFooter)
         }
     }
 

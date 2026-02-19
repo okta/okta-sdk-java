@@ -684,7 +684,7 @@ class GroupPushMappingIT extends ITSupport {
             // Verify initial state
             assertThat("Initial status should be ACTIVE", mapping.getStatus(), is(GroupPushMappingStatus.ACTIVE))
 
-            // Transition 1: ACTIVE → INACTIVE
+            // Transition 1: ACTIVE  INACTIVE
             UpdateGroupPushMappingRequest deactivateRequest = new UpdateGroupPushMappingRequest()
             deactivateRequest.status(GroupPushMappingStatusUpsert.INACTIVE)
 
@@ -694,7 +694,7 @@ class GroupPushMappingIT extends ITSupport {
             assertThat("Status should transition to INACTIVE", 
                 deactivatedMapping.getStatus(), is(GroupPushMappingStatus.INACTIVE))
 
-            // Transition 2: INACTIVE → ACTIVE
+            // Transition 2: INACTIVE  ACTIVE
             UpdateGroupPushMappingRequest reactivateRequest = new UpdateGroupPushMappingRequest()
             reactivateRequest.status(GroupPushMappingStatusUpsert.ACTIVE)
 

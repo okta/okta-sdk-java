@@ -101,7 +101,7 @@ class ApplicationSSOIT extends ITSupport {
      * Coverage:
      * - GET /api/v1/apps/{appId}/sso/saml/metadata - previewSAMLmetadataForApplication
      * 
-     * Test pattern: Create SAML App → Get Key Credentials → Preview SAML Metadata → Validate → Cleanup
+     * Test pattern: Create SAML App  Get Key Credentials  Preview SAML Metadata  Validate  Cleanup
      */
     @Test
     void testPreviewSAMLMetadataForApplication() {

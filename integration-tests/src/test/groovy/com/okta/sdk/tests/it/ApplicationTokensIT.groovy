@@ -145,6 +145,12 @@ class ApplicationTokensIT extends ITSupport {
         assertThat(tokensLimit200.isEmpty(), is(true))
         logger.debug("List tokens with limit variations: verified")
 
+        // Note: anyOf(is(404), is(0)) is intentional throughout this file.
+        // Some token endpoints return HTTP 404 with an empty body.  When that happens
+        // Jackson cannot deserialise the response and the SDK throws ApiException via a
+        // constructor that does not set the HTTP status code, so ApiException.getCode()
+        // returns 0 (its Java field default).  Both values are therefore valid outcomes.
+
         // Test 4: Get token with invalid ID (should throw ApiException)
         String fakeTokenId = "tok_nonexistent_token_id"
         ApiException getException = expect(ApiException.class, () ->
@@ -172,7 +178,8 @@ class ApplicationTokensIT extends ITSupport {
 
     /**
      * Test error handling with invalid application ID.
-     * Verifies 404 errors for all operations with non-existent app.
+     * Verifies error responses (HTTP 404, or code 0 when the 404 body is empty)
+     * for all token operations against a non-existent application.
      */
     @Test
     void testInvalidApplicationId() {

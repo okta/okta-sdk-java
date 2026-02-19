@@ -28,6 +28,8 @@ import java.util.function.Function
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Consolidated coverage tests for all API classes below 90% instruction coverage.
@@ -45,6 +47,9 @@ import static org.hamcrest.Matchers.*
  */
 class TargetedApiCoverageIT extends ITSupport {
 
+    private static final Logger logger = LoggerFactory.getLogger(TargetedApiCoverageIT)
+
+
     private def headers = Collections.<String, String>emptyMap()
     private static final String FAKE_NEXT = "https://java-sdk-dcp.oktapreview.com/api/v1/fake-paged-next"
 
@@ -56,7 +61,7 @@ class TargetedApiCoverageIT extends ITSupport {
     /** Labeled helper - runs the closure, swallows exceptions, prints a checkmark. */
     private void exercise(String label, Closure action) {
         try { action.call() } catch (Exception ignored) {}
-        println "   ✓ ${label}"
+        logger.debug("    {}", label)
     }
 
     /** Iterate a paged iterable to trigger the first-page (null-nextUrl) lambda branch. */
@@ -68,7 +73,7 @@ class TargetedApiCoverageIT extends ITSupport {
                 if (iter.hasNext()) iter.next()
             }
         } catch (Exception ignored) {}
-        println "   ✓ ${label}"
+        logger.debug("    {}", label)
     }
 
     /**
@@ -90,7 +95,7 @@ class TargetedApiCoverageIT extends ITSupport {
                 }
             }
         } catch (Exception ignored) {}
-        println "   ✓ ${label} (paged-else)"
+        logger.debug("    {} (paged-else)", label)
     }
 
     // =========================================================================
@@ -125,10 +130,10 @@ class TargetedApiCoverageIT extends ITSupport {
                     .name("tgt-as-${testId}").description("Targeted coverage")
                     .audiences(["api://tgt-as-${testId}".toString()]))
             sid = authServer.id
-            println "Created auth server ${sid}"
+            logger.debug("Created auth server {}", sid)
 
-            // --- OAuth2ResourceServerCredentialsKeysApi (6 methods × 2) ---
-            println "\nOAuth2ResourceServerCredentialsKeysApi:"
+            // --- OAuth2ResourceServerCredentialsKeysApi (6 methods  2) ---
+            logger.debug("\nOAuth2ResourceServerCredentialsKeysApi:")
             exercise("activate")      { credKeysApi.activateOAuth2ResourceServerJsonWebKey(sid, "dummyKey") }
             exercise("activate+h")    { credKeysApi.activateOAuth2ResourceServerJsonWebKey(sid, "dummyKey", headers) }
             exercise("add")           { credKeysApi.addOAuth2ResourceServerJsonWebKey(sid, new OAuth2ResourceServerJsonWebKeyRequestBody()) }
@@ -142,8 +147,8 @@ class TargetedApiCoverageIT extends ITSupport {
             exercise("list")          { credKeysApi.listOAuth2ResourceServerJsonWebKeys(sid) }
             exercise("list+h")        { credKeysApi.listOAuth2ResourceServerJsonWebKeys(sid, headers) }
 
-            // --- AuthorizationServerKeysApi (3 methods × 2 + 2 paged) ---
-            println "\nAuthorizationServerKeysApi:"
+            // --- AuthorizationServerKeysApi (3 methods  2 + 2 paged) ---
+            logger.debug("\nAuthorizationServerKeysApi:")
             exercise("getKey")        { authKeysApi.getAuthorizationServerKey(sid, "dummyKey") }
             exercise("getKey+h")      { authKeysApi.getAuthorizationServerKey(sid, "dummyKey", headers) }
             exercise("rotateKeys")    { authKeysApi.rotateAuthorizationServerKeys(sid, new JwkUse().use("sig")) }
@@ -151,8 +156,8 @@ class TargetedApiCoverageIT extends ITSupport {
             exercisePaged("rotateKeysPaged")   { authKeysApi.rotateAuthorizationServerKeysPaged(sid, new JwkUse().use("sig")) }
             exercisePaged("rotateKeysPaged+h") { authKeysApi.rotateAuthorizationServerKeysPaged(sid, new JwkUse().use("sig"), headers) }
 
-            // --- AuthorizationServerClientsApi (5 methods × 2 + paged) ---
-            println "\nAuthorizationServerClientsApi:"
+            // --- AuthorizationServerClientsApi (5 methods  2 + paged) ---
+            logger.debug("\nAuthorizationServerClientsApi:")
             exercise("getRefreshToken")     { authClientsApi.getRefreshTokenForAuthorizationServerAndClient(sid, "dummyClient", "dummyToken", null) }
             exercise("getRefreshToken+h")   { authClientsApi.getRefreshTokenForAuthorizationServerAndClient(sid, "dummyClient", "dummyToken", null, headers) }
             exercise("listRefreshTokens")   { authClientsApi.listRefreshTokensForAuthorizationServerAndClient(sid, "dummyClient", null, null, null) }
@@ -164,7 +169,7 @@ class TargetedApiCoverageIT extends ITSupport {
             exercise("revokeRefreshTokens")    { authClientsApi.revokeRefreshTokensForAuthorizationServerAndClient(sid, "dummyClient") }
             exercise("revokeRefreshTokens+h")  { authClientsApi.revokeRefreshTokensForAuthorizationServerAndClient(sid, "dummyClient", headers) }
 
-            println "\n✅ Auth-server related API coverage complete!"
+            logger.debug("\n Auth-server related API coverage complete!")
         } finally {
             if (sid) { try { authServerApi.deactivateAuthorizationServer(sid); authServerApi.deleteAuthorizationServer(sid) } catch (Exception e) {} }
         }
@@ -204,10 +209,10 @@ class TargetedApiCoverageIT extends ITSupport {
                             .url("https://example.com/tgt-${testId}".toString()))),
                 true, null)
             appId = app.getId()
-            println "Created app ${appId}"
+            logger.debug("Created app {}", appId)
 
-            // --- ApplicationCrossAppAccessConnectionsApi (5 methods × 2) ---
-            println "\nApplicationCrossAppAccessConnectionsApi:"
+            // --- ApplicationCrossAppAccessConnectionsApi (5 methods  2) ---
+            logger.debug("\nApplicationCrossAppAccessConnectionsApi:")
             exercise("create")     { crossAppApi.createCrossAppAccessConnection(appId, new OrgCrossAppAccessConnection()) }
             exercise("create+h")   { crossAppApi.createCrossAppAccessConnection(appId, new OrgCrossAppAccessConnection(), headers) }
             exercise("get")        { crossAppApi.getCrossAppAccessConnection(appId, "dummyConn") }
@@ -221,8 +226,8 @@ class TargetedApiCoverageIT extends ITSupport {
             exercisePaged("getAllPaged")   { crossAppApi.getAllCrossAppAccessConnectionsPaged(appId, null, null) }
             exercisePaged("getAllPaged+h") { crossAppApi.getAllCrossAppAccessConnectionsPaged(appId, null, null, headers) }
 
-            // --- ApplicationFeaturesApi (3 methods × 2) ---
-            println "\nApplicationFeaturesApi:"
+            // --- ApplicationFeaturesApi (3 methods  2) ---
+            logger.debug("\nApplicationFeaturesApi:")
             exercise("getFeature")     { featuresApi.getFeatureForApplication(appId, ApplicationFeatureType.USER_PROVISIONING) }
             exercise("getFeature+h")   { featuresApi.getFeatureForApplication(appId, ApplicationFeatureType.USER_PROVISIONING, headers) }
             exercise("updateFeature")  { featuresApi.updateFeatureForApplication(appId, ApplicationFeatureType.USER_PROVISIONING, new UpdateFeatureForApplicationRequest()) }
@@ -232,8 +237,8 @@ class TargetedApiCoverageIT extends ITSupport {
             exercisePaged("listFeaturesPaged")   { featuresApi.listFeaturesForApplicationPaged(appId) }
             exercisePaged("listFeaturesPaged+h") { featuresApi.listFeaturesForApplicationPaged(appId, headers) }
 
-            // --- ApplicationTokensApi (4 methods × 2) ---
-            println "\nApplicationTokensApi:"
+            // --- ApplicationTokensApi (4 methods  2) ---
+            logger.debug("\nApplicationTokensApi:")
             exercise("getToken")       { tokensApi.getOAuth2TokenForApplication(appId, "dummyToken", null) }
             exercise("getToken+h")     { tokensApi.getOAuth2TokenForApplication(appId, "dummyToken", null, headers) }
             exercise("revokeToken")    { tokensApi.revokeOAuth2TokenForApplication(appId, "dummyToken") }
@@ -245,8 +250,8 @@ class TargetedApiCoverageIT extends ITSupport {
             exercisePaged("listTokensPaged")   { tokensApi.listOAuth2TokensForApplicationPaged(appId, null, null, null) }
             exercisePaged("listTokensPaged+h") { tokensApi.listOAuth2TokensForApplicationPaged(appId, null, null, null, headers) }
 
-            // --- ApplicationGrantsApi (4 methods × 2) ---
-            println "\nApplicationGrantsApi:"
+            // --- ApplicationGrantsApi (4 methods  2) ---
+            logger.debug("\nApplicationGrantsApi:")
             exercise("getGrant")       { grantsApi.getScopeConsentGrant(appId, "dummyGrant", null) }
             exercise("getGrant+h")     { grantsApi.getScopeConsentGrant(appId, "dummyGrant", null, headers) }
             exercise("grant")          { grantsApi.grantConsentToScope(appId, new OAuth2ScopeConsentGrant()) }
@@ -258,8 +263,8 @@ class TargetedApiCoverageIT extends ITSupport {
             exercisePaged("listGrantsPaged")   { grantsApi.listScopeConsentGrantsPaged(appId, null) }
             exercisePaged("listGrantsPaged+h") { grantsApi.listScopeConsentGrantsPaged(appId, null, headers) }
 
-            // --- ApplicationSsoCredentialKeyApi (9 methods × 2) ---
-            println "\nApplicationSsoCredentialKeyApi:"
+            // --- ApplicationSsoCredentialKeyApi (9 methods  2) ---
+            logger.debug("\nApplicationSsoCredentialKeyApi:")
             exercise("cloneKey")       { credKeyApi.cloneApplicationKey(appId, "dummyKey", "dummyTarget") }
             exercise("cloneKey+h")     { credKeyApi.cloneApplicationKey(appId, "dummyKey", "dummyTarget", headers) }
             exercise("generateKey")    { credKeyApi.generateApplicationKey(appId, 5) }
@@ -283,7 +288,7 @@ class TargetedApiCoverageIT extends ITSupport {
             exercisePaged("listCsrsPaged")   { credKeyApi.listCsrsForApplicationPaged(appId) }
             exercisePaged("listCsrsPaged+h") { credKeyApi.listCsrsForApplicationPaged(appId, headers) }
 
-            println "\n✅ Application related API coverage complete!"
+            logger.debug("\n Application related API coverage complete!")
         } finally {
             if (appId) { try { appApi.deactivateApplication(appId); appApi.deleteApplication(appId) } catch (Exception e) {} }
         }
@@ -323,10 +328,10 @@ class TargetedApiCoverageIT extends ITSupport {
                         .login("tgt-cov-${testId}@example.com".toString())),
                 true, false, null)
             uid = user.getId()
-            println "Created user ${uid}"
+            logger.debug("Created user {}", uid)
 
-            // --- UserAuthenticatorEnrollmentsApi (5 methods × 2) ---
-            println "\nUserAuthenticatorEnrollmentsApi:"
+            // --- UserAuthenticatorEnrollmentsApi (5 methods  2) ---
+            logger.debug("\nUserAuthenticatorEnrollmentsApi:")
             exercise("create")     { enrollApi.createAuthenticatorEnrollment(uid, new AuthenticatorEnrollmentCreateRequest()) }
             exercise("create+h")   { enrollApi.createAuthenticatorEnrollment(uid, new AuthenticatorEnrollmentCreateRequest(), headers) }
             exercise("createTac")  { enrollApi.createTacAuthenticatorEnrollment(uid, new AuthenticatorEnrollmentCreateRequestTac()) }
@@ -338,8 +343,8 @@ class TargetedApiCoverageIT extends ITSupport {
             exercise("list")       { enrollApi.listAuthenticatorEnrollments(uid, null) }
             exercise("list+h")     { enrollApi.listAuthenticatorEnrollments(uid, null, headers) }
 
-            // --- UserGrantApi (6 methods × 2) ---
-            println "\nUserGrantApi:"
+            // --- UserGrantApi (6 methods  2) ---
+            logger.debug("\nUserGrantApi:")
             exercise("getUserGrant")       { grantApi.getUserGrant(uid, "dummyGrant", null) }
             exercise("getUserGrant+h")     { grantApi.getUserGrant(uid, "dummyGrant", null, headers) }
             exercise("listGrants")         { grantApi.listUserGrants(uid, null, null, null, null) }
@@ -358,8 +363,8 @@ class TargetedApiCoverageIT extends ITSupport {
             exercisePaged("listGrantsClientPaged") { grantApi.listGrantsForUserAndClientPaged(uid, "dummyClient", null, null, null) }
             exercisePaged("listGrantsClientPaged+h"){ grantApi.listGrantsForUserAndClientPaged(uid, "dummyClient", null, null, null, headers) }
 
-            // --- UserResourcesApi (4 methods × 2) ---
-            println "\nUserResourcesApi:"
+            // --- UserResourcesApi (4 methods  2) ---
+            logger.debug("\nUserResourcesApi:")
             exercise("listAppLinks")     { resourcesApi.listAppLinks(uid) }
             exercise("listAppLinks+h")   { resourcesApi.listAppLinks(uid, headers) }
             exercise("listClients")      { resourcesApi.listUserClients(uid) }
@@ -378,8 +383,8 @@ class TargetedApiCoverageIT extends ITSupport {
             exercisePaged("listGroupsPaged")     { resourcesApi.listUserGroupsPaged(uid) }
             exercisePaged("listGroupsPaged+h")   { resourcesApi.listUserGroupsPaged(uid, headers) }
 
-            // --- UserFactorApi (13 methods × 2 + paged) ---
-            println "\nUserFactorApi:"
+            // --- UserFactorApi (13 methods  2 + paged) ---
+            logger.debug("\nUserFactorApi:")
             exercise("activateFactor")     { factorApi.activateFactor(uid, "dummyFactor", null) }
             exercise("activateFactor+h")   { factorApi.activateFactor(uid, "dummyFactor", null, headers) }
             exercise("enrollFactor")       { factorApi.enrollFactor(uid, null, null, null, null, null, null) }
@@ -416,8 +421,8 @@ class TargetedApiCoverageIT extends ITSupport {
             exercisePaged("listYubikeysPaged")    { factorApi.listYubikeyOtpTokensPaged(null, null, null, null, null, null, null) }
             exercisePaged("listYubikeysPaged+h")  { factorApi.listYubikeyOtpTokensPaged(null, null, null, null, null, null, null, headers) }
 
-            // --- UserOAuthApi (4 methods × 2 + paged) ---
-            println "\nUserOAuthApi:"
+            // --- UserOAuthApi (4 methods  2 + paged) ---
+            logger.debug("\nUserOAuthApi:")
             exercise("getRefresh")         { oauthApi.getRefreshTokenForUserAndClient(uid, "dummyClient", "dummyToken", null) }
             exercise("getRefresh+h")       { oauthApi.getRefreshTokenForUserAndClient(uid, "dummyClient", "dummyToken", null, headers) }
             exercise("listRefresh")        { oauthApi.listRefreshTokensForUserAndClient(uid, "dummyClient", null, null, null) }
@@ -429,8 +434,8 @@ class TargetedApiCoverageIT extends ITSupport {
             exercisePaged("listRefreshPaged")   { oauthApi.listRefreshTokensForUserAndClientPaged(uid, "dummyClient", null, null, null) }
             exercisePaged("listRefreshPaged+h") { oauthApi.listRefreshTokensForUserAndClientPaged(uid, "dummyClient", null, null, null, headers) }
 
-            // --- UserLinkedObjectApi (3 methods × 2) ---
-            println "\nUserLinkedObjectApi:"
+            // --- UserLinkedObjectApi (3 methods  2) ---
+            logger.debug("\nUserLinkedObjectApi:")
             exercise("assign")     { linkedApi.assignLinkedObjectValueForPrimary(uid, "dummyRel", "dummyPrimary") }
             exercise("assign+h")   { linkedApi.assignLinkedObjectValueForPrimary(uid, "dummyRel", "dummyPrimary", headers) }
             exercise("delete")     { linkedApi.deleteLinkedObjectForUser(uid, "dummyRel") }
@@ -440,7 +445,7 @@ class TargetedApiCoverageIT extends ITSupport {
             exercisePaged("listPaged")   { linkedApi.listLinkedObjectsForUserPaged(uid, "dummyRel") }
             exercisePaged("listPaged+h") { linkedApi.listLinkedObjectsForUserPaged(uid, "dummyRel", headers) }
 
-            println "\n✅ User related API coverage complete!"
+            logger.debug("\n User related API coverage complete!")
         } finally {
             if (uid) {
                 try { lifecycleApi.deactivateUser(uid, false, null); userApi.deleteUser(uid, false, null) } catch (Exception e) {}
@@ -482,10 +487,10 @@ class TargetedApiCoverageIT extends ITSupport {
                 def authenticators = authApi.listAuthenticators()
                 if (!authenticators.isEmpty()) authId = authenticators[0].id
             } catch (Exception ignored) {}
-            println "Using authenticator ${authId}"
+            logger.debug("Using authenticator {}", authId)
 
-            // --- AuthenticatorApi (19 methods × 2 + paged) ---
-            println "\nAuthenticatorApi:"
+            // --- AuthenticatorApi (19 methods  2 + paged) ---
+            logger.debug("\nAuthenticatorApi:")
             exercise("activate")           { authApi.activateAuthenticator(authId) }
             exercise("activate+h")         { authApi.activateAuthenticator(authId, headers) }
             exercise("activateMethod")     { authApi.activateAuthenticatorMethod(authId, AuthenticatorMethodType.EMAIL) }
@@ -532,8 +537,8 @@ class TargetedApiCoverageIT extends ITSupport {
             exercisePaged("listMethodsPaged")   { authApi.listAuthenticatorMethodsPaged(authId) }
             exercisePaged("listMethodsPaged+h") { authApi.listAuthenticatorMethodsPaged(authId, headers) }
 
-            // --- ApiTokenApi (5 methods × 2) ---
-            println "\nApiTokenApi:"
+            // --- ApiTokenApi (5 methods  2) ---
+            logger.debug("\nApiTokenApi:")
             exercise("getToken")       { tokenApi.getApiToken("dummyTokenId") }
             exercise("getToken+h")     { tokenApi.getApiToken("dummyTokenId", headers) }
             exercise("list")           { tokenApi.listApiTokens() }
@@ -546,8 +551,8 @@ class TargetedApiCoverageIT extends ITSupport {
             exercisePaged("listPaged")       { tokenApi.listApiTokensPaged() }
             exercisePaged("listPaged+h")     { tokenApi.listApiTokensPaged(headers) }
 
-            // --- SubscriptionApi (8 methods × 2) ---
-            println "\nSubscriptionApi:"
+            // --- SubscriptionApi (8 methods  2) ---
+            logger.debug("\nSubscriptionApi:")
             // Create a user for user-subscription tests
             def subUser = userApi.createUser(
                 new CreateUserRequest()
@@ -581,8 +586,8 @@ class TargetedApiCoverageIT extends ITSupport {
             exercisePaged("listSubRolePaged")   { subApi.listSubscriptionsRolePaged(roleRef) }
             exercisePaged("listSubRolePaged+h") { subApi.listSubscriptionsRolePaged(roleRef, headers) }
 
-            // --- UserTypeApi (6 methods × 2) ---
-            println "\nUserTypeApi:"
+            // --- UserTypeApi (6 methods  2) ---
+            logger.debug("\nUserTypeApi:")
             exercise("create")         { userTypeApi.createUserType(new UserType()) }
             exercise("create+h")       { userTypeApi.createUserType(new UserType(), headers) }
             exercise("get")            { userTypeApi.getUserType("dummyType") }
@@ -598,8 +603,8 @@ class TargetedApiCoverageIT extends ITSupport {
             exercisePaged("listPaged")       { userTypeApi.listUserTypesPaged() }
             exercisePaged("listPaged+h")     { userTypeApi.listUserTypesPaged(headers) }
 
-            // --- GroupOwnerApi (3 methods × 2) ---
-            println "\nGroupOwnerApi:"
+            // --- GroupOwnerApi (3 methods  2) ---
+            logger.debug("\nGroupOwnerApi:")
             def group = groupApi.addGroup(
                 new AddGroupRequest().profile(new OktaUserGroupProfile()
                     .name("TgtOwner ${testId}".toString()).description("owner test")),
@@ -614,8 +619,8 @@ class TargetedApiCoverageIT extends ITSupport {
             exercisePaged("listPaged")       { ownerApi.listGroupOwnersPaged(groupId, null, null, null) }
             exercisePaged("listPaged+h")     { ownerApi.listGroupOwnersPaged(groupId, null, null, null, headers) }
 
-            // --- OrgSettingContactApi (3 methods × 2) ---
-            println "\nOrgSettingContactApi:"
+            // --- OrgSettingContactApi (3 methods  2) ---
+            logger.debug("\nOrgSettingContactApi:")
             exercise("getContact")     { contactApi.getOrgContactUser("BILLING") }
             exercise("getContact+h")   { contactApi.getOrgContactUser("BILLING", headers) }
             exercise("list")           { contactApi.listOrgContactTypes() }
@@ -625,7 +630,7 @@ class TargetedApiCoverageIT extends ITSupport {
             exercisePaged("listPaged")       { contactApi.listOrgContactTypesPaged() }
             exercisePaged("listPaged+h")     { contactApi.listOrgContactTypesPaged(headers) }
 
-            println "\n✅ Standalone API coverage complete!"
+            logger.debug("\n Standalone API coverage complete!")
         } finally {
             if (groupId) { try { groupApi.deleteGroup(groupId) } catch (Exception e) {} }
             if (userId) {
@@ -654,10 +659,10 @@ class TargetedApiCoverageIT extends ITSupport {
             def policies = policyApi.listPolicies("OKTA_SIGN_ON", null, null, null, null, null, null, null)
             if (!policies.isEmpty()) policyId = policies[0].id
         } catch (Exception ignored) {}
-        println "Using policy ${policyId}"
+        logger.debug("Using policy {}", policyId)
 
-        // --- PolicyApi (21 methods × 2 + paged) ---
-        println "\nPolicyApi:"
+        // --- PolicyApi (21 methods  2 + paged) ---
+        logger.debug("\nPolicyApi:")
         exercise("activate")           { policyApi.activatePolicy(policyId) }
         exercise("activate+h")         { policyApi.activatePolicy(policyId, headers) }
         exercise("activateRule")       { policyApi.activatePolicyRule(policyId, "dummyRule") }
@@ -715,8 +720,8 @@ class TargetedApiCoverageIT extends ITSupport {
         // Re-activate in case we deactivated it
         try { policyApi.activatePolicy(policyId) } catch (Exception ignored) {}
 
-        // --- ProfileMappingApi (3 methods × 2) ---
-        println "\nProfileMappingApi:"
+        // --- ProfileMappingApi (3 methods  2) ---
+        logger.debug("\nProfileMappingApi:")
         String mappingId = "dummyMapping"
         try {
             def mappings = mappingApi.listProfileMappings(null, null, null, null)
@@ -731,14 +736,14 @@ class TargetedApiCoverageIT extends ITSupport {
         exercisePaged("listPaged")       { mappingApi.listProfileMappingsPaged(null, null, null, null) }
         exercisePaged("listPaged+h")     { mappingApi.listProfileMappingsPaged(null, null, null, null, headers) }
 
-        // --- AgentPoolsApi (14 methods × 2 + paged) ---
-        println "\nAgentPoolsApi:"
+        // --- AgentPoolsApi (14 methods  2 + paged) ---
+        logger.debug("\nAgentPoolsApi:")
         String poolId = "dummyPool"
         try {
             def pools = agentApi.listAgentPools(null, null, null)
             if (!pools.isEmpty()) poolId = pools[0].id
         } catch (Exception ignored) {}
-        println "Using agent pool ${poolId}"
+        logger.debug("Using agent pool {}", poolId)
 
         exercise("activateUpdate")     { agentApi.activateAgentPoolsUpdate(poolId, "dummyUpdate") }
         exercise("activateUpdate+h")   { agentApi.activateAgentPoolsUpdate(poolId, "dummyUpdate", headers) }
@@ -774,7 +779,7 @@ class TargetedApiCoverageIT extends ITSupport {
         exercisePaged("listUpdatesPaged")    { agentApi.listAgentPoolsUpdatesPaged(poolId, null) }
         exercisePaged("listUpdatesPaged+h")  { agentApi.listAgentPoolsUpdatesPaged(poolId, null, headers) }
 
-        println "\n✅ Policy + Agent pool API coverage complete!"
+        logger.debug("\n Policy + Agent pool API coverage complete!")
     }
 
     // =========================================================================
@@ -804,12 +809,12 @@ class TargetedApiCoverageIT extends ITSupport {
                 m.setAccessible(true)
                 def om = m.invoke(null)
                 assertThat("${clazz.simpleName}.getObjectMapper()", om, notNullValue())
-                println "   ✓ ${clazz.simpleName}.getObjectMapper()"
+                logger.debug("    {}.getObjectMapper()", clazz.simpleName)
             } catch (Exception e) {
-                println "   ✗ ${clazz.simpleName}: ${e.message}"
+                logger.debug("    {}: {}", clazz.simpleName, e.message)
             }
         }
-        println "\n✅ getObjectMapper coverage complete!"
+        logger.debug("\n getObjectMapper coverage complete!")
     }
 
     // =================================================================
@@ -892,7 +897,7 @@ class TargetedApiCoverageIT extends ITSupport {
         ex("revCsr-1")       { ak.revokeCsrFromApplication(null, "x") }
         ex("revCsr-2")       { ak.revokeCsrFromApplication("x", null) }
 
-        println "\n✅ Null-param validation (Application APIs) complete!"
+        logger.debug("\n Null-param validation (Application APIs) complete!")
     }
 
     @Test(groups = "group3")
@@ -982,7 +987,7 @@ class TargetedApiCoverageIT extends ITSupport {
         ex("update-1")   { ut.updateUserType(null, new UserTypePostRequest()) }
         ex("update-2")   { ut.updateUserType("x", (UserTypePostRequest) null) }
 
-        println "\n✅ Null-param validation (User APIs) complete!"
+        logger.debug("\n Null-param validation (User APIs) complete!")
     }
 
     @Test(groups = "group3")
@@ -1089,7 +1094,7 @@ class TargetedApiCoverageIT extends ITSupport {
         ex("delete-2")   { go.deleteGroupOwner("x", null) }
         ex("list-1")     { go.listGroupOwners(null, null, null, null) }
 
-        println "\n✅ Null-param validation (Auth & Standalone APIs) complete!"
+        logger.debug("\n Null-param validation (Auth & Standalone APIs) complete!")
     }
 
     @Test(groups = "group3")
@@ -1166,7 +1171,7 @@ class TargetedApiCoverageIT extends ITSupport {
         ex("updateSettings-1")  { ap.updateAgentPoolsUpdateSettings(null, new AgentPoolUpdateSetting()) }
         ex("updateSettings-2")  { ap.updateAgentPoolsUpdateSettings("x", (AgentPoolUpdateSetting) null) }
 
-        println "\n✅ Null-param validation (Policy & Agent APIs) complete!"
+        logger.debug("\n Null-param validation (Policy & Agent APIs) complete!")
     }
 
     // =========================================================================
@@ -1177,7 +1182,7 @@ class TargetedApiCoverageIT extends ITSupport {
     // =====================================================================
     // 1. ApiTokenApi (76%) + OrgSettingContactApi (87%) + UserTypeApi (89%)
     //    + ProfileMappingApi (88%)
-    //    — standalone APIs with no parent-resource dependency
+    //     standalone APIs with no parent-resource dependency
     // =====================================================================
     @Test(groups = "group3")
     @Scenario("coverage-final-standalone")
@@ -1185,7 +1190,7 @@ class TargetedApiCoverageIT extends ITSupport {
         ApiClient client = getClient()
 
         // --- ApiTokenApi ---
-        println "\nApiTokenApi paged-else:"
+        logger.debug("\nApiTokenApi paged-else:")
         def tokenApi = new ApiTokenApi(client)
         exercisePagedElseBranch("listApiTokens") { tokenApi.listApiTokensPaged() }
         exercisePagedElseBranch("listApiTokens+h") { tokenApi.listApiTokensPaged(Collections.<String, String>emptyMap()) }
@@ -1194,7 +1199,7 @@ class TargetedApiCoverageIT extends ITSupport {
         exercise("upsertApiToken") { tokenApi.upsertApiToken("dummyTokenId", new ApiTokenUpdate()) }
 
         // --- OrgSettingContactApi ---
-        println "\nOrgSettingContactApi paged-else:"
+        logger.debug("\nOrgSettingContactApi paged-else:")
         def contactApi = new OrgSettingContactApi(client)
         exercisePagedElseBranch("listOrgContactTypes") { contactApi.listOrgContactTypesPaged() }
         exercisePagedElseBranch("listOrgContactTypes+h") { contactApi.listOrgContactTypesPaged(Collections.<String, String>emptyMap()) }
@@ -1202,7 +1207,7 @@ class TargetedApiCoverageIT extends ITSupport {
         exercise("listOrgContactTypes") { contactApi.listOrgContactTypes() }
 
         // --- UserTypeApi ---
-        println "\nUserTypeApi paged-else:"
+        logger.debug("\nUserTypeApi paged-else:")
         def userTypeApi = new UserTypeApi(client)
         exercisePagedElseBranch("listUserTypes") { userTypeApi.listUserTypesPaged() }
         exercisePagedElseBranch("listUserTypes+h") { userTypeApi.listUserTypesPaged(Collections.<String, String>emptyMap()) }
@@ -1212,19 +1217,19 @@ class TargetedApiCoverageIT extends ITSupport {
         exercise("replaceUserType") { userTypeApi.replaceUserType("dummyType", new UserTypePutRequest()) }
 
         // --- ProfileMappingApi ---
-        println "\nProfileMappingApi paged-else:"
+        logger.debug("\nProfileMappingApi paged-else:")
         def mappingApi = new ProfileMappingApi(client)
         exercisePagedElseBranch("listProfileMappings") { mappingApi.listProfileMappingsPaged(null, null, null, null) }
         exercisePagedElseBranch("listProfileMappings+h") { mappingApi.listProfileMappingsPaged(null, null, null, null, Collections.<String, String>emptyMap()) }
         // Re-call convenience wrapper
         exercise("updateProfileMapping") { mappingApi.updateProfileMapping("dummyMapping", new ProfileMappingRequest()) }
 
-        println "\n✅ Standalone API paged-else coverage complete!"
+        logger.debug("\n Standalone API paged-else coverage complete!")
     }
 
     // =====================================================================
     // 2. SubscriptionApi (88%) + GroupOwnerApi (89%)
-    //    — require specific enum/model params
+    //     require specific enum/model params
     // =====================================================================
     @Test(groups = "group3")
     @Scenario("coverage-final-subscription-group")
@@ -1232,7 +1237,7 @@ class TargetedApiCoverageIT extends ITSupport {
         ApiClient client = getClient()
 
         // --- SubscriptionApi ---
-        println "\nSubscriptionApi paged-else:"
+        logger.debug("\nSubscriptionApi paged-else:")
         def subApi = new SubscriptionApi(client)
         def roleRef = new ListSubscriptionsRoleRoleRefParameter()
 
@@ -1247,12 +1252,12 @@ class TargetedApiCoverageIT extends ITSupport {
         exercise("unsubscribeByNotificationTypeRole") { subApi.unsubscribeByNotificationTypeRole(roleRef, NotificationType.AD_AGENT) }
 
         // --- GroupOwnerApi ---
-        println "\nGroupOwnerApi paged-else:"
+        logger.debug("\nGroupOwnerApi paged-else:")
         def groupOwnerApi = new GroupOwnerApi(client)
         exercisePagedElseBranch("listGroupOwners") { groupOwnerApi.listGroupOwnersPaged("dummyGroupId", null, null, null) }
         exercisePagedElseBranch("listGroupOwners+h") { groupOwnerApi.listGroupOwnersPaged("dummyGroupId", null, null, null, Collections.<String, String>emptyMap()) }
 
-        println "\n✅ Subscription + GroupOwner paged-else coverage complete!"
+        logger.debug("\n Subscription + GroupOwner paged-else coverage complete!")
     }
 
     // =====================================================================
@@ -1268,7 +1273,7 @@ class TargetedApiCoverageIT extends ITSupport {
         String dummyAuthServerId = "dummyAuthServerId"
 
         // --- OAuth2ResourceServerCredentialsKeysApi ---
-        println "\nOAuth2ResourceServerCredentialsKeysApi paged-else:"
+        logger.debug("\nOAuth2ResourceServerCredentialsKeysApi paged-else:")
         def credKeysApi = new OAuth2ResourceServerCredentialsKeysApi(client)
         exercisePagedElseBranch("listKeys") { credKeysApi.listOAuth2ResourceServerJsonWebKeysPaged(dummyAuthServerId) }
         exercisePagedElseBranch("listKeys+h") { credKeysApi.listOAuth2ResourceServerJsonWebKeysPaged(dummyAuthServerId, Collections.<String, String>emptyMap()) }
@@ -1279,7 +1284,7 @@ class TargetedApiCoverageIT extends ITSupport {
         exercise("getKey") { credKeysApi.getOAuth2ResourceServerJsonWebKey(dummyAuthServerId, "dummyKey") }
 
         // --- AuthorizationServerKeysApi ---
-        println "\nAuthorizationServerKeysApi paged-else:"
+        logger.debug("\nAuthorizationServerKeysApi paged-else:")
         def authKeysApi = new AuthorizationServerKeysApi(client)
         exercisePagedElseBranch("listAuthServerKeys") { authKeysApi.listAuthorizationServerKeysPaged(dummyAuthServerId) }
         exercisePagedElseBranch("listAuthServerKeys+h") { authKeysApi.listAuthorizationServerKeysPaged(dummyAuthServerId, Collections.<String, String>emptyMap()) }
@@ -1289,7 +1294,7 @@ class TargetedApiCoverageIT extends ITSupport {
         exercise("rotateAuthorizationServerKeys") { authKeysApi.rotateAuthorizationServerKeys(dummyAuthServerId, new JwkUse().use("sig")) }
 
         // --- AuthorizationServerClientsApi ---
-        println "\nAuthorizationServerClientsApi paged-else:"
+        logger.debug("\nAuthorizationServerClientsApi paged-else:")
         def authClientsApi = new AuthorizationServerClientsApi(client)
         exercisePagedElseBranch("listOAuth2Clients") { authClientsApi.listOAuth2ClientsForAuthorizationServerPaged(dummyAuthServerId) }
         exercisePagedElseBranch("listOAuth2Clients+h") { authClientsApi.listOAuth2ClientsForAuthorizationServerPaged(dummyAuthServerId, Collections.<String, String>emptyMap()) }
@@ -1299,7 +1304,7 @@ class TargetedApiCoverageIT extends ITSupport {
         exercise("revokeRefreshToken") { authClientsApi.revokeRefreshTokenForAuthorizationServerAndClient(dummyAuthServerId, "dummyClient", "dummyToken") }
         exercise("revokeRefreshTokens") { authClientsApi.revokeRefreshTokensForAuthorizationServerAndClient(dummyAuthServerId, "dummyClient") }
 
-        println "\n✅ Auth-server paged-else coverage complete!"
+        logger.debug("\n Auth-server paged-else coverage complete!")
     }
 
     // =====================================================================
@@ -1315,7 +1320,7 @@ class TargetedApiCoverageIT extends ITSupport {
         String dummyAppId = "dummyAppId"
 
         // --- ApplicationCrossAppAccessConnectionsApi ---
-        println "\nApplicationCrossAppAccessConnectionsApi paged-else:"
+        logger.debug("\nApplicationCrossAppAccessConnectionsApi paged-else:")
         def crossAppApi = new ApplicationCrossAppAccessConnectionsApi(client)
         exercisePagedElseBranch("getAllConnections") { crossAppApi.getAllCrossAppAccessConnectionsPaged(dummyAppId, null, null) }
         exercisePagedElseBranch("getAllConnections+h") { crossAppApi.getAllCrossAppAccessConnectionsPaged(dummyAppId, null, null, Collections.<String, String>emptyMap()) }
@@ -1325,7 +1330,7 @@ class TargetedApiCoverageIT extends ITSupport {
         exercise("getConnection") { crossAppApi.getCrossAppAccessConnection(dummyAppId, "dummyConn") }
 
         // --- ApplicationFeaturesApi ---
-        println "\nApplicationFeaturesApi paged-else:"
+        logger.debug("\nApplicationFeaturesApi paged-else:")
         def featuresApi = new ApplicationFeaturesApi(client)
         exercisePagedElseBranch("listFeatures") { featuresApi.listFeaturesForApplicationPaged(dummyAppId) }
         exercisePagedElseBranch("listFeatures+h") { featuresApi.listFeaturesForApplicationPaged(dummyAppId, Collections.<String, String>emptyMap()) }
@@ -1334,7 +1339,7 @@ class TargetedApiCoverageIT extends ITSupport {
         exercise("listFeatures") { featuresApi.listFeaturesForApplication(dummyAppId) }
 
         // --- ApplicationTokensApi ---
-        println "\nApplicationTokensApi paged-else:"
+        logger.debug("\nApplicationTokensApi paged-else:")
         def tokensApi = new ApplicationTokensApi(client)
         exercisePagedElseBranch("listTokens") { tokensApi.listOAuth2TokensForApplicationPaged(dummyAppId, null, null, null) }
         exercisePagedElseBranch("listTokens+h") { tokensApi.listOAuth2TokensForApplicationPaged(dummyAppId, null, null, null, Collections.<String, String>emptyMap()) }
@@ -1342,7 +1347,7 @@ class TargetedApiCoverageIT extends ITSupport {
         exercise("getToken") { tokensApi.getOAuth2TokenForApplication(dummyAppId, "dummyToken", null) }
         exercise("revokeToken") { tokensApi.revokeOAuth2TokenForApplication(dummyAppId, "dummyToken") }
 
-        println "\n✅ Application paged-else coverage complete!"
+        logger.debug("\n Application paged-else coverage complete!")
     }
 
     // =====================================================================
@@ -1358,8 +1363,8 @@ class TargetedApiCoverageIT extends ITSupport {
         ApiClient client = getClient()
         String dummyUserId = "dummyUserId"
 
-        // --- UserResourcesApi (4 paged methods → 4 else blocks) ---
-        println "\nUserResourcesApi paged-else:"
+        // --- UserResourcesApi (4 paged methods  4 else blocks) ---
+        logger.debug("\nUserResourcesApi paged-else:")
         def resourcesApi = new UserResourcesApi(client)
         exercisePagedElseBranch("listAppLinks") { resourcesApi.listAppLinksPaged(dummyUserId) }
         exercisePagedElseBranch("listAppLinks+h") { resourcesApi.listAppLinksPaged(dummyUserId, Collections.<String, String>emptyMap()) }
@@ -1371,7 +1376,7 @@ class TargetedApiCoverageIT extends ITSupport {
         exercisePagedElseBranch("listUserGroups+h") { resourcesApi.listUserGroupsPaged(dummyUserId, Collections.<String, String>emptyMap()) }
 
         // --- UserLinkedObjectApi ---
-        println "\nUserLinkedObjectApi paged-else:"
+        logger.debug("\nUserLinkedObjectApi paged-else:")
         def linkedApi = new UserLinkedObjectApi(client)
         exercisePagedElseBranch("listLinkedObjects") { linkedApi.listLinkedObjectsForUserPaged(dummyUserId, "dummyRel") }
         exercisePagedElseBranch("listLinkedObjects+h") { linkedApi.listLinkedObjectsForUserPaged(dummyUserId, "dummyRel", Collections.<String, String>emptyMap()) }
@@ -1380,7 +1385,7 @@ class TargetedApiCoverageIT extends ITSupport {
         exercise("listLinkedObjects") { linkedApi.listLinkedObjectsForUser(dummyUserId, "dummyRel") }
 
         // --- UserGrantApi ---
-        println "\nUserGrantApi paged-else:"
+        logger.debug("\nUserGrantApi paged-else:")
         def grantApi = new UserGrantApi(client)
         exercisePagedElseBranch("listGrantsForUserAndClient") { grantApi.listGrantsForUserAndClientPaged(dummyUserId, "dummyClient", null, null, null) }
         exercisePagedElseBranch("listGrantsForUserAndClient+h") { grantApi.listGrantsForUserAndClientPaged(dummyUserId, "dummyClient", null, null, null, Collections.<String, String>emptyMap()) }
@@ -1393,7 +1398,7 @@ class TargetedApiCoverageIT extends ITSupport {
         exercise("revokeUserGrant") { grantApi.revokeUserGrant(dummyUserId, "dummyGrant") }
 
         // --- UserOAuthApi ---
-        println "\nUserOAuthApi paged-else:"
+        logger.debug("\nUserOAuthApi paged-else:")
         def oauthApi = new UserOAuthApi(client)
         exercisePagedElseBranch("listRefreshTokens") { oauthApi.listRefreshTokensForUserAndClientPaged(dummyUserId, "dummyClient", null, null, null) }
         exercisePagedElseBranch("listRefreshTokens+h") { oauthApi.listRefreshTokensForUserAndClientPaged(dummyUserId, "dummyClient", null, null, null, Collections.<String, String>emptyMap()) }
@@ -1403,7 +1408,7 @@ class TargetedApiCoverageIT extends ITSupport {
         exercise("revokeToken") { oauthApi.revokeTokenForUserAndClient(dummyUserId, "dummyClient", "dummyToken") }
         exercise("revokeTokens") { oauthApi.revokeTokensForUserAndClient(dummyUserId, "dummyClient") }
 
-        println "\n✅ User API part-1 paged-else coverage complete!"
+        logger.debug("\n User API part-1 paged-else coverage complete!")
     }
 
     // =====================================================================
@@ -1417,7 +1422,7 @@ class TargetedApiCoverageIT extends ITSupport {
         String dummyUserId = "dummyUserId"
 
         // --- UserFactorApi (3+ paged methods) ---
-        println "\nUserFactorApi paged-else:"
+        logger.debug("\nUserFactorApi paged-else:")
         def factorApi = new UserFactorApi(client)
         exercisePagedElseBranch("listFactors") { factorApi.listFactorsPaged(dummyUserId) }
         exercisePagedElseBranch("listFactors+h") { factorApi.listFactorsPaged(dummyUserId, Collections.<String, String>emptyMap()) }
@@ -1439,12 +1444,12 @@ class TargetedApiCoverageIT extends ITSupport {
         exercise("resendEnrollFactor") { factorApi.resendEnrollFactor(dummyUserId, "dummyFactor", new ResendUserFactor(), null) }
         exercise("resendEnrollFactor+h") { factorApi.resendEnrollFactor(dummyUserId, "dummyFactor", new ResendUserFactor(), null, Collections.<String, String>emptyMap()) }
 
-        println "\n✅ UserFactorApi paged-else coverage complete!"
+        logger.debug("\n UserFactorApi paged-else coverage complete!")
     }
 
     // =====================================================================
     // 7. AuthenticatorApi (89%)
-    //    — many paged methods + several convenience wrappers
+    //     many paged methods + several convenience wrappers
     // =====================================================================
     @Test(groups = "group3")
     @Scenario("coverage-final-authenticator")
@@ -1452,7 +1457,7 @@ class TargetedApiCoverageIT extends ITSupport {
         ApiClient client = getClient()
         String dummyAuthenticatorId = "dummyAuthenticatorId"
 
-        println "\nAuthenticatorApi paged-else:"
+        logger.debug("\nAuthenticatorApi paged-else:")
         def authApi = new AuthenticatorApi(client)
 
         exercisePagedElseBranch("getWellKnownConfig") { authApi.getWellKnownAppAuthenticatorConfigurationPaged("dummyOauthClientId") }
@@ -1473,12 +1478,12 @@ class TargetedApiCoverageIT extends ITSupport {
         exercise("deactivateAuthenticatorMethod") { authApi.deactivateAuthenticatorMethod(dummyAuthenticatorId, AuthenticatorMethodType.EMAIL) }
         exercise("verifyRpIdDomain") { authApi.verifyRpIdDomain(dummyAuthenticatorId, AuthenticatorMethodTypeWebAuthn.WEBAUTHN) }
 
-        println "\n✅ AuthenticatorApi paged-else coverage complete!"
+        logger.debug("\n AuthenticatorApi paged-else coverage complete!")
     }
 
     // =====================================================================
     // 8. AgentPoolsApi (89%)
-    //    — 2 paged methods + many convenience wrappers
+    //     2 paged methods + many convenience wrappers
     // =====================================================================
     @Test(groups = "group3")
     @Scenario("coverage-final-agent-pools")
@@ -1486,7 +1491,7 @@ class TargetedApiCoverageIT extends ITSupport {
         ApiClient client = getClient()
         String dummyPoolId = "dummyPoolId"
 
-        println "\nAgentPoolsApi paged-else:"
+        logger.debug("\nAgentPoolsApi paged-else:")
         def agentApi = new AgentPoolsApi(client)
 
         exercisePagedElseBranch("listAgentPools") { agentApi.listAgentPoolsPaged(null, null, null) }
@@ -1506,12 +1511,12 @@ class TargetedApiCoverageIT extends ITSupport {
         exercise("updateAgentPoolsUpdate") { agentApi.updateAgentPoolsUpdate(dummyPoolId, "dummyUpdate", new AgentPoolUpdate()) }
         exercise("updateAgentPoolsUpdateSettings") { agentApi.updateAgentPoolsUpdateSettings(dummyPoolId, new AgentPoolUpdateSetting()) }
 
-        println "\n✅ AgentPoolsApi paged-else coverage complete!"
+        logger.debug("\n AgentPoolsApi paged-else coverage complete!")
     }
 
     // =====================================================================
     // 9. PolicyApi (87%)
-    //    — paged lambdas for all 5 paged methods need the else-branch hit
+    //     paged lambdas for all 5 paged methods need the else-branch hit
     //      (TargetedApiCoverageIT already calls exercisePaged() which only
     //       covers the first-page / null-nextUrl branch; here we use the
     //       reflection trick to cover the else / non-null-nextUrl branch)
@@ -1522,10 +1527,10 @@ class TargetedApiCoverageIT extends ITSupport {
         ApiClient client = getClient()
         String dummyPolicyId = "dummyPolicyId"
 
-        println "\nPolicyApi paged-else:"
+        logger.debug("\nPolicyApi paged-else:")
         def policyApi = new PolicyApi(client)
 
-        // lambda$createPolicySimulationPaged$0  (61% → else-branch nc)
+        // lambda$createPolicySimulationPaged$0  (61%  else-branch nc)
         exercisePagedElseBranch("createPolicySimulationPaged") {
             policyApi.createPolicySimulationPaged([], null)
         }
@@ -1533,7 +1538,7 @@ class TargetedApiCoverageIT extends ITSupport {
             policyApi.createPolicySimulationPaged([], null, Collections.<String, String>emptyMap())
         }
 
-        // lambda$listPolicyAppsPaged$2  (61% → else-branch nc)
+        // lambda$listPolicyAppsPaged$2  (61%  else-branch nc)
         exercisePagedElseBranch("listPolicyAppsPaged") {
             policyApi.listPolicyAppsPaged(dummyPolicyId)
         }
@@ -1541,7 +1546,7 @@ class TargetedApiCoverageIT extends ITSupport {
             policyApi.listPolicyAppsPaged(dummyPolicyId, Collections.<String, String>emptyMap())
         }
 
-        // lambda$listPolicyMappingsPaged$3  (61% → else-branch nc)
+        // lambda$listPolicyMappingsPaged$3  (61%  else-branch nc)
         exercisePagedElseBranch("listPolicyMappingsPaged") {
             policyApi.listPolicyMappingsPaged(dummyPolicyId)
         }
@@ -1549,7 +1554,7 @@ class TargetedApiCoverageIT extends ITSupport {
             policyApi.listPolicyMappingsPaged(dummyPolicyId, Collections.<String, String>emptyMap())
         }
 
-        // lambda$listPolicyRulesPaged$4  (64% → else-branch nc)
+        // lambda$listPolicyRulesPaged$4  (64%  else-branch nc)
         exercisePagedElseBranch("listPolicyRulesPaged") {
             policyApi.listPolicyRulesPaged(dummyPolicyId, null)
         }
@@ -1557,7 +1562,7 @@ class TargetedApiCoverageIT extends ITSupport {
             policyApi.listPolicyRulesPaged(dummyPolicyId, null, Collections.<String, String>emptyMap())
         }
 
-        // lambda$listPoliciesPaged$1  (72% → else-branch nc)
+        // lambda$listPoliciesPaged$1  (72%  else-branch nc)
         exercisePagedElseBranch("listPoliciesPaged") {
             policyApi.listPoliciesPaged("OKTA_SIGN_ON", null, null, null, null, null, null, null)
         }
@@ -1566,6 +1571,6 @@ class TargetedApiCoverageIT extends ITSupport {
                     Collections.<String, String>emptyMap())
         }
 
-        println "\n✅ PolicyApi paged-else coverage complete!"
+        logger.debug("\n PolicyApi paged-else coverage complete!")
     }
 }

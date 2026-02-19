@@ -25,16 +25,13 @@ import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
-/**
- * Tests that exercise additionalHeaders overloads for CRUD (non-list) operations
- * and list operations across multiple API classes. This covers the code paths
- * for methods that accept Map&lt;String,String&gt; additionalHeaders.
- *
- * Strategy: Call the additionalHeaders variant with an empty Map for real CRUD operations.
- * This exercises the code path without actually modifying headers.
- */
 class AdditionalHeadersCoverageIT extends ITSupport {
+
+    private static final Logger logger = LoggerFactory.getLogger(AdditionalHeadersCoverageIT)
+
 
     private def headers = Collections.<String, String>emptyMap()
 
@@ -54,6 +51,7 @@ class AdditionalHeadersCoverageIT extends ITSupport {
         def credKeysApi = new OAuth2ResourceServerCredentialsKeysApi(client)
 
         String testId = UUID.randomUUID().toString().substring(0, 8)
+        String authServerId = null
 
         try {
             // Create auth server with headers
@@ -64,47 +62,48 @@ class AdditionalHeadersCoverageIT extends ITSupport {
                     .audiences(["api://headers-test-${testId}".toString()]),
                 headers)
             assertThat authServer.id, notNullValue()
-            println "   ✓ createAuthorizationServer(headers)"
+            authServerId = authServer.id
+            logger.debug("    createAuthorizationServer(headers)")
 
             // Get auth server with headers
             def fetched = authServerApi.getAuthorizationServer(authServer.id, headers)
             assertThat fetched.name, equalTo("headers-test-${testId}".toString())
-            println "   ✓ getAuthorizationServer(headers)"
+            logger.debug("    getAuthorizationServer(headers)")
 
             // Replace auth server with headers
             authServer.description("Updated via headers")
             def updated = authServerApi.replaceAuthorizationServer(authServer.id, authServer, headers)
             assertThat updated.description, equalTo("Updated via headers")
-            println "   ✓ replaceAuthorizationServer(headers)"
+            logger.debug("    replaceAuthorizationServer(headers)")
 
             // List auth servers with headers (non-paged)
             def servers = authServerApi.listAuthorizationServers(null, null, null, headers)
             assertThat servers, not(empty())
-            println "   ✓ listAuthorizationServers(headers)"
+            logger.debug("    listAuthorizationServers(headers)")
 
             // Create scope with headers
             def scope = scopesApi.createOAuth2Scope(authServer.id,
                 new OAuth2Scope().name("h:scope:${testId}".toString()), headers)
             assertThat scope.id, notNullValue()
-            println "   ✓ createOAuth2Scope(headers)"
+            logger.debug("    createOAuth2Scope(headers)")
 
             // Get scope with headers
             def fetchedScope = scopesApi.getOAuth2Scope(authServer.id, scope.id, headers)
             assertThat fetchedScope.name, equalTo("h:scope:${testId}".toString())
-            println "   ✓ getOAuth2Scope(headers)"
+            logger.debug("    getOAuth2Scope(headers)")
 
             // Replace scope with headers
             scope.description("Updated scope")
             def updatedScope = scopesApi.replaceOAuth2Scope(authServer.id, scope.id, scope, headers)
-            println "   ✓ replaceOAuth2Scope(headers)"
+            logger.debug("    replaceOAuth2Scope(headers)")
 
             // List scopes with headers
             def scopes = scopesApi.listOAuth2Scopes(authServer.id, null, null, null, null, headers)
-            println "   ✓ listOAuth2Scopes(headers)"
+            logger.debug("    listOAuth2Scopes(headers)")
 
             // Delete scope with headers
             scopesApi.deleteOAuth2Scope(authServer.id, scope.id, headers)
-            println "   ✓ deleteOAuth2Scope(headers)"
+            logger.debug("    deleteOAuth2Scope(headers)")
 
             // Create claim with headers
             def claim = claimsApi.createOAuth2Claim(authServer.id,
@@ -113,24 +112,24 @@ class AdditionalHeadersCoverageIT extends ITSupport {
                     .valueType(OAuth2ClaimValueType.EXPRESSION).value("user.email"),
                 headers)
             assertThat claim.id, notNullValue()
-            println "   ✓ createOAuth2Claim(headers)"
+            logger.debug("    createOAuth2Claim(headers)")
 
             // Get claim with headers
             def fetchedClaim = claimsApi.getOAuth2Claim(authServer.id, claim.id, headers)
-            println "   ✓ getOAuth2Claim(headers)"
+            logger.debug("    getOAuth2Claim(headers)")
 
             // Replace claim with headers
             claim.value("user.login")
             def updatedClaim = claimsApi.replaceOAuth2Claim(authServer.id, claim.id, claim, headers)
-            println "   ✓ replaceOAuth2Claim(headers)"
+            logger.debug("    replaceOAuth2Claim(headers)")
 
             // List claims with headers
             def claims = claimsApi.listOAuth2Claims(authServer.id, headers)
-            println "   ✓ listOAuth2Claims(headers)"
+            logger.debug("    listOAuth2Claims(headers)")
 
             // Delete claim with headers
             claimsApi.deleteOAuth2Claim(authServer.id, claim.id, headers)
-            println "   ✓ deleteOAuth2Claim(headers)"
+            logger.debug("    deleteOAuth2Claim(headers)")
 
             // Create policy with headers
             def policy = policiesApi.createAuthorizationServerPolicy(authServer.id,
@@ -141,20 +140,20 @@ class AdditionalHeadersCoverageIT extends ITSupport {
                         .clients(new ClientPolicyCondition().include(["ALL_CLIENTS"]))),
                 headers)
             assertThat policy.id, notNullValue()
-            println "   ✓ createAuthorizationServerPolicy(headers)"
+            logger.debug("    createAuthorizationServerPolicy(headers)")
 
             // Get policy with headers
             def fetchedPolicy = policiesApi.getAuthorizationServerPolicy(authServer.id, policy.id, headers)
-            println "   ✓ getAuthorizationServerPolicy(headers)"
+            logger.debug("    getAuthorizationServerPolicy(headers)")
 
             // Replace policy with headers
             policy.description("Updated policy")
             def updatedPolicy = policiesApi.replaceAuthorizationServerPolicy(authServer.id, policy.id, policy, headers)
-            println "   ✓ replaceAuthorizationServerPolicy(headers)"
+            logger.debug("    replaceAuthorizationServerPolicy(headers)")
 
             // List policies with headers
             def policies = policiesApi.listAuthorizationServerPolicies(authServer.id, headers)
-            println "   ✓ listAuthorizationServerPolicies(headers)"
+            logger.debug("    listAuthorizationServerPolicies(headers)")
 
             // Create rule with headers
             def rule = rulesApi.createAuthorizationServerPolicyRule(authServer.id, policy.id,
@@ -171,11 +170,11 @@ class AdditionalHeadersCoverageIT extends ITSupport {
                             .accessTokenLifetimeMinutes(60).refreshTokenLifetimeMinutes(0).refreshTokenWindowMinutes(10080))),
                 headers)
             assertThat rule.id, notNullValue()
-            println "   ✓ createAuthorizationServerPolicyRule(headers)"
+            logger.debug("    createAuthorizationServerPolicyRule(headers)")
 
             // Get rule with headers
             def fetchedRule = rulesApi.getAuthorizationServerPolicyRule(authServer.id, policy.id, rule.id, headers)
-            println "   ✓ getAuthorizationServerPolicyRule(headers)"
+            logger.debug("    getAuthorizationServerPolicyRule(headers)")
 
             // Replace rule with headers
             rule.name("H Rule Updated ${testId}".toString())
@@ -185,57 +184,62 @@ class AdditionalHeadersCoverageIT extends ITSupport {
                 .conditions(rule.conditions)
                 .actions(rule.actions)
             def updatedRule = rulesApi.replaceAuthorizationServerPolicyRule(authServer.id, policy.id, rule.id, ruleForUpdate, headers)
-            println "   ✓ replaceAuthorizationServerPolicyRule(headers)"
+            logger.debug("    replaceAuthorizationServerPolicyRule(headers)")
 
             // List rules with headers
             def rules = rulesApi.listAuthorizationServerPolicyRules(authServer.id, policy.id, headers)
-            println "   ✓ listAuthorizationServerPolicyRules(headers)"
+            logger.debug("    listAuthorizationServerPolicyRules(headers)")
 
             // Delete rule with headers
             rulesApi.deleteAuthorizationServerPolicyRule(authServer.id, policy.id, rule.id, headers)
-            println "   ✓ deleteAuthorizationServerPolicyRule(headers)"
+            logger.debug("    deleteAuthorizationServerPolicyRule(headers)")
 
             // Delete policy with headers
             policiesApi.deleteAuthorizationServerPolicy(authServer.id, policy.id, headers)
-            println "   ✓ deleteAuthorizationServerPolicy(headers)"
+            logger.debug("    deleteAuthorizationServerPolicy(headers)")
 
             // List keys with headers
             def keys = keysApi.listAuthorizationServerKeys(authServer.id, headers)
-            println "   ✓ listAuthorizationServerKeys(headers)"
+            logger.debug("    listAuthorizationServerKeys(headers)")
 
             // Rotate keys with headers
             try {
                 def newKeys = authServerApi.rotateAuthorizationServerKeys(authServer.id,
                     new JwkUse().use("sig"), headers)
-                println "   ✓ rotateAuthorizationServerKeys(headers)"
+                logger.debug("    rotateAuthorizationServerKeys(headers)")
             } catch (Exception e) {
-                println "   ⚠ rotateAuthorizationServerKeys: ${e.message?.take(60)}"
+                logger.debug("    rotateAuthorizationServerKeys: {}", e.message?.take(60))
             }
 
             // Get resource server credentials keys with headers
             try {
                 def credKeys = credKeysApi.listOAuth2ResourceServerJsonWebKeys(authServer.id, headers)
-                println "   ✓ listOAuth2ResourceServerJsonWebKeys(headers)"
+                logger.debug("    listOAuth2ResourceServerJsonWebKeys(headers)")
             } catch (Exception e) {
-                println "   ⚠ listOAuth2ResourceServerJsonWebKeys: ${e.message?.take(60)}"
+                logger.debug("    listOAuth2ResourceServerJsonWebKeys: {}", e.message?.take(60))
             }
 
             // Lifecycle with headers
             authServerApi.deactivateAuthorizationServer(authServer.id, headers)
-            println "   ✓ deactivateAuthorizationServer(headers)"
+            logger.debug("    deactivateAuthorizationServer(headers)")
             authServerApi.activateAuthorizationServer(authServer.id, headers)
-            println "   ✓ activateAuthorizationServer(headers)"
+            logger.debug("    activateAuthorizationServer(headers)")
 
             // Deactivate and delete with headers
             authServerApi.deactivateAuthorizationServer(authServer.id, headers)
             authServerApi.deleteAuthorizationServer(authServer.id, headers)
-            println "   ✓ deleteAuthorizationServer(headers)"
+            logger.debug("    deleteAuthorizationServer(headers)")
 
-            println "\n✅ AuthorizationServer CRUD with headers completed!"
+            logger.debug("\n AuthorizationServer CRUD with headers completed!")
 
         } catch (ApiException e) {
-            println "❌ Test failed: ${e.responseBody}"
+            logger.debug(" Test failed: {}", e.responseBody)
             throw e
+        } finally {
+            if (authServerId) {
+                try { authServerApi.deactivateAuthorizationServer(authServerId) } catch (Exception ignored) {}
+                try { authServerApi.deleteAuthorizationServer(authServerId) } catch (Exception ignored) {}
+            }
         }
     }
 
@@ -256,53 +260,53 @@ class AdditionalHeadersCoverageIT extends ITSupport {
         // OrgSettingContactApi
         try {
             def types = contactApi.listOrgContactTypes(headers)
-            println "   ✓ listOrgContactTypes(headers)"
-        } catch (Exception e) { println "   ⚠ listOrgContactTypes: ${e.message?.take(60)}" }
+            logger.debug("    listOrgContactTypes(headers)")
+        } catch (Exception e) { logger.debug("    listOrgContactTypes: {}", e.message?.take(60)) }
 
         try {
             def contact = contactApi.getOrgContactUser("BILLING", headers)
-            println "   ✓ getOrgContactUser(headers)"
-        } catch (Exception e) { println "   ⚠ getOrgContactUser: ${e.message?.take(60)}" }
+            logger.debug("    getOrgContactUser(headers)")
+        } catch (Exception e) { logger.debug("    getOrgContactUser: {}", e.message?.take(60)) }
 
         // OrgSettingAdminApi
         try {
             def setting = adminApi.getAutoAssignAdminAppSetting(headers)
-            println "   ✓ getAutoAssignAdminAppSetting(headers)"
-        } catch (Exception e) { println "   ⚠ getAutoAssignAdminAppSetting: ${e.message?.take(60)}" }
+            logger.debug("    getAutoAssignAdminAppSetting(headers)")
+        } catch (Exception e) { logger.debug("    getAutoAssignAdminAppSetting: {}", e.message?.take(60)) }
         try {
             def clientPriv = adminApi.getClientPrivilegesSetting(headers)
-            println "   ✓ getClientPrivilegesSetting(headers)"
-        } catch (Exception e) { println "   ⚠ getClientPrivilegesSetting: ${e.message?.take(60)}" }
+            logger.debug("    getClientPrivilegesSetting(headers)")
+        } catch (Exception e) { logger.debug("    getClientPrivilegesSetting: {}", e.message?.take(60)) }
         try {
             def thirdParty = adminApi.getThirdPartyAdminSetting(headers)
-            println "   ✓ getThirdPartyAdminSetting(headers)"
-        } catch (Exception e) { println "   ⚠ getThirdPartyAdminSetting: ${e.message?.take(60)}" }
+            logger.debug("    getThirdPartyAdminSetting(headers)")
+        } catch (Exception e) { logger.debug("    getThirdPartyAdminSetting: {}", e.message?.take(60)) }
 
         // OrgSettingGeneralApi
         try {
             def settings = generalApi.getOrgSettings(headers)
-            println "   ✓ getOrgSettings(headers)"
-        } catch (Exception e) { println "   ⚠ getOrgSettings: ${e.message?.take(60)}" }
+            logger.debug("    getOrgSettings(headers)")
+        } catch (Exception e) { logger.debug("    getOrgSettings: {}", e.message?.take(60)) }
 
         // OrgSettingMetadataApi
         try {
             def metadata = metadataApi.getWellknownOrgMetadata(headers)
-            println "   ✓ getWellknownOrgMetadata(headers)"
-        } catch (Exception e) { println "   ⚠ getWellknownOrgMetadata: ${e.message?.take(60)}" }
+            logger.debug("    getWellknownOrgMetadata(headers)")
+        } catch (Exception e) { logger.debug("    getWellknownOrgMetadata: {}", e.message?.take(60)) }
 
         // OrgSettingCommunicationApi
         try {
             def prefs = commApi.getOktaCommunicationSettings(headers)
-            println "   ✓ getOktaCommunicationSettings(headers)"
-        } catch (Exception e) { println "   ⚠ getOktaCommunicationSettings: ${e.message?.take(60)}" }
+            logger.debug("    getOktaCommunicationSettings(headers)")
+        } catch (Exception e) { logger.debug("    getOktaCommunicationSettings: {}", e.message?.take(60)) }
 
         // OrgSettingSupportApi
         try {
             def support = supportApi.getOrgOktaSupportSettings(headers)
-            println "   ✓ getOrgOktaSupportSettings(headers)"
-        } catch (Exception e) { println "   ⚠ getOrgOktaSupportSettings: ${e.message?.take(60)}" }
+            logger.debug("    getOrgOktaSupportSettings(headers)")
+        } catch (Exception e) { logger.debug("    getOrgOktaSupportSettings: {}", e.message?.take(60)) }
 
-        println "\n✅ OrgSetting with headers completed!"
+        logger.debug("\n OrgSetting with headers completed!")
     }
 
     /**
@@ -317,6 +321,8 @@ class AdditionalHeadersCoverageIT extends ITSupport {
         def groupOwnerApi = new GroupOwnerApi(client)
 
         String testId = UUID.randomUUID().toString().substring(0, 8)
+        String groupId = null
+        String ruleId = null
 
         try {
             // Create group with headers
@@ -326,43 +332,44 @@ class AdditionalHeadersCoverageIT extends ITSupport {
                     .description("Test group for headers coverage")),
                 headers)
             assertThat group.id, notNullValue()
-            println "   ✓ addGroup(headers)"
+            groupId = group.id
+            logger.debug("    addGroup(headers)")
 
             // Get group with headers
             def fetched = groupApi.getGroup(group.id, headers)
             assertThat fetched.profile.name, equalTo("Headers Test ${testId}".toString())
-            println "   ✓ getGroup(headers)"
+            logger.debug("    getGroup(headers)")
 
             // Replace group with headers
             def updateReq = new AddGroupRequest().profile(new OktaUserGroupProfile()
                 .name("Headers Test ${testId}".toString())
                 .description("Updated via headers"))
             def updated = groupApi.replaceGroup(group.id, updateReq, headers)
-            println "   ✓ replaceGroup(headers)"
+            logger.debug("    replaceGroup(headers)")
 
             // List groups with headers
             def groups = groupApi.listGroups(null, null, null, null, null, null, null, null, headers)
             assertThat groups, not(empty())
-            println "   ✓ listGroups(headers)"
+            logger.debug("    listGroups(headers)")
 
             // List group users with headers
             def users = groupApi.listGroupUsers(group.id, null, null, headers)
-            println "   ✓ listGroupUsers(headers)"
+            logger.debug("    listGroupUsers(headers)")
 
             // List assigned applications with headers
             try {
                 def apps = groupApi.listAssignedApplicationsForGroup(group.id, null, null, headers)
-                println "   ✓ listAssignedApplicationsForGroup(headers)"
+                logger.debug("    listAssignedApplicationsForGroup(headers)")
             } catch (Exception e) {
-                println "   ⚠ listAssignedApplicationsForGroup: ${e.message?.take(60)}"
+                logger.debug("    listAssignedApplicationsForGroup: {}", e.message?.take(60))
             }
 
             // GroupOwnerApi - list owners with headers
             try {
                 def owners = groupOwnerApi.listGroupOwners(group.id, null, null, null, headers)
-                println "   ✓ listGroupOwners(headers)"
+                logger.debug("    listGroupOwners(headers)")
             } catch (Exception e) {
-                println "   ⚠ listGroupOwners: ${e.message?.take(60)}"
+                logger.debug("    listGroupOwners: {}", e.message?.take(60))
             }
 
             // Create group rule with headers
@@ -380,30 +387,39 @@ class AdditionalHeadersCoverageIT extends ITSupport {
                         .assignUserToGroups(new GroupRuleGroupAssignment()
                             .groupIds([group.id]))),
                 headers)
-            println "   ✓ createGroupRule(headers)"
+            ruleId = rule.id
+            logger.debug("    createGroupRule(headers)")
 
             // Get rule with headers
             def fetchedRule = groupRuleApi.getGroupRule(rule.id, null, headers)
-            println "   ✓ getGroupRule(headers)"
+            logger.debug("    getGroupRule(headers)")
 
             // List rules with headers
             def rules = groupRuleApi.listGroupRules(null, null, null, null, headers)
-            println "   ✓ listGroupRules(headers)"
+            logger.debug("    listGroupRules(headers)")
 
             // Delete rule with headers
             try { groupRuleApi.deactivateGroupRule(rule.id, headers) } catch (Exception ignored) {}
             groupRuleApi.deleteGroupRule(rule.id, false, headers)
-            println "   ✓ deleteGroupRule(headers)"
+            logger.debug("    deleteGroupRule(headers)")
 
             // Delete group with headers
             groupApi.deleteGroup(group.id, headers)
-            println "   ✓ deleteGroup(headers)"
+            logger.debug("    deleteGroup(headers)")
 
-            println "\n✅ Group CRUD with headers completed!"
+            logger.debug("\n Group CRUD with headers completed!")
 
         } catch (ApiException e) {
-            println "❌ Test failed: ${e.responseBody}"
+            logger.debug(" Test failed: {}", e.responseBody)
             throw e
+        } finally {
+            if (ruleId) {
+                try { groupRuleApi.deactivateGroupRule(ruleId) } catch (Exception ignored) {}
+                try { groupRuleApi.deleteGroupRule(ruleId, false) } catch (Exception ignored) {}
+            }
+            if (groupId) {
+                try { groupApi.deleteGroup(groupId) } catch (Exception ignored) {}
+            }
         }
     }
 
@@ -420,41 +436,41 @@ class AdditionalHeadersCoverageIT extends ITSupport {
             // List policies with headers (8 params: type, status, q, expand, sortBy, limit, resourceId, after)
             def policies = policyApi.listPolicies("OKTA_SIGN_ON", null, null, null, null, null, null, null, headers)
             assertThat policies, not(empty())
-            println "   ✓ listPolicies(OKTA_SIGN_ON, headers)"
+            logger.debug("    listPolicies(OKTA_SIGN_ON, headers)")
 
             // Get first policy with headers
             if (!policies.isEmpty()) {
                 def policyId = policies[0].id
                 def policy = policyApi.getPolicy(policyId, null, headers)
                 assertThat policy.id, equalTo(policyId)
-                println "   ✓ getPolicy(headers)"
+                logger.debug("    getPolicy(headers)")
 
                 // List policy rules with headers
                 try {
                     def rules = policyApi.listPolicyRules(policyId, headers)
-                    println "   ✓ listPolicyRules(headers)"
+                    logger.debug("    listPolicyRules(headers)")
 
                     if (!rules.isEmpty()) {
                         def rule = policyApi.getPolicyRule(policyId, rules[0].id, headers)
-                        println "   ✓ getPolicyRule(headers)"
+                        logger.debug("    getPolicyRule(headers)")
                     }
                 } catch (Exception e) {
-                    println "   ⚠ listPolicyRules: ${e.message?.take(60)}"
+                    logger.debug("    listPolicyRules: {}", e.message?.take(60))
                 }
             }
 
             // Also test ACCESS_POLICY type
             try {
                 def accessPolicies = policyApi.listPolicies("ACCESS_POLICY", null, null, null, null, null, null, null, headers)
-                println "   ✓ listPolicies(ACCESS_POLICY, headers)"
+                logger.debug("    listPolicies(ACCESS_POLICY, headers)")
             } catch (Exception e) {
-                println "   ⚠ listPolicies(ACCESS_POLICY): ${e.message?.take(60)}"
+                logger.debug("    listPolicies(ACCESS_POLICY): {}", e.message?.take(60))
             }
 
-            println "\n✅ Policy CRUD with headers completed!"
+            logger.debug("\n Policy CRUD with headers completed!")
 
         } catch (ApiException e) {
-            println "❌ Test failed: ${e.responseBody}"
+            logger.debug(" Test failed: {}", e.responseBody)
             throw e
         }
     }
@@ -475,58 +491,58 @@ class AdditionalHeadersCoverageIT extends ITSupport {
         // AuthenticatorApi
         try {
             def authenticators = authenticatorApi.listAuthenticators(headers)
-            println "   ✓ listAuthenticators(headers): ${authenticators.size()} items"
+            logger.debug("    listAuthenticators(headers): {} items", authenticators.size())
 
             if (!authenticators.isEmpty()) {
                 def authId = authenticators[0].id
                 def auth = authenticatorApi.getAuthenticator(authId, headers)
-                println "   ✓ getAuthenticator(headers)"
+                logger.debug("    getAuthenticator(headers)")
 
                 try {
                     def methods = authenticatorApi.listAuthenticatorMethods(authId, headers)
-                    println "   ✓ listAuthenticatorMethods(headers)"
+                    logger.debug("    listAuthenticatorMethods(headers)")
                 } catch (Exception e) {
-                    println "   ⚠ listAuthenticatorMethods: ${e.message?.take(60)}"
+                    logger.debug("    listAuthenticatorMethods: {}", e.message?.take(60))
                 }
             }
-        } catch (Exception e) { println "   ⚠ AuthenticatorApi: ${e.message?.take(60)}" }
+        } catch (Exception e) { logger.debug("    AuthenticatorApi: {}", e.message?.take(60)) }
 
         // RealmApi
         try {
             def realms = realmApi.listRealms(null, null, null, null, null, headers)
-            println "   ✓ listRealms(headers): ${realms.size()} items"
+            logger.debug("    listRealms(headers): {} items", realms.size())
 
             if (!realms.isEmpty()) {
                 def realmId = realms[0].id
                 def realm = realmApi.getRealm(realmId, headers)
-                println "   ✓ getRealm(headers)"
+                logger.debug("    getRealm(headers)")
             }
-        } catch (Exception e) { println "   ⚠ RealmApi: ${e.message?.take(60)}" }
+        } catch (Exception e) { logger.debug("    RealmApi: {}", e.message?.take(60)) }
 
         // ProfileMappingApi
         try {
             def mappings = profileMappingApi.listProfileMappings(null, null, null, null, headers)
-            println "   ✓ listProfileMappings(headers): ${mappings.size()} items"
+            logger.debug("    listProfileMappings(headers): {} items", mappings.size())
 
             if (!mappings.isEmpty()) {
                 def mapping = profileMappingApi.getProfileMapping(mappings[0].id, headers)
-                println "   ✓ getProfileMapping(headers)"
+                logger.debug("    getProfileMapping(headers)")
             }
-        } catch (Exception e) { println "   ⚠ ProfileMappingApi: ${e.message?.take(60)}" }
+        } catch (Exception e) { logger.debug("    ProfileMappingApi: {}", e.message?.take(60)) }
 
         // ApiTokenApi
         try {
             def tokens = apiTokenApi.listApiTokens(headers)
-            println "   ✓ listApiTokens(headers)"
-        } catch (Exception e) { println "   ⚠ ApiTokenApi: ${e.message?.take(60)}" }
+            logger.debug("    listApiTokens(headers)")
+        } catch (Exception e) { logger.debug("    ApiTokenApi: {}", e.message?.take(60)) }
 
         // AgentPoolsApi
         try {
             def pools = agentPoolsApi.listAgentPools(null, null, null, headers)
-            println "   ✓ listAgentPools(headers)"
-        } catch (Exception e) { println "   ⚠ AgentPoolsApi: ${e.message?.take(60)}" }
+            logger.debug("    listAgentPools(headers)")
+        } catch (Exception e) { logger.debug("    AgentPoolsApi: {}", e.message?.take(60)) }
 
-        println "\n✅ Misc APIs with headers completed!"
+        logger.debug("\n Misc APIs with headers completed!")
     }
 
     /**
@@ -558,63 +574,63 @@ class AdditionalHeadersCoverageIT extends ITSupport {
                         .login("headers-test-${testId}@example.com".toString())),
                 true, false, null, headers)
             userId = user.getId()
-            println "   ✓ createUser(headers)"
+            logger.debug("    createUser(headers)")
 
             // Get user with headers (id, contentType, expand, headers)
             def fetched = userApi.getUser(userId, null, null, headers)
             assertThat fetched.profile.lastName, equalTo("User${testId}".toString())
-            println "   ✓ getUser(headers)"
+            logger.debug("    getUser(headers)")
 
             // List users with headers
             def users = userApi.listUsers(null, null, null, null, null, null, null, null, null, null, headers)
             assertThat users, not(empty())
-            println "   ✓ listUsers(headers)"
+            logger.debug("    listUsers(headers)")
 
             // UserResourcesApi with headers
             try {
                 def appLinks = userResourcesApi.listAppLinks(userId, headers)
-                println "   ✓ listAppLinks(headers)"
-            } catch (Exception e) { println "   ⚠ listAppLinks: ${e.message?.take(60)}" }
+                logger.debug("    listAppLinks(headers)")
+            } catch (Exception e) { logger.debug("    listAppLinks: {}", e.message?.take(60)) }
 
             try {
                 def clients = userResourcesApi.listUserClients(userId, headers)
-                println "   ✓ listUserClients(headers)"
-            } catch (Exception e) { println "   ⚠ listUserClients: ${e.message?.take(60)}" }
+                logger.debug("    listUserClients(headers)")
+            } catch (Exception e) { logger.debug("    listUserClients: {}", e.message?.take(60)) }
 
             try {
                 def groups = userResourcesApi.listUserGroups(userId, headers)
-                println "   ✓ listUserGroups(headers)"
-            } catch (Exception e) { println "   ⚠ listUserGroups: ${e.message?.take(60)}" }
+                logger.debug("    listUserGroups(headers)")
+            } catch (Exception e) { logger.debug("    listUserGroups: {}", e.message?.take(60)) }
 
             // UserFactorApi - list factors with headers
             try {
                 def factors = userFactorApi.listFactors(userId, headers)
-                println "   ✓ listFactors(headers)"
-            } catch (Exception e) { println "   ⚠ listFactors: ${e.message?.take(60)}" }
+                logger.debug("    listFactors(headers)")
+            } catch (Exception e) { logger.debug("    listFactors: {}", e.message?.take(60)) }
 
             // UserSessionsApi - revokeUserSessions with headers (userId, oauthTokens, forgetDevices, headers)
             try {
                 userSessionsApi.revokeUserSessions(userId, false, false, headers)
-                println "   ✓ revokeUserSessions(headers)"
-            } catch (Exception e) { println "   ⚠ revokeUserSessions: ${e.message?.take(60)}" }
+                logger.debug("    revokeUserSessions(headers)")
+            } catch (Exception e) { logger.debug("    revokeUserSessions: {}", e.message?.take(60)) }
 
             // SubscriptionApi - list user subscriptions with headers
             try {
                 def subs = subscriptionApi.listSubscriptionsUser(userId, headers)
-                println "   ✓ listSubscriptionsUser(headers)"
-            } catch (Exception e) { println "   ⚠ listSubscriptionsUser: ${e.message?.take(60)}" }
+                logger.debug("    listSubscriptionsUser(headers)")
+            } catch (Exception e) { logger.debug("    listSubscriptionsUser: {}", e.message?.take(60)) }
 
             // Deactivate and delete with headers
             userLifecycleApi.deactivateUser(userId, false, null, headers)
-            println "   ✓ deactivateUser(headers)"
+            logger.debug("    deactivateUser(headers)")
             userApi.deleteUser(userId, false, null, headers)
-            println "   ✓ deleteUser(headers)"
+            logger.debug("    deleteUser(headers)")
             userId = null // already deleted
 
-            println "\n✅ User lifecycle and creds with headers completed!"
+            logger.debug("\n User lifecycle and creds with headers completed!")
 
         } catch (ApiException e) {
-            println "❌ Test failed: ${e.responseBody}"
+            logger.debug(" Test failed: {}", e.responseBody)
             throw e
         } finally {
             if (userId) {
@@ -654,47 +670,47 @@ class AdditionalHeadersCoverageIT extends ITSupport {
                             .url("https://example.com/headers-${testId}".toString()))),
                 true, null, headers)
             appId = app.getId()
-            println "   ✓ createApplication(headers)"
+            logger.debug("    createApplication(headers)")
 
             // Get application with headers
             def fetched = applicationApi.getApplication(appId, null, headers)
-            println "   ✓ getApplication(headers)"
+            logger.debug("    getApplication(headers)")
 
             // List applications with headers (8 params + headers)
             try {
                 def apps = applicationApi.listApplications(null, null, null, null, null, null, null, null, headers)
-                println "   ✓ listApplications(headers)"
-            } catch (Exception e) { println "   ⚠ listApplications: ${e.message?.take(60)}" }
+                logger.debug("    listApplications(headers)")
+            } catch (Exception e) { logger.debug("    listApplications: {}", e.message?.take(60)) }
 
             // ApplicationPoliciesApi - assignApplicationPolicy with fake policyId (will 404 but exercises code path)
             try {
                 appPoliciesApi.assignApplicationPolicy(appId, "nonexistent-policy", headers)
-                println "   ✓ assignApplicationPolicy(headers)"
-            } catch (Exception e) { println "   ✓ assignApplicationPolicy(headers) - exercised (${e.message?.take(60)})" }
+                logger.debug("    assignApplicationPolicy(headers)")
+            } catch (Exception e) { logger.debug("    assignApplicationPolicy(headers) - exercised ({})", e.message?.take(60)) }
 
             // ApplicationConnectionsApi - get default provisioning connection
             try {
                 def connection = appConnectionsApi.getDefaultProvisioningConnectionForApplication(appId, headers)
-                println "   ✓ getDefaultProvisioningConnectionForApplication(headers)"
-            } catch (Exception e) { println "   ⚠ getDefaultProvisioningConnectionForApplication: ${e.message?.take(60)}" }
+                logger.debug("    getDefaultProvisioningConnectionForApplication(headers)")
+            } catch (Exception e) { logger.debug("    getDefaultProvisioningConnectionForApplication: {}", e.message?.take(60)) }
 
             // Lifecycle with headers
             applicationApi.deactivateApplication(appId, headers)
-            println "   ✓ deactivateApplication(headers)"
+            logger.debug("    deactivateApplication(headers)")
 
             applicationApi.activateApplication(appId, headers)
-            println "   ✓ activateApplication(headers)"
+            logger.debug("    activateApplication(headers)")
 
             // Delete with headers
             applicationApi.deactivateApplication(appId, headers)
             applicationApi.deleteApplication(appId, headers)
-            println "   ✓ deleteApplication(headers)"
+            logger.debug("    deleteApplication(headers)")
             appId = null
 
-            println "\n✅ Application CRUD with headers completed!"
+            logger.debug("\n Application CRUD with headers completed!")
 
         } catch (ApiException e) {
-            println "❌ Test failed: ${e.responseBody}"
+            logger.debug(" Test failed: {}", e.responseBody)
             throw e
         } finally {
             if (appId) {

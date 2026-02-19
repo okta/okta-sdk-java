@@ -39,14 +39,6 @@ import static org.hamcrest.Matchers.*
 /**
  * Integration tests for Application SSO Credential Key API.
  * Tests signing key and CSR management for SAML applications.
- * 
- * Coverage:
- * - Key generation and lifecycle (generateApplicationKey, listApplicationKeys, getApplicationKey)
- * - Key cloning between applications (cloneApplicationKey)
- * - CSR generation and lifecycle (generateCsrForApplication, listCsrsForApplication, getCsrForApplication, revokeCsrFromApplication)
- * - CSR metadata variations (minimal, multi-SAN, wildcard)
- * - CSR publish error handling (publishCsrFromApplication)
- * - Error handling (invalid IDs, invalid inputs)
  */
 class ApplicationSSOCredentialKeyIT extends ITSupport {
 
@@ -176,12 +168,6 @@ class ApplicationSSOCredentialKeyIT extends ITSupport {
         assertThat(targetKeys.find { it.getKid() == keyId }, notNullValue())
         logger.info("Verified cloned key exists in target app")
 
-        // ==================== NOTE: CSR TESTS IN SEPARATE METHODS ====================
-        // CSR lifecycle operations (generate, list, retrieve, revoke, publish) are tested
-        // in testCsrLifecycle(), testCsrMetadataVariations(), and testPublishCsrErrorHandling().
-        // The generateCsrForApplication SDK method returns String (PKCS#10) rather than Csr object
-        // due to content-type negotiation, so CSR tests use listCsrsForApplication to find CSR IDs.
-
         logger.info("All comprehensive credential key operations completed successfully!")
     }
 
@@ -282,9 +268,6 @@ class ApplicationSSOCredentialKeyIT extends ITSupport {
 
     /**
      * Tests CSR lifecycle: create, list, retrieve, and revoke.
-     * 
-     * Works around SDK issue where generateCsrForApplication returns String (PKCS#10)
-     * instead of Csr object, by using listCsrsForApplication to find the CSR ID.
      */
     @Test
     void testCsrLifecycle() {
@@ -405,9 +388,6 @@ class ApplicationSSOCredentialKeyIT extends ITSupport {
 
     /**
      * Tests CSR generation with various metadata configurations.
-     * 
-     * Works around SDK issue where generateCsrForApplication returns String (PKCS#10)
-     * by using listCsrsForApplication to verify CSRs were created.
      */
     @Test
     void testCsrMetadataVariations() {

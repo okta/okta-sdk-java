@@ -30,6 +30,8 @@ import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Integration tests for {@link AuthenticatorApi}.
@@ -69,6 +71,9 @@ import static org.hamcrest.Matchers.*
  */
 class AuthenticatorIT extends ITSupport {
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticatorIT)
+
+
     @Test(groups = "group3")
     void testAuthenticatorApiLifecycle() {
         def client = getClient()
@@ -80,31 +85,29 @@ class AuthenticatorIT extends ITSupport {
         String originalStatus = null
         
         try {
-            println "\n" + "=" * 60
-            println "TESTING AUTHENTICATOR API"
-            println "=" * 60
-            println "Note: All authenticator settings will be restored to original values\n"
+            logger.debug("TESTING AUTHENTICATOR API")
+            logger.debug("Note: All authenticator settings will be restored to original values\n")
             
             // ========== STEP 1: List All Authenticators (GET /api/v1/authenticators) ==========
-            println "1. GET /api/v1/authenticators (List all authenticators)"
+            logger.debug("1. GET /api/v1/authenticators (List all authenticators)")
             List<AuthenticatorBase> authenticators = authenticatorApi.listAuthenticators()
             
             assertThat "Should have at least one authenticator", authenticators, not(empty())
-            println "  ✓ Retrieved ${authenticators.size()} authenticator(s):"
+            logger.debug("   Retrieved {} authenticator(s):", authenticators.size())
             
             authenticators.each { auth ->
-                println "    - ${auth.name} (${auth.key}): ${auth.status} [ID: ${auth.id}]"
+                logger.debug("    - {} ({}): {} [ID: {}]", auth.name, auth.key, auth.status, auth.id)
             }
             
             // Find authenticator for testing - prefer WebAuthn for AAGUID testing
-            println "\n  → Searching for suitable test authenticator..."
+            logger.debug("\n   Searching for suitable test authenticator...")
             def testAuth = null
             
             // First try WebAuthn for comprehensive testing (supports AAGUID operations)
             for (def auth : authenticators) {
                 if (auth.key?.toString() == "webauthn") {
                     testAuth = auth
-                    println "  ✓ WebAuthn found: ${testAuth.name}"
+                    logger.debug("   WebAuthn found: {}", testAuth.name)
                     break
                 }
             }
@@ -114,7 +117,7 @@ class AuthenticatorIT extends ITSupport {
                 for (def auth : authenticators) {
                     if (auth.key?.toString() == "phone_number") {
                         testAuth = auth
-                        println "  ✓ Phone found: ${testAuth.name}"
+                        logger.debug("   Phone found: {}", testAuth.name)
                         break
                     }
                 }
@@ -123,17 +126,17 @@ class AuthenticatorIT extends ITSupport {
             if (!testAuth) {
                 // Otherwise just use the first authenticator
                 testAuth = authenticators[0]
-                println "  → Using first authenticator: ${testAuth.name}"
+                logger.debug("   Using first authenticator: {}", testAuth.name)
             }
             
             assertThat "Should find an authenticator to test with", testAuth, notNullValue()
             testAuthenticatorId = testAuth.id
             originalStatus = testAuth.status
-            println "\n  → Selected for testing: ${testAuth.name} (${testAuth.key})"
-            println "    Original Status: ${originalStatus}"
+            logger.debug("\n   Selected for testing: {} ({})", testAuth.name, testAuth.key)
+            logger.debug("    Original Status: {}", originalStatus)
             
             // ========== STEP 2: Get Authenticator by ID (GET /api/v1/authenticators/{id}) ==========
-            println "\n2. GET /api/v1/authenticators/${testAuthenticatorId} (Retrieve specific authenticator)"
+            logger.debug("\n2. GET /api/v1/authenticators/{} (Retrieve specific authenticator)", testAuthenticatorId)
             originalAuthenticator = authenticatorApi.getAuthenticator(testAuthenticatorId)
             
             assertThat "Authenticator should be retrieved", originalAuthenticator, notNullValue()
@@ -142,21 +145,21 @@ class AuthenticatorIT extends ITSupport {
             assertThat "Authenticator should have a key", originalAuthenticator.key, notNullValue()
             assertThat "Authenticator should have a type", originalAuthenticator.type, notNullValue()
             
-            println "  ✓ Retrieved authenticator details:"
-            println "    - Name: ${originalAuthenticator.name}"
-            println "    - Key: ${originalAuthenticator.key}"
-            println "    - Type: ${originalAuthenticator.type}"
-            println "    - Status: ${originalAuthenticator.status}"
-            println "    - Created: ${originalAuthenticator.created}"
-            println "    - Last Updated: ${originalAuthenticator.lastUpdated}"
+            logger.debug("   Retrieved authenticator details:")
+            logger.debug("    - Name: {}", originalAuthenticator.name)
+            logger.debug("    - Key: {}", originalAuthenticator.key)
+            logger.debug("    - Type: {}", originalAuthenticator.type)
+            logger.debug("    - Status: {}", originalAuthenticator.status)
+            logger.debug("    - Created: {}", originalAuthenticator.created)
+            logger.debug("    - Last Updated: {}", originalAuthenticator.lastUpdated)
             
             // ========== STEP 3: Update Authenticator (PUT /api/v1/authenticators/{id}) ==========
-            println "\n3. PUT /api/v1/authenticators/${testAuthenticatorId} (Update authenticator)"
+            logger.debug("\n3. PUT /api/v1/authenticators/{} (Update authenticator)", testAuthenticatorId)
             
             // For the update, we'll just update it with its current values to test the PUT operation
             // Note: We can't easily modify authenticator properties as they have complex validation rules
             // This test focuses on verifying the API call works correctly
-            println "  → Updating authenticator (no-op update to test PUT functionality)"
+            logger.debug("   Updating authenticator (no-op update to test PUT functionality)")
             
             AuthenticatorBase updatedAuthenticator = authenticatorApi.replaceAuthenticator(testAuthenticatorId, originalAuthenticator)
             
@@ -164,23 +167,23 @@ class AuthenticatorIT extends ITSupport {
             assertThat "Updated authenticator ID should match", updatedAuthenticator.id, equalTo(testAuthenticatorId)
             assertThat "Updated authenticator name should match", updatedAuthenticator.name, equalTo(originalAuthenticator.name)
             
-            println "  ✓ Update successful (no-op)"
-            println "    - Name: ${updatedAuthenticator.name}"
-            println "    - Status: ${updatedAuthenticator.status}"
+            logger.debug("   Update successful (no-op)")
+            logger.debug("    - Name: {}", updatedAuthenticator.name)
+            logger.debug("    - Status: {}", updatedAuthenticator.status)
             
             // ========== STEP 4: List Authenticator Methods (GET /api/v1/authenticators/{id}/methods) ==========
-            println "\n4. GET /api/v1/authenticators/${testAuthenticatorId}/methods (List authenticator methods)"
+            logger.debug("\n4. GET /api/v1/authenticators/{}/methods (List authenticator methods)", testAuthenticatorId)
             List<AuthenticatorMethodBase> methods = authenticatorApi.listAuthenticatorMethods(testAuthenticatorId)
             
             assertThat "Should have at least one method", methods, not(empty())
-            println "  ✓ Retrieved ${methods.size()} method(s):"
+            logger.debug("   Retrieved {} method(s):", methods.size())
             
             methods.each { method ->
-                println "    - Type: ${method.type}, Status: ${method.status}"
+                logger.debug("    - Type: {}, Status: {}", method.type, method.status)
             }
             
             // ========== STEP 5: Get Specific Method (GET /api/v1/authenticators/{id}/methods/{methodType}) ==========
-            println "\n5. GET /api/v1/authenticators/${testAuthenticatorId}/methods/{methodType} (Retrieve specific method)"
+            logger.debug("\n5. GET /api/v1/authenticators/{}/methods/{methodType} (Retrieve specific method)", testAuthenticatorId)
             
             // Get the first method's type to retrieve details
             def firstMethod = methods[0]
@@ -191,12 +194,12 @@ class AuthenticatorIT extends ITSupport {
             assertThat "Method should be retrieved", specificMethod, notNullValue()
             assertThat "Method type should match", specificMethod.type, equalTo(methodType)
             
-            println "  ✓ Retrieved method details:"
-            println "    - Type: ${specificMethod.type}"
-            println "    - Status: ${specificMethod.status}"
+            logger.debug("   Retrieved method details:")
+            logger.debug("    - Type: {}", specificMethod.type)
+            logger.debug("    - Status: {}", specificMethod.status)
             
             // ========== STEP 6: Test Method Update (PUT /api/v1/authenticators/{id}/methods/{methodType}) ==========
-            println "\n6. PUT /api/v1/authenticators/${testAuthenticatorId}/methods/${methodType} (Update method)"
+            logger.debug("\n6. PUT /api/v1/authenticators/{}/methods/{} (Update method)", testAuthenticatorId, methodType)
             
             try {
                 AuthenticatorMethodBase updatedMethod = authenticatorApi.replaceAuthenticatorMethod(testAuthenticatorId, methodType, specificMethod)
@@ -204,66 +207,66 @@ class AuthenticatorIT extends ITSupport {
                 assertThat "Method update should return method", updatedMethod, notNullValue()
                 assertThat "Method type should match", updatedMethod.type, equalTo(methodType)
                 
-                println "  ✓ Method updated successfully (no-op update):"
-                println "    - Type: ${updatedMethod.type}"
-                println "    - Status: ${updatedMethod.status}"
+                logger.debug("   Method updated successfully (no-op update):")
+                logger.debug("    - Type: {}", updatedMethod.type)
+                logger.debug("    - Status: {}", updatedMethod.status)
             } catch (Exception e) {
-                println "  ⚠ Method update skipped (may not be supported for this authenticator): ${e.message}"
+                logger.debug("   Method update skipped (may not be supported for this authenticator): {}", e.message)
             }
             
             // ========== STEP 7: Test Method Lifecycle Operations ==========
-            println "\n7. Testing method lifecycle operations"
+            logger.debug("\n7. Testing method lifecycle operations")
             
             // Test method activation/deactivation if method is in INACTIVE state
             if (specificMethod.status?.toString() == "INACTIVE") {
-                println "  → Testing method activation (POST /api/v1/authenticators/${testAuthenticatorId}/methods/${methodType}/lifecycle/activate)"
+                logger.debug("   Testing method activation (POST /api/v1/authenticators/{}/methods/{}/lifecycle/activate)", testAuthenticatorId, methodType)
                 
                 try {
                     AuthenticatorMethodBase activatedMethod = authenticatorApi.activateAuthenticatorMethod(testAuthenticatorId, methodType)
                     
                     assertThat "Method activation should return method", activatedMethod, notNullValue()
-                    println "  ✓ Method activated: ${activatedMethod.type} is now ${activatedMethod.status}"
+                    logger.debug("   Method activated: {} is now {}", activatedMethod.type, activatedMethod.status)
                     
                     sleep(1000)
                     
                     // Test method deactivation to restore
-                    println "  → Testing method deactivation (POST /api/v1/authenticators/${testAuthenticatorId}/methods/${methodType}/lifecycle/deactivate)"
+                    logger.debug("   Testing method deactivation (POST /api/v1/authenticators/{}/methods/{}/lifecycle/deactivate)", testAuthenticatorId, methodType)
                     AuthenticatorMethodBase deactivatedMethod = authenticatorApi.deactivateAuthenticatorMethod(testAuthenticatorId, methodType)
                     
                     assertThat "Method deactivation should return method", deactivatedMethod, notNullValue()
-                    println "  ✓ Method deactivated: ${deactivatedMethod.type} is now ${deactivatedMethod.status}"
+                    logger.debug("   Method deactivated: {} is now {}", deactivatedMethod.type, deactivatedMethod.status)
                     
                     sleep(1000)
                 } catch (Exception e) {
-                    println "  ⚠ Method lifecycle operations skipped: ${e.message}"
+                    logger.debug("   Method lifecycle operations skipped: {}", e.message)
                 }
             } else {
-                println "  ⚠ Method lifecycle operations skipped (method is ${specificMethod.status})"
+                logger.debug("   Method lifecycle operations skipped (method is {})", specificMethod.status)
             }
             
             // ========== STEP 8: Test AAGUID Operations (for WebAuthn only) ==========
-            println "\n8. Testing AAGUID operations (WebAuthn specific)"
+            logger.debug("\n8. Testing AAGUID operations (WebAuthn specific)")
             
             if (testAuth.key?.toString() == "webauthn") {
-                println "  → GET /api/v1/authenticators/${testAuthenticatorId}/aaguids (List custom AAGUIDs)"
+                logger.debug("   GET /api/v1/authenticators/{}/aaguids (List custom AAGUIDs)", testAuthenticatorId)
                 
                 try {
                     def aaguids = authenticatorApi.listAllCustomAAGUIDs(testAuthenticatorId)
                     
                     assertThat "AAGUID list should not be null", aaguids, notNullValue()
-                    println "  ✓ Retrieved ${aaguids.size()} custom AAGUIDs"
+                    logger.debug("   Retrieved {} custom AAGUIDs", aaguids.size())
                     
                     if (aaguids.size() > 0) {
                         def firstAaguid = aaguids[0]
-                        println "\n  → GET /api/v1/authenticators/${testAuthenticatorId}/aaguids/{aaguid} (Get specific AAGUID)"
+                        logger.debug("\n   GET /api/v1/authenticators/{}/aaguids/{aaguid} (Get specific AAGUID)", testAuthenticatorId)
                         
                         def specificAaguid = authenticatorApi.getCustomAAGUID(testAuthenticatorId, firstAaguid.aaguid)
                         
                         assertThat "AAGUID should be retrieved", specificAaguid, notNullValue()
-                        println "  ✓ Retrieved AAGUID: ${specificAaguid.aaguid}"
+                        logger.debug("   Retrieved AAGUID: {}", specificAaguid.aaguid)
                         
                         // Test AAGUID update (PATCH)
-                        println "\n  → PATCH /api/v1/authenticators/${testAuthenticatorId}/aaguids/{aaguid} (Update AAGUID)"
+                        logger.debug("\n   PATCH /api/v1/authenticators/{}/aaguids/{aaguid} (Update AAGUID)", testAuthenticatorId)
                         
                         def updateRequest = client.instantiate(com.okta.sdk.resource.model.CustomAAGUIDUpdateRequestObject)
                         updateRequest.name = specificAaguid.name
@@ -271,79 +274,79 @@ class AuthenticatorIT extends ITSupport {
                         def updatedAaguid = authenticatorApi.updateCustomAAGUID(testAuthenticatorId, firstAaguid.aaguid, updateRequest)
                         
                         assertThat "Updated AAGUID should not be null", updatedAaguid, notNullValue()
-                        println "  ✓ AAGUID updated successfully"
+                        logger.debug("   AAGUID updated successfully")
                     } else {
-                        println "  → No custom AAGUIDs found (none configured)"
+                        logger.debug("   No custom AAGUIDs found (none configured)")
                     }
                 } catch (Exception e) {
-                    println "  ⚠ AAGUID operations error: ${e.message}"
+                    logger.debug("   AAGUID operations error: {}", e.message)
                 }
             } else {
-                println "  ⚠ AAGUID operations skipped (only applicable to WebAuthn authenticator, current: ${testAuth.key})"
+                logger.debug("   AAGUID operations skipped (only applicable to WebAuthn authenticator, current: {})", testAuth.key)
             }
             
             // ========== STEP 9: Test Authenticator Lifecycle Operations ==========
-            println "\n9. Testing authenticator lifecycle operations (Activate/Deactivate)"
+            logger.debug("\n9. Testing authenticator lifecycle operations (Activate/Deactivate)")
             
             boolean lifecycleTestPerformed = false
             boolean activationSucceeded = false
             
             if (originalStatus == "INACTIVE" && testAuth.key?.toString() in ["phone_number", "security_question", "webauthn"]) {
-                println "  → Testing activation (POST /api/v1/authenticators/${testAuthenticatorId}/lifecycle/activate)"
+                logger.debug("   Testing activation (POST /api/v1/authenticators/{}/lifecycle/activate)", testAuthenticatorId)
                 
                 try {
                     AuthenticatorBase activatedAuth = authenticatorApi.activateAuthenticator(testAuthenticatorId)
                     
                     assertThat "Activation should return authenticator", activatedAuth, notNullValue()
-                    println "  ✓ Activation successful: ${activatedAuth.name} is now ${activatedAuth.status}"
+                    logger.debug("   Activation successful: {} is now {}", activatedAuth.name, activatedAuth.status)
                     lifecycleTestPerformed = true
                     activationSucceeded = true
                     
                     sleep(1000)
                     
                     // Verify activation persisted
-                    println "  → Verifying activation persisted"
+                    logger.debug("   Verifying activation persisted")
                     AuthenticatorBase verifyActivated = authenticatorApi.getAuthenticator(testAuthenticatorId)
-                    println "  ✓ Activation verified: ${verifyActivated.status}"
+                    logger.debug("   Activation verified: {}", verifyActivated.status)
                     
                     // Now test deactivation to restore original state
-                    println "  → Testing deactivation (POST /api/v1/authenticators/${testAuthenticatorId}/lifecycle/deactivate)"
+                    logger.debug("   Testing deactivation (POST /api/v1/authenticators/{}/lifecycle/deactivate)", testAuthenticatorId)
                     
                     try {
                         AuthenticatorBase deactivatedAuth = authenticatorApi.deactivateAuthenticator(testAuthenticatorId)
                         
                         assertThat "Deactivation should return authenticator", deactivatedAuth, notNullValue()
-                        println "  ✓ Deactivation successful: ${deactivatedAuth.name} is now ${deactivatedAuth.status}"
+                        logger.debug("   Deactivation successful: {} is now {}", deactivatedAuth.name, deactivatedAuth.status)
                         activationSucceeded = false  // Successfully restored
                         
                         sleep(1000)
                         
                         // Verify deactivation persisted
-                        println "  → Verifying deactivation persisted"
+                        logger.debug("   Verifying deactivation persisted")
                         AuthenticatorBase verifyDeactivated = authenticatorApi.getAuthenticator(testAuthenticatorId)
-                        println "  ✓ Deactivation verified: ${verifyDeactivated.status}"
+                        logger.debug("   Deactivation verified: {}", verifyDeactivated.status)
                     } catch (Exception deactivateEx) {
-                        println "  ⚠ Deactivation failed (authenticator may be in use by policies): ${deactivateEx.message}"
-                        println "  ⚠ Authenticator remains ACTIVE (could not restore to original INACTIVE state)"
+                        logger.debug("   Deactivation failed (authenticator may be in use by policies): {}", deactivateEx.message)
+                        logger.debug("   Authenticator remains ACTIVE (could not restore to original INACTIVE state)")
                     }
                 } catch (Exception e) {
-                    println "  ⚠ Lifecycle activation error: ${e.message}"
+                    logger.debug("   Lifecycle activation error: {}", e.message)
                 }
             } else {
-                println "  ⚠ Skipping lifecycle operations (authenticator is ${originalStatus}, key: ${testAuth.key})"
-                println "    Note: Some authenticators like Password and Email cannot be deactivated"
+                logger.debug("   Skipping lifecycle operations (authenticator is {}, key: {})", originalStatus, testAuth.key)
+                logger.debug("    Note: Some authenticators like Password and Email cannot be deactivated")
             }
             
             // ========== STEP 10: Final Verification ==========
-            println "\n10. Final verification"
+            logger.debug("\n10. Final verification")
             AuthenticatorBase finalCheck = authenticatorApi.getAuthenticator(testAuthenticatorId)
             
             // Check if state matches original (or if lifecycle test changed it)
             if (activationSucceeded) {
                 // Activation succeeded but deactivation failed - authenticator is now ACTIVE
-                println "  ℹ Note: Authenticator was activated during lifecycle testing but could not be deactivated"
-                println "    Original Status: ${originalStatus}"
-                println "    Current Status: ${finalCheck.status}"
+                logger.debug("   Note: Authenticator was activated during lifecycle testing but could not be deactivated")
+                logger.debug("    Original Status: {}", originalStatus)
+                logger.debug("    Current Status: {}", finalCheck.status)
                 assertThat "Authenticator should be ACTIVE after lifecycle test", finalCheck.status?.toString(), equalTo("ACTIVE")
             } else {
                 // Normal case or lifecycle test fully restored state
@@ -352,78 +355,76 @@ class AuthenticatorIT extends ITSupport {
             
             assertThat "Final authenticator name should match", finalCheck.name, equalTo(originalAuthenticator.name)
             
-            println "  ✓ Authenticator state verified:"
-            println "    - Name: ${finalCheck.name}"
-            println "    - Status: ${finalCheck.status}"
-            println "    - Type: ${finalCheck.type}"
+            logger.debug("   Authenticator state verified:")
+            logger.debug("    - Name: {}", finalCheck.name)
+            logger.debug("    - Status: {}", finalCheck.status)
+            logger.debug("    - Type: {}", finalCheck.type)
             if (!activationSucceeded) {
-                println "    - Matches original: ${originalStatus} ✓"
+                logger.debug("    - Matches original: {} ", originalStatus)
             } else {
-                println "    - Changed from original (${originalStatus} → ACTIVE) due to lifecycle test"
+                logger.debug("    - Changed from original ({}  ACTIVE) due to lifecycle test", originalStatus)
             }
             
-            println "\n" + "=" * 60
-            println "✅ ALL AUTHENTICATOR API TESTS COMPLETE"
-            println "=" * 60
+            logger.debug(" ALL AUTHENTICATOR API TESTS COMPLETE")
             
-            println "\n=== API Coverage Summary ==="
-            println "Core Authenticator Operations:"
-            println "  ✓ GET  /api/v1/authenticators                                     - listAuthenticators()"
-            println "  ✓ GET  /api/v1/authenticators/{id}                                - getAuthenticator()"
-            println "  ✓ PUT  /api/v1/authenticators/{id}                                - replaceAuthenticator()"
+            logger.debug("\n=== API Coverage Summary ===")
+            logger.debug("Core Authenticator Operations:")
+            logger.debug("   GET  /api/v1/authenticators                                     - listAuthenticators()")
+            logger.debug("   GET  /api/v1/authenticators/{id}                                - getAuthenticator()")
+            logger.debug("   PUT  /api/v1/authenticators/{id}                                - replaceAuthenticator()")
             
-            println "\nAuthenticator Methods:"
-            println "  ✓ GET  /api/v1/authenticators/{id}/methods                        - listAuthenticatorMethods()"
-            println "  ✓ GET  /api/v1/authenticators/{id}/methods/{methodType}           - getAuthenticatorMethod()"
-            println "  ~ PUT  /api/v1/authenticators/{id}/methods/{methodType}           - replaceAuthenticatorMethod() [attempted]"
+            logger.debug("\nAuthenticator Methods:")
+            logger.debug("   GET  /api/v1/authenticators/{id}/methods                        - listAuthenticatorMethods()")
+            logger.debug("   GET  /api/v1/authenticators/{id}/methods/{methodType}           - getAuthenticatorMethod()")
+            logger.debug("  ~ PUT  /api/v1/authenticators/{id}/methods/{methodType}           - replaceAuthenticatorMethod() [attempted]")
             
-            println "\nAAGUID Operations (WebAuthn):"
+            logger.debug("\nAAGUID Operations (WebAuthn):")
             if (testAuth.key?.toString() == "webauthn") {
-                println "  ✓ GET  /api/v1/authenticators/{id}/aaguids                        - listAllCustomAAGUIDs()"
+                logger.debug("   GET  /api/v1/authenticators/{id}/aaguids                        - listAllCustomAAGUIDs()")
             } else {
-                println "  ⊘ GET  /api/v1/authenticators/{id}/aaguids                        - listAllCustomAAGUIDs() [WebAuthn only]"
+                logger.debug("   GET  /api/v1/authenticators/{id}/aaguids                        - listAllCustomAAGUIDs() [WebAuthn only]")
             }
             
-            println "\nLifecycle Operations:"
+            logger.debug("\nLifecycle Operations:")
             if (lifecycleTestPerformed) {
-                println "  ✓ POST /api/v1/authenticators/{id}/lifecycle/activate             - activateAuthenticator()"
-                println "  ~ POST /api/v1/authenticators/{id}/lifecycle/deactivate           - deactivateAuthenticator() [attempted]"
+                logger.debug("   POST /api/v1/authenticators/{id}/lifecycle/activate             - activateAuthenticator()")
+                logger.debug("  ~ POST /api/v1/authenticators/{id}/lifecycle/deactivate           - deactivateAuthenticator() [attempted]")
             } else {
-                println "  ⊘ POST /api/v1/authenticators/{id}/lifecycle/activate             - activateAuthenticator() [conditional]"
-                println "  ⊘ POST /api/v1/authenticators/{id}/lifecycle/deactivate           - deactivateAuthenticator() [conditional]"
+                logger.debug("   POST /api/v1/authenticators/{id}/lifecycle/activate             - activateAuthenticator() [conditional]")
+                logger.debug("   POST /api/v1/authenticators/{id}/lifecycle/deactivate           - deactivateAuthenticator() [conditional]")
             }
             
-            println "\n=== Cleanup Summary ==="
+            logger.debug("\n=== Cleanup Summary ===")
             if (!activationSucceeded) {
-                println "  ✓ Authenticator state fully restored to original values"
-                println "  ✓ Org impact: Zero (complete restoration verified)"
+                logger.debug("   Authenticator state fully restored to original values")
+                logger.debug("   Org impact: Zero (complete restoration verified)")
             } else {
-                println "  ⚠ Authenticator remains ACTIVE (deactivation blocked by policy)"
-                println "  ℹ Note: Lifecycle testing successfully demonstrated activation"
+                logger.debug("   Authenticator remains ACTIVE (deactivation blocked by policy)")
+                logger.debug("   Note: Lifecycle testing successfully demonstrated activation")
             }
             
             int methodsTesteed = 8  // listAuthenticators, getAuthenticator, replaceAuthenticator, 
                                     // listAuthenticatorMethods, getAuthenticatorMethod, replaceAuthenticatorMethod (attempted),
                                     // listAllCustomAAGUIDs (if WebAuthn), activateAuthenticator (if lifecycle)
             
-            println "\n=== Test Results ==="
-            println "• Total SDK Methods Tested: ${methodsTesteed}"
-            println "• Test Scenarios: List, Get, Update, Methods, AAGUID, Lifecycle, Verify"
-            println "• Authenticator Tested: ${originalAuthenticator.name} (${testAuth.key})"
+            logger.debug("\n=== Test Results ===")
+            logger.debug(" Total SDK Methods Tested: {}", methodsTesteed)
+            logger.debug(" Test Scenarios: List, Get, Update, Methods, AAGUID, Lifecycle, Verify")
+            logger.debug(" Authenticator Tested: {} ({})", originalAuthenticator.name, testAuth.key)
             if (activationSucceeded) {
-                println "• Org Impact: Minimal (authenticator activated, could not be deactivated)"
+                logger.debug(" Org Impact: Minimal (authenticator activated, could not be deactivated)")
             } else {
-                println "• Org Impact: Zero (all settings restored)"
+                logger.debug(" Org Impact: Zero (all settings restored)")
             }
             
         } catch (Exception e) {
-            println "\n❌ Test failed: ${e.message}"
+            logger.debug("\n Test failed: {}", e.message)
             e.printStackTrace()
             
             // Emergency cleanup: restore original state if we have the information
             if (testAuthenticatorId != null && originalStatus != null) {
                 try {
-                    println "\n🔄 Emergency cleanup: Restoring authenticator state..."
+                    logger.debug("\n Emergency cleanup: Restoring authenticator state...")
                     
                     // Get current state
                     AuthenticatorBase currentState = authenticatorApi.getAuthenticator(testAuthenticatorId)
@@ -431,24 +432,24 @@ class AuthenticatorIT extends ITSupport {
                     // Restore to original status if different
                     if (currentState.status != originalStatus) {
                         if (originalStatus == "ACTIVE") {
-                            println "  → Activating authenticator to restore original state..."
+                            logger.debug("   Activating authenticator to restore original state...")
                             authenticatorApi.activateAuthenticator(testAuthenticatorId)
                         } else {
-                            println "  → Deactivating authenticator to restore original state..."
+                            logger.debug("   Deactivating authenticator to restore original state...")
                             authenticatorApi.deactivateAuthenticator(testAuthenticatorId)
                         }
                         sleep(1000)
                         
                         // Verify restoration
                         AuthenticatorBase restoredState = authenticatorApi.getAuthenticator(testAuthenticatorId)
-                        println "  ✓ Emergency cleanup successful: Status restored to ${restoredState.status}"
+                        logger.debug("   Emergency cleanup successful: Status restored to {}", restoredState.status)
                     } else {
-                        println "  ✓ Authenticator already in original state: ${currentState.status}"
+                        logger.debug("   Authenticator already in original state: {}", currentState.status)
                     }
                     
                 } catch (Exception cleanupError) {
-                    println "  ⚠ Emergency cleanup failed: ${cleanupError.message}"
-                    println "  ! Manual intervention may be required to restore authenticator: ${testAuthenticatorId}"
+                    logger.debug("   Emergency cleanup failed: {}", cleanupError.message)
+                    logger.debug("  ! Manual intervention may be required to restore authenticator: {}", testAuthenticatorId)
                 }
             }
             
@@ -461,22 +462,20 @@ class AuthenticatorIT extends ITSupport {
         def client = getClient()
         AuthenticatorApi authenticatorApi = new AuthenticatorApi(client)
         
-        println "\n" + "=" * 60
-        println "TESTING AUTHENTICATOR API NEGATIVE CASES"
-        println "=" * 60
+        logger.debug("TESTING AUTHENTICATOR API NEGATIVE CASES")
         
         // Test 1: Get non-existent authenticator
-        println "\n1. Testing get with invalid authenticator ID..."
+        logger.debug("\n1. Testing get with invalid authenticator ID...")
         try {
             authenticatorApi.getAuthenticator("invalidAuthId123")
             assert false, "Should have thrown ApiException for invalid authenticator ID"
         } catch (com.okta.sdk.resource.client.ApiException e) {
             assertThat "Should return 404 for invalid ID", e.code, equalTo(404)
-            println "   ✓ Correctly returned 404 for invalid authenticator ID"
+            logger.debug("    Correctly returned 404 for invalid authenticator ID")
         }
         
         // Test 2: Update non-existent authenticator
-        println "\n2. Testing update with invalid authenticator ID..."
+        logger.debug("\n2. Testing update with invalid authenticator ID...")
         try {
             def authenticator = new com.okta.sdk.resource.model.AuthenticatorBase()
                 .name("Invalid Authenticator")
@@ -484,50 +483,50 @@ class AuthenticatorIT extends ITSupport {
             assert false, "Should have thrown ApiException for updating invalid authenticator"
         } catch (com.okta.sdk.resource.client.ApiException e) {
             assertThat "Should return 404 for invalid ID", e.code, equalTo(404)
-            println "   ✓ Correctly returned 404 for updating invalid authenticator"
+            logger.debug("    Correctly returned 404 for updating invalid authenticator")
         }
         
         // Test 3: Activate non-existent authenticator
-        println "\n3. Testing activate with invalid authenticator ID..."
+        logger.debug("\n3. Testing activate with invalid authenticator ID...")
         try {
             authenticatorApi.activateAuthenticator("invalidAuthId123")
             assert false, "Should have thrown ApiException for activating invalid authenticator"
         } catch (com.okta.sdk.resource.client.ApiException e) {
             assertThat "Should return 404 for invalid ID", e.code, equalTo(404)
-            println "   ✓ Correctly returned 404 for activating invalid authenticator"
+            logger.debug("    Correctly returned 404 for activating invalid authenticator")
         }
         
         // Test 4: Deactivate non-existent authenticator
-        println "\n4. Testing deactivate with invalid authenticator ID..."
+        logger.debug("\n4. Testing deactivate with invalid authenticator ID...")
         try {
             authenticatorApi.deactivateAuthenticator("invalidAuthId123")
             assert false, "Should have thrown ApiException for deactivating invalid authenticator"
         } catch (com.okta.sdk.resource.client.ApiException e) {
             assertThat "Should return 404 for invalid ID", e.code, equalTo(404)
-            println "   ✓ Correctly returned 404 for deactivating invalid authenticator"
+            logger.debug("    Correctly returned 404 for deactivating invalid authenticator")
         }
         
         // Test 5: Get methods for non-existent authenticator
-        println "\n5. Testing list methods with invalid authenticator ID..."
+        logger.debug("\n5. Testing list methods with invalid authenticator ID...")
         try {
             authenticatorApi.listAuthenticatorMethods("invalidAuthId123")
             assert false, "Should have thrown ApiException for invalid authenticator ID"
         } catch (com.okta.sdk.resource.client.ApiException e) {
             assertThat "Should return 404 for invalid ID", e.code, equalTo(404)
-            println "   ✓ Correctly returned 404 for listing methods from invalid authenticator"
+            logger.debug("    Correctly returned 404 for listing methods from invalid authenticator")
         }
         
         // Test 6: Get specific method for non-existent authenticator
-        println "\n6. Testing get method with invalid authenticator ID..."
+        logger.debug("\n6. Testing get method with invalid authenticator ID...")
         try {
             authenticatorApi.getAuthenticatorMethod("invalidAuthId123", AuthenticatorMethodType.SMS)
             assert false, "Should have thrown ApiException for invalid authenticator ID"
         } catch (com.okta.sdk.resource.client.ApiException e) {
             assertThat "Should return 404 for invalid ID", e.code, equalTo(404)
-            println "   ✓ Correctly returned 404 for getting method from invalid authenticator"
+            logger.debug("    Correctly returned 404 for getting method from invalid authenticator")
         }
         
-        println "\n✅ All negative test cases passed successfully!"
+        logger.debug("\n All negative test cases passed successfully!")
     }
 
     /**
@@ -539,7 +538,7 @@ class AuthenticatorIT extends ITSupport {
      * - PUT    /api/v1/authenticators/{authenticatorId}/aaguids/{aaguid}    - replaceCustomAAGUID()
      * - DELETE /api/v1/authenticators/{authenticatorId}/aaguids/{aaguid}    - deleteCustomAAGUID()
      *
-     * Note: SDK bug — CustomAAGUIDCreateRequestObject is missing the required 'name' field.
+     * Note: SDK bug  CustomAAGUIDCreateRequestObject is missing the required 'name' field.
      * The API requires 'name' but the codegen model only has aaguid, attestationRootCertificates,
      * and authenticatorCharacteristics. The create call is exercised via try-catch documenting
      * the 400 validation error. The remaining CRUD operations (get, replace, delete) are tested
@@ -555,25 +554,23 @@ class AuthenticatorIT extends ITSupport {
         String createdAaguid = null
 
         try {
-            println "\n" + "=" * 60
-            println "TESTING CUSTOM AAGUID CRUD LIFECYCLE"
-            println "=" * 60
+            logger.debug("TESTING CUSTOM AAGUID CRUD LIFECYCLE")
 
             // Find the WebAuthn authenticator
             List<AuthenticatorBase> authenticators = authenticatorApi.listAuthenticators()
             def webAuthnAuth = authenticators.find { it.key?.toString() == "webauthn" }
 
             if (!webAuthnAuth) {
-                println "  ⚠ WebAuthn authenticator not found — skipping AAGUID CRUD tests"
+                logger.debug("   WebAuthn authenticator not found  skipping AAGUID CRUD tests")
                 return
             }
             webAuthnAuthenticatorId = webAuthnAuth.id
-            println "  → WebAuthn authenticator found: ${webAuthnAuth.name} (${webAuthnAuthenticatorId})"
+            logger.debug("   WebAuthn authenticator found: {} ({})", webAuthnAuth.name, webAuthnAuthenticatorId)
 
             // Step 1: Attempt to create a custom AAGUID via SDK
             // SDK bug: CustomAAGUIDCreateRequestObject is missing the 'name' field which the API requires.
-            println "\n1. POST /api/v1/authenticators/${webAuthnAuthenticatorId}/aaguids (Create custom AAGUID)"
-            println "   SDK bug: CustomAAGUIDCreateRequestObject missing required 'name' field"
+            logger.debug("\n1. POST /api/v1/authenticators/{}/aaguids (Create custom AAGUID)", webAuthnAuthenticatorId)
+            logger.debug("   SDK bug: CustomAAGUIDCreateRequestObject missing required 'name' field")
 
             String testAaguid = "f8a5d520-0000-4a9b-b8e7-000000000001"
 
@@ -584,18 +581,18 @@ class AuthenticatorIT extends ITSupport {
                 CustomAAGUIDResponseObject createdResponse = authenticatorApi.createCustomAAGUID(webAuthnAuthenticatorId, createRequest)
                 // If it succeeds despite the bug, great
                 createdAaguid = createdResponse.aaguid
-                println "  ✓ Custom AAGUID created: ${createdResponse.aaguid}"
+                logger.debug("   Custom AAGUID created: {}", createdResponse.aaguid)
             } catch (ApiException e) {
                 // Expected: 400 because SDK model doesn't include 'name' field
                 assertThat "Should return 400 for missing name",
                     e.code, equalTo(400)
-                println "  ✓ createCustomAAGUID() correctly exercised — returns 400 due to SDK codegen bug"
-                println "    Error: ${e.message}"
-                println "    Bug: CustomAAGUIDCreateRequestObject model missing 'name' property"
+                logger.debug("   createCustomAAGUID() correctly exercised  returns 400 due to SDK codegen bug")
+                logger.debug("    Error: {}", e.message)
+                logger.debug("    Bug: CustomAAGUIDCreateRequestObject model missing 'name' property")
             }
 
             // Step 2: Create AAGUID via raw HTTP so we can test get/replace/delete
-            println "\n2. Creating AAGUID via raw HTTP to test remaining CRUD operations..."
+            logger.debug("\n2. Creating AAGUID via raw HTTP to test remaining CRUD operations...")
 
             def apiClient = authenticatorApi.getApiClient()
             def objectMapper = apiClient.getObjectMapper()
@@ -625,37 +622,37 @@ class AuthenticatorIT extends ITSupport {
                 def responseBody = conn.getInputStream().text
                 def responseObj = objectMapper.readValue(responseBody, CustomAAGUIDResponseObject.class)
                 createdAaguid = responseObj.aaguid
-                println "  ✓ AAGUID created via raw HTTP: ${createdAaguid}"
+                logger.debug("   AAGUID created via raw HTTP: {}", createdAaguid)
             } else {
                 def errorBody = conn.getErrorStream()?.text ?: "No error body"
-                println "  ⚠ Failed to create AAGUID via raw HTTP: ${responseCode} - ${errorBody}"
-                println "  → Skipping get/replace/delete tests"
+                logger.debug("   Failed to create AAGUID via raw HTTP: {} - {}", responseCode, errorBody)
+                logger.debug("   Skipping get/replace/delete tests")
                 return
             }
 
             // Step 3: Get the created AAGUID
-            println "\n3. GET /api/v1/authenticators/${webAuthnAuthenticatorId}/aaguids/${createdAaguid} (Retrieve custom AAGUID)"
+            logger.debug("\n3. GET /api/v1/authenticators/{}/aaguids/{} (Retrieve custom AAGUID)", webAuthnAuthenticatorId, createdAaguid)
 
             CustomAAGUIDResponseObject fetchedAaguid = authenticatorApi.getCustomAAGUID(webAuthnAuthenticatorId, createdAaguid)
 
             assertThat "Fetched AAGUID should not be null", fetchedAaguid, notNullValue()
             assertThat "Fetched AAGUID value should match", fetchedAaguid.aaguid, equalTo(createdAaguid)
-            println "  ✓ Custom AAGUID retrieved: ${fetchedAaguid.aaguid}"
+            logger.debug("   Custom AAGUID retrieved: {}", fetchedAaguid.aaguid)
             if (fetchedAaguid.name) {
-                println "    - Name: ${fetchedAaguid.name}"
+                logger.debug("    - Name: {}", fetchedAaguid.name)
             }
 
             // Step 4: Verify AAGUID appears in list
-            println "\n4. Verify AAGUID appears in listAllCustomAAGUIDs()"
+            logger.debug("\n4. Verify AAGUID appears in listAllCustomAAGUIDs()")
 
             List<CustomAAGUIDResponseObject> aaguids = authenticatorApi.listAllCustomAAGUIDs(webAuthnAuthenticatorId)
             assertThat "AAGUID list should not be empty", aaguids, not(empty())
             def found = aaguids.find { it.aaguid == createdAaguid }
             assertThat "Created AAGUID should appear in list", found, notNullValue()
-            println "  ✓ AAGUID found in list (total: ${aaguids.size()})"
+            logger.debug("   AAGUID found in list (total: {})", aaguids.size())
 
             // Step 5: Replace the custom AAGUID (PUT)
-            println "\n5. PUT /api/v1/authenticators/${webAuthnAuthenticatorId}/aaguids/${createdAaguid} (Replace custom AAGUID)"
+            logger.debug("\n5. PUT /api/v1/authenticators/{}/aaguids/{} (Replace custom AAGUID)", webAuthnAuthenticatorId, createdAaguid)
 
             def replaceRequest = new CustomAAGUIDUpdateRequestObject()
             replaceRequest.setName("Updated-AAGUID-Name")
@@ -666,52 +663,50 @@ class AuthenticatorIT extends ITSupport {
 
                 assertThat "Replaced AAGUID should not be null", replacedAaguid, notNullValue()
                 assertThat "Replaced AAGUID value should match", replacedAaguid.aaguid, equalTo(createdAaguid)
-                println "  ✓ Custom AAGUID replaced successfully"
+                logger.debug("   Custom AAGUID replaced successfully")
                 if (replacedAaguid.name) {
-                    println "    - Name: ${replacedAaguid.name}"
+                    logger.debug("    - Name: {}", replacedAaguid.name)
                 }
             } catch (ApiException e) {
                 // API may return 500 for replace operations on certain configurations
-                println "  → replaceCustomAAGUID() returned HTTP ${e.code}: ${e.message}"
+                logger.debug("   replaceCustomAAGUID() returned HTTP {}: {}", e.code, e.message)
                 assertThat "Should return a server or client error", e.code, anyOf(
                     equalTo(400), equalTo(500))
-                println "  ✓ replaceCustomAAGUID() SDK method exercised (API returned ${e.code})"
+                logger.debug("   replaceCustomAAGUID() SDK method exercised (API returned {})", e.code)
             }
 
             // Step 6: Delete the custom AAGUID
-            println "\n6. DELETE /api/v1/authenticators/${webAuthnAuthenticatorId}/aaguids/${createdAaguid} (Delete custom AAGUID)"
+            logger.debug("\n6. DELETE /api/v1/authenticators/{}/aaguids/{} (Delete custom AAGUID)", webAuthnAuthenticatorId, createdAaguid)
 
             authenticatorApi.deleteCustomAAGUID(webAuthnAuthenticatorId, createdAaguid)
-            println "  ✓ Custom AAGUID deleted"
+            logger.debug("   Custom AAGUID deleted")
 
             // Verify deletion
-            println "  → Verifying deletion..."
+            logger.debug("   Verifying deletion...")
             try {
                 authenticatorApi.getCustomAAGUID(webAuthnAuthenticatorId, createdAaguid)
-                println "  ⚠ AAGUID still accessible after deletion (may be eventually consistent)"
+                logger.debug("   AAGUID still accessible after deletion (may be eventually consistent)")
             } catch (ApiException e) {
                 assertThat "Should return 404 after deletion", e.code, equalTo(404)
-                println "  ✓ Confirmed AAGUID no longer exists (404)"
+                logger.debug("   Confirmed AAGUID no longer exists (404)")
             }
             createdAaguid = null  // Mark as cleaned up
 
-            println "\n" + "=" * 60
-            println "✅ CUSTOM AAGUID CRUD LIFECYCLE TEST COMPLETE"
-            println "=" * 60
+            logger.debug(" CUSTOM AAGUID CRUD LIFECYCLE TEST COMPLETE")
 
         } catch (Exception e) {
-            println "\n❌ Test failed: ${e.message}"
+            logger.debug("\n Test failed: {}", e.message)
             e.printStackTrace()
             throw e
         } finally {
             // Cleanup: delete AAGUID if it was created
             if (createdAaguid != null && webAuthnAuthenticatorId != null) {
                 try {
-                    println "\n🔄 Cleanup: Deleting test AAGUID ${createdAaguid}..."
+                    logger.debug("\n Cleanup: Deleting test AAGUID {}...", createdAaguid)
                     authenticatorApi.deleteCustomAAGUID(webAuthnAuthenticatorId, createdAaguid)
-                    println "  ✓ Cleanup successful"
+                    logger.debug("   Cleanup successful")
                 } catch (Exception cleanupEx) {
-                    println "  ⚠ Cleanup failed: ${cleanupEx.message}"
+                    logger.debug("   Cleanup failed: {}", cleanupEx.message)
                 }
             }
         }
@@ -728,32 +723,28 @@ class AuthenticatorIT extends ITSupport {
         def client = getClient()
         AuthenticatorApi authenticatorApi = new AuthenticatorApi(client)
 
-        println "\n" + "=" * 60
-        println "TESTING WELL-KNOWN APP AUTHENTICATOR CONFIGURATION"
-        println "=" * 60
+        logger.debug("TESTING WELL-KNOWN APP AUTHENTICATOR CONFIGURATION")
 
         // The well-known endpoint requires an oauthClientId parameter.
-        // Using a dummy client ID — the endpoint returns an empty list for unknown clients (HTTP 200).
-        println "\n1. GET /.well-known/app-authenticator-configuration?oauthClientId=testClientId"
+        // Using a dummy client ID  the endpoint returns an empty list for unknown clients (HTTP 200).
+        logger.debug("\n1. GET /.well-known/app-authenticator-configuration?oauthClientId=testClientId")
 
         List<WellKnownAppAuthenticatorConfiguration> configs =
             authenticatorApi.getWellKnownAppAuthenticatorConfiguration("testClientId")
 
         assertThat "Response should not be null", configs, notNullValue()
-        println "  ✓ Well-known app authenticator configuration retrieved"
-        println "    - Configurations returned: ${configs.size()}"
+        logger.debug("   Well-known app authenticator configuration retrieved")
+        logger.debug("    - Configurations returned: {}", configs.size())
 
         if (configs.size() > 0) {
             configs.each { config ->
-                println "    - Config: ${config}"
+                logger.debug("    - Config: {}", config)
             }
         } else {
-            println "    - No configurations found for test client (expected for non-existent client)"
+            logger.debug("    - No configurations found for test client (expected for non-existent client)")
         }
 
-        println "\n" + "=" * 60
-        println "✅ WELL-KNOWN APP AUTHENTICATOR CONFIGURATION TEST COMPLETE"
-        println "=" * 60
+        logger.debug(" WELL-KNOWN APP AUTHENTICATOR CONFIGURATION TEST COMPLETE")
     }
 
     /**
@@ -768,40 +759,36 @@ class AuthenticatorIT extends ITSupport {
         def client = getClient()
         AuthenticatorApi authenticatorApi = new AuthenticatorApi(client)
 
-        println "\n" + "=" * 60
-        println "TESTING VERIFY RP ID DOMAIN"
-        println "=" * 60
+        logger.debug("TESTING VERIFY RP ID DOMAIN")
 
         // Find the WebAuthn authenticator
         List<AuthenticatorBase> authenticators = authenticatorApi.listAuthenticators()
         def webAuthnAuth = authenticators.find { it.key?.toString() == "webauthn" }
 
         if (!webAuthnAuth) {
-            println "  ⚠ WebAuthn authenticator not found — skipping verifyRpIdDomain test"
+            logger.debug("   WebAuthn authenticator not found  skipping verifyRpIdDomain test")
             return
         }
 
         String webAuthnId = webAuthnAuth.id
-        println "  → WebAuthn authenticator found: ${webAuthnAuth.name} (${webAuthnId})"
+        logger.debug("   WebAuthn authenticator found: {} ({})", webAuthnAuth.name, webAuthnId)
 
-        println "\n1. POST /api/v1/authenticators/${webAuthnId}/methods/webauthn/verify-rp-id-domain"
+        logger.debug("\n1. POST /api/v1/authenticators/{}/methods/webauthn/verify-rp-id-domain", webAuthnId)
 
         try {
             authenticatorApi.verifyRpIdDomain(webAuthnId, AuthenticatorMethodTypeWebAuthn.WEBAUTHN)
-            println "  ✓ verifyRpIdDomain() call succeeded"
+            logger.debug("   verifyRpIdDomain() call succeeded")
         } catch (ApiException e) {
             // The API may return various status codes depending on configuration
             // 400 = domain not configured, 404 = method not found, 403 = feature not enabled
             // 500 = internal server error (observed in CI environments)
-            println "  → API returned HTTP ${e.code}: ${e.message}"
+            logger.debug("   API returned HTTP {}: {}", e.code, e.message)
             assertThat "Should return an error status", e.code, anyOf(
                 equalTo(400), equalTo(403), equalTo(404), equalTo(409), equalTo(500))
-            println "  ✓ verifyRpIdDomain() correctly returned ${e.code} (SDK method exercised)"
+            logger.debug("   verifyRpIdDomain() correctly returned {} (SDK method exercised)", e.code)
         }
 
-        println "\n" + "=" * 60
-        println "✅ VERIFY RP ID DOMAIN TEST COMPLETE"
-        println "=" * 60
+        logger.debug(" VERIFY RP ID DOMAIN TEST COMPLETE")
     }
 
     @Test(groups = "group3")

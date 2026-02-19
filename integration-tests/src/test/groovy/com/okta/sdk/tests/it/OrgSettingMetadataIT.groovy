@@ -23,6 +23,8 @@ import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Integration tests for OrgSettingMetadata API
@@ -34,6 +36,9 @@ import static org.hamcrest.Matchers.*
  * It returns org metadata including ID, pipeline, and settings.
  */
 class OrgSettingMetadataIT extends ITSupport {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrgSettingMetadataIT)
+
 
     private OrgSettingMetadataApi orgSettingMetadataApi
 
@@ -48,14 +53,14 @@ class OrgSettingMetadataIT extends ITSupport {
         // Initialize API
         orgSettingMetadataApi = new OrgSettingMetadataApi(getClient())
 
-        println "\n" + "=".multiply(60)
-        println "TESTING ORG SETTING METADATA API"
-        println "=".multiply(60)
+        logger.debug("\n" + "=".multiply(60))
+        logger.debug("TESTING ORG SETTING METADATA API")
+        logger.debug("=".multiply(60))
 
         // ========================================
         // Step 1: Get well-known org metadata
         // ========================================
-        println "\n1. GET /.well-known/okta-organization"
+        logger.debug("\n1. GET /.well-known/okta-organization")
         WellKnownOrgMetadata metadata = orgSettingMetadataApi.getWellknownOrgMetadata()
 
         assertThat "Org metadata should not be null", metadata, notNullValue()
@@ -63,38 +68,38 @@ class OrgSettingMetadataIT extends ITSupport {
         // Validate org ID
         assertThat "Org ID should not be null", metadata.getId(), notNullValue()
         assertThat "Org ID should not be empty", metadata.getId(), not(emptyOrNullString())
-        println "  ✓ Org ID: ${metadata.getId()}"
+        logger.debug("   Org ID: {}", metadata.getId())
 
         // Validate pipeline
         assertThat "Pipeline should not be null", metadata.getPipeline(), notNullValue()
-        println "  ✓ Pipeline: ${metadata.getPipeline()}"
+        logger.debug("   Pipeline: {}", metadata.getPipeline())
 
         // ========================================
         // Step 2: Verify consistency (call again)
         // ========================================
-        println "\n2. Verifying consistency (second call)..."
+        logger.debug("\n2. Verifying consistency (second call)...")
         WellKnownOrgMetadata metadata2 = orgSettingMetadataApi.getWellknownOrgMetadata()
 
         assertThat "Second call should return same org ID",
                    metadata2.getId(), equalTo(metadata.getId())
         assertThat "Second call should return same pipeline",
                    metadata2.getPipeline(), equalTo(metadata.getPipeline())
-        println "  ✓ Consistent results across multiple calls"
+        logger.debug("   Consistent results across multiple calls")
 
         // ========================================
         // Summary
         // ========================================
-        println "\n" + "=".multiply(60)
-        println "✅ ALL ORG SETTING METADATA API TESTS COMPLETE"
-        println "=".multiply(60)
-        println "\n=== API Coverage Summary ==="
-        println "All 1 OrgSettingMetadata API endpoint tested:"
-        println "  ✓ GET /.well-known/okta-organization"
-        println "\n=== Test Results ==="
-        println "• Total Endpoints: 1"
-        println "• Endpoints Tested: 1 (100%)"
-        println "• Test Scenarios: Get metadata, Verify fields, Verify consistency"
-        println "• Org Impact: Zero (read-only endpoint)"
+        logger.debug("\n" + "=".multiply(60))
+        logger.debug(" ALL ORG SETTING METADATA API TESTS COMPLETE")
+        logger.debug("=".multiply(60))
+        logger.debug("\n=== API Coverage Summary ===")
+        logger.debug("All 1 OrgSettingMetadata API endpoint tested:")
+        logger.debug("   GET /.well-known/okta-organization")
+        logger.debug("\n=== Test Results ===")
+        logger.debug(" Total Endpoints: 1")
+        logger.debug(" Endpoints Tested: 1 (100%)")
+        logger.debug(" Test Scenarios: Get metadata, Verify fields, Verify consistency")
+        logger.debug(" Org Impact: Zero (read-only endpoint)")
     }
 
     @Test(groups = "group3")

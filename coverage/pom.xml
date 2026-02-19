@@ -58,12 +58,6 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <!-- Exclude anonymous TypeReference inner classes from generated API code.
-                             Each `new TypeReference<T>() {}` compiles to a separate class file
-                             (e.g., GroupApi$1.class, GroupApi$2.class) that JaCoCo reports as
-                             individual classes, inflating class/method counts and adding noise
-                             to the coverage report. These are trivial one-line type hints and
-                             not meaningful coverage targets. -->
                         <exclude>com/okta/sdk/resource/api/*Api$*.class</exclude>
                     </excludes>
                 </configuration>

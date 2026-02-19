@@ -27,21 +27,6 @@ import static org.hamcrest.Matchers.*
 /**
  * Integration tests for User Type API.
  * Tests user type management (create, get, list, update, replace, delete).
- *
- * NOTE: The SDK-generated UserType model (User_type) only has an 'id' property.
- * The createUserType API expects {name, displayName, description} but the SDK model
- * does not expose these fields. Tests that require creating/updating/replacing user types
- * cannot be fully tested through the SDK without model fixes.
- * 
- * Tests that work:
- * - listUserTypes / getUserType (read-only, works with existing types)
- * - Negative tests (error handling)
- *
- * Tests that need SDK model fix (documented but skipped):
- * - createUserType (UserType model missing name, displayName, description)
- * - updateUserType (UserTypePostRequest works but needs valid type to update)
- * - replaceUserType (UserTypePutRequest works but needs valid type to replace)
- * - deleteUserType (needs valid type to delete)
  */
 class UserTypeIT extends ITSupport {
 

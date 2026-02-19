@@ -23,6 +23,8 @@ import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Integration tests for OrgSettingCommunication API
@@ -35,6 +37,9 @@ import static org.hamcrest.Matchers.*
  * Note: These are org-wide communication settings. Tests will restore original values after testing.
  */
 class OrgSettingCommunicationIT extends ITSupport {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrgSettingCommunicationIT)
+
 
     private OrgSettingCommunicationApi orgSettingCommunicationApi
 
@@ -60,15 +65,15 @@ class OrgSettingCommunicationIT extends ITSupport {
         def originalOptOutValue = null
 
         try {
-            println "\n" + "=".multiply(60)
-            println "TESTING ORG COMMUNICATION SETTINGS API"
-            println "=".multiply(60)
-            println "Note: All settings will be restored to original values"
+            logger.debug("\n" + "=".multiply(60))
+            logger.debug("TESTING ORG COMMUNICATION SETTINGS API")
+            logger.debug("=".multiply(60))
+            logger.debug("Note: All settings will be restored to original values")
 
             // ========================================
             // Step 1: Get current communication settings
             // ========================================
-            println "\n1. GET /api/v1/org/privacy/oktaCommunication"
+            logger.debug("\n1. GET /api/v1/org/privacy/oktaCommunication")
             def currentSettings = orgSettingCommunicationApi.getOktaCommunicationSettings()
             originalOptOutValue = currentSettings.optOutEmailUsers
             
@@ -76,20 +81,20 @@ class OrgSettingCommunicationIT extends ITSupport {
             assertThat "OptOutEmailUsers should not be null", 
                        currentSettings.optOutEmailUsers, notNullValue()
             
-            println "  ✓ Current setting: optOutEmailUsers = ${originalOptOutValue}"
+            logger.debug("   Current setting: optOutEmailUsers = {}", originalOptOutValue)
             
             if (originalOptOutValue) {
-                println "  → Users are currently OPTED OUT of communication emails"
+                logger.debug("   Users are currently OPTED OUT of communication emails")
             } else {
-                println "  → Users are currently OPTED IN to communication emails"
+                logger.debug("   Users are currently OPTED IN to communication emails")
             }
 
             // ========================================
             // Step 2: Test Opt-Out (if currently opted in)
             // ========================================
             if (!originalOptOutValue) {
-                println "\n2. POST /api/v1/org/privacy/oktaCommunication/optOut"
-                println "   (Opting out users from communication emails)"
+                logger.debug("\n2. POST /api/v1/org/privacy/oktaCommunication/optOut")
+                logger.debug("   (Opting out users from communication emails)")
                 
                 def optedOut = orgSettingCommunicationApi.optOutUsersFromOktaCommunicationEmails()
                 
@@ -97,11 +102,11 @@ class OrgSettingCommunicationIT extends ITSupport {
                 assertThat "OptOutEmailUsers should be true after opt-out", 
                            optedOut.optOutEmailUsers, equalTo(true)
                 
-                println "  ✓ Successfully opted out: optOutEmailUsers = ${optedOut.optOutEmailUsers}"
+                logger.debug("   Successfully opted out: optOutEmailUsers = {}", optedOut.optOutEmailUsers)
                 
                 // Test Opt-In to restore original
-                println "\n3. POST /api/v1/org/privacy/oktaCommunication/optIn"
-                println "   (Opting in users to communication emails - restore original)"
+                logger.debug("\n3. POST /api/v1/org/privacy/oktaCommunication/optIn")
+                logger.debug("   (Opting in users to communication emails - restore original)")
                 
                 def optedIn = orgSettingCommunicationApi.optInUsersToOktaCommunicationEmails()
                 
@@ -109,13 +114,13 @@ class OrgSettingCommunicationIT extends ITSupport {
                 assertThat "OptOutEmailUsers should be false after opt-in", 
                            optedIn.optOutEmailUsers, equalTo(false)
                 
-                println "  ✓ Successfully opted in: optOutEmailUsers = ${optedIn.optOutEmailUsers}"
-                println "  ✅ Restored to original state (opted in)"
+                logger.debug("   Successfully opted in: optOutEmailUsers = {}", optedIn.optOutEmailUsers)
+                logger.debug("   Restored to original state (opted in)")
                 
             } else {
                 // Currently opted out, test opt-in first, then opt-out to restore
-                println "\n2. POST /api/v1/org/privacy/oktaCommunication/optIn"
-                println "   (Opting in users to communication emails)"
+                logger.debug("\n2. POST /api/v1/org/privacy/oktaCommunication/optIn")
+                logger.debug("   (Opting in users to communication emails)")
                 
                 def optedIn = orgSettingCommunicationApi.optInUsersToOktaCommunicationEmails()
                 
@@ -123,11 +128,11 @@ class OrgSettingCommunicationIT extends ITSupport {
                 assertThat "OptOutEmailUsers should be false after opt-in", 
                            optedIn.optOutEmailUsers, equalTo(false)
                 
-                println "  ✓ Successfully opted in: optOutEmailUsers = ${optedIn.optOutEmailUsers}"
+                logger.debug("   Successfully opted in: optOutEmailUsers = {}", optedIn.optOutEmailUsers)
                 
                 // Test Opt-Out to restore original
-                println "\n3. POST /api/v1/org/privacy/oktaCommunication/optOut"
-                println "   (Opting out users from communication emails - restore original)"
+                logger.debug("\n3. POST /api/v1/org/privacy/oktaCommunication/optOut")
+                logger.debug("   (Opting out users from communication emails - restore original)")
                 
                 def optedOut = orgSettingCommunicationApi.optOutUsersFromOktaCommunicationEmails()
                 
@@ -135,64 +140,64 @@ class OrgSettingCommunicationIT extends ITSupport {
                 assertThat "OptOutEmailUsers should be true after opt-out", 
                            optedOut.optOutEmailUsers, equalTo(true)
                 
-                println "  ✓ Successfully opted out: optOutEmailUsers = ${optedOut.optOutEmailUsers}"
-                println "  ✅ Restored to original state (opted out)"
+                logger.debug("   Successfully opted out: optOutEmailUsers = {}", optedOut.optOutEmailUsers)
+                logger.debug("   Restored to original state (opted out)")
             }
 
             // ========================================
             // Summary
             // ========================================
-            println "\n" + "=".multiply(60)
-            println "✅ ALL ORG COMMUNICATION SETTINGS API TESTS COMPLETE"
-            println "=".multiply(60)
-            println "\n=== API Coverage Summary ==="
-            println "All 3 OrgSettingCommunication API endpoints tested:"
-            println "  ✓ GET  /api/v1/org/privacy/oktaCommunication"
-            println "  ✓ POST /api/v1/org/privacy/oktaCommunication/optIn"
-            println "  ✓ POST /api/v1/org/privacy/oktaCommunication/optOut"
-            println "\n=== Cleanup Summary ==="
-            println "  ✓ Communication Settings: Restored to optOutEmailUsers = ${originalOptOutValue}"
-            println "\n=== Test Results ==="
-            println "• Total Endpoints: 3"
-            println "• Endpoints Tested: 3 (100%)"
-            println "• Test Scenarios: Get current, Toggle settings, Verify responses, Restore"
-            println "• Org Impact: Zero (settings restored to original)"
+            logger.debug("\n" + "=".multiply(60))
+            logger.debug(" ALL ORG COMMUNICATION SETTINGS API TESTS COMPLETE")
+            logger.debug("=".multiply(60))
+            logger.debug("\n=== API Coverage Summary ===")
+            logger.debug("All 3 OrgSettingCommunication API endpoints tested:")
+            logger.debug("   GET  /api/v1/org/privacy/oktaCommunication")
+            logger.debug("   POST /api/v1/org/privacy/oktaCommunication/optIn")
+            logger.debug("   POST /api/v1/org/privacy/oktaCommunication/optOut")
+            logger.debug("\n=== Cleanup Summary ===")
+            logger.debug("   Communication Settings: Restored to optOutEmailUsers = {}", originalOptOutValue)
+            logger.debug("\n=== Test Results ===")
+            logger.debug(" Total Endpoints: 3")
+            logger.debug(" Endpoints Tested: 3 (100%)")
+            logger.debug(" Test Scenarios: Get current, Toggle settings, Verify responses, Restore")
+            logger.debug(" Org Impact: Zero (settings restored to original)")
 
         } catch (Exception e) {
-            println "\n❌ Test failed with exception: ${e.message}"
+            logger.debug("\n Test failed with exception: {}", e.message)
             if (e instanceof ApiException) {
-                println "Response code: ${e.code}"
-                println "Response body: ${e.responseBody}"
+                logger.debug("Response code: {}", e.code)
+                logger.debug("Response body: {}", e.responseBody)
             }
             
             // Attempt emergency restoration if we have original value
-            println "\n=== Emergency Cleanup Attempt ==="
+            logger.debug("\n=== Emergency Cleanup Attempt ===")
             try {
                 if (originalOptOutValue != null) {
-                    println "Restoring communication settings to original value..."
+                    logger.debug("Restoring communication settings to original value...")
                     
                     if (originalOptOutValue) {
                         // Restore to opted out
                         orgSettingCommunicationApi.optOutUsersFromOktaCommunicationEmails()
-                        println "  ✓ Restored to opted out"
+                        logger.debug("   Restored to opted out")
                     } else {
                         // Restore to opted in
                         orgSettingCommunicationApi.optInUsersToOktaCommunicationEmails()
-                        println "  ✓ Restored to opted in"
+                        logger.debug("   Restored to opted in")
                     }
                     
                     // Verify restoration
                     def restoredSettings = orgSettingCommunicationApi.getOktaCommunicationSettings()
                     if (restoredSettings.optOutEmailUsers == originalOptOutValue) {
-                        println "  ✓ Emergency restoration verified"
+                        logger.debug("   Emergency restoration verified")
                     } else {
-                        println "  ⚠ Emergency restoration may have failed"
+                        logger.debug("   Emergency restoration may have failed")
                     }
                 }
                 
-                println "=== Emergency Cleanup Complete ==="
+                logger.debug("=== Emergency Cleanup Complete ===")
             } catch (Exception cleanupException) {
-                println "⚠ Emergency cleanup failed: ${cleanupException.message}"
+                logger.debug(" Emergency cleanup failed: {}", cleanupException.message)
             }
             
             throw e
@@ -203,58 +208,56 @@ class OrgSettingCommunicationIT extends ITSupport {
     void testOrgCommunicationNegativeCases() {
         orgSettingCommunicationApi = new OrgSettingCommunicationApi(getClient())
         
-        println "\n" + "=" * 60
-        println "TESTING ORG COMMUNICATION NEGATIVE CASES"
-        println "=" * 60
+        logger.debug("TESTING ORG COMMUNICATION NEGATIVE CASES")
         
         // Test 1: Verify we cannot pass invalid parameters to opt-in
-        println "\n1. Testing opt-in endpoint behavior..."
+        logger.debug("\n1. Testing opt-in endpoint behavior...")
         try {
             // The API endpoints don't accept parameters, but we verify they handle correctly
             def result = orgSettingCommunicationApi.optInUsersToOktaCommunicationEmails()
             assertThat "Opt-in should return settings", result, notNullValue()
-            println "   ✓ Opt-in endpoint works correctly"
+            logger.debug("    Opt-in endpoint works correctly")
         } catch (Exception e) {
-            println "   ⚠ Opt-in may not be allowed in current org state: ${e.message}"
+            logger.debug("    Opt-in may not be allowed in current org state: {}", e.message)
         }
         
         // Test 2: Verify we cannot pass invalid parameters to opt-out
-        println "\n2. Testing opt-out endpoint behavior..."
+        logger.debug("\n2. Testing opt-out endpoint behavior...")
         try {
             // The API endpoints don't accept parameters, but we verify they handle correctly
             def result = orgSettingCommunicationApi.optOutUsersFromOktaCommunicationEmails()
             assertThat "Opt-out should return settings", result, notNullValue()
-            println "   ✓ Opt-out endpoint works correctly"
+            logger.debug("    Opt-out endpoint works correctly")
         } catch (Exception e) {
-            println "   ⚠ Opt-out may not be allowed in current org state: ${e.message}"
+            logger.debug("    Opt-out may not be allowed in current org state: {}", e.message)
         }
         
         // Test 3: Verify idempotency - calling opt-in twice
-        println "\n3. Testing opt-in idempotency (calling twice)..."
+        logger.debug("\n3. Testing opt-in idempotency (calling twice)...")
         try {
             def result1 = orgSettingCommunicationApi.optInUsersToOktaCommunicationEmails()
             def result2 = orgSettingCommunicationApi.optInUsersToOktaCommunicationEmails()
             assertThat "Both calls should return same state", 
                        result1.optOutEmailUsers, equalTo(result2.optOutEmailUsers)
-            println "   ✓ Opt-in is idempotent"
+            logger.debug("    Opt-in is idempotent")
         } catch (Exception e) {
-            println "   ⚠ Idempotency test skipped: ${e.message}"
+            logger.debug("    Idempotency test skipped: {}", e.message)
         }
         
         // Test 4: Verify idempotency - calling opt-out twice
-        println "\n4. Testing opt-out idempotency (calling twice)..."
+        logger.debug("\n4. Testing opt-out idempotency (calling twice)...")
         try {
             def result1 = orgSettingCommunicationApi.optOutUsersFromOktaCommunicationEmails()
             def result2 = orgSettingCommunicationApi.optOutUsersFromOktaCommunicationEmails()
             assertThat "Both calls should return same state", 
                        result1.optOutEmailUsers, equalTo(result2.optOutEmailUsers)
-            println "   ✓ Opt-out is idempotent"
+            logger.debug("    Opt-out is idempotent")
         } catch (Exception e) {
-            println "   ⚠ Idempotency test skipped: ${e.message}"
+            logger.debug("    Idempotency test skipped: {}", e.message)
         }
         
-        println "\n✅ All negative test cases completed!"
-        println "Note: Communication settings are org-level and have limited error scenarios"
+        logger.debug("\n All negative test cases completed!")
+        logger.debug("Note: Communication settings are org-level and have limited error scenarios")
     }
 
     @Test(groups = "group3")

@@ -28,6 +28,8 @@ import java.lang.reflect.Method
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Comprehensive integration tests for {@link UserApi}.
@@ -65,6 +67,9 @@ import static org.hamcrest.Matchers.*
  */
 class UserIT extends ITSupport {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserIT)
+
+
     @Test(groups = "group3")
     void testUserApiComprehensiveLifecycle() {
         def client = getClient()
@@ -75,15 +80,11 @@ class UserIT extends ITSupport {
         List<String> createdUserIds = []
         
         try {
-            println "\n" + "=" * 80
-            println "COMPREHENSIVE USER API TEST"
-            println "=" * 80
-            println "Testing all 7 core User API endpoints with complete lifecycle\n"
+            logger.debug("COMPREHENSIVE USER API TEST")
+            logger.debug("Testing all 7 core User API endpoints with complete lifecycle\n")
             
             // ========== STEP 1: Create User - Activated with Password ==========
-            println "=" * 80
-            println "STEP 1: POST /api/v1/users (Create user - activated with password)"
-            println "=" * 80
+            logger.debug("STEP 1: POST /api/v1/users (Create user - activated with password)")
             
             def uniqueId = UUID.randomUUID().toString().substring(0, 8)
             def email1 = "user-test-1-${uniqueId}@example.com"
@@ -106,9 +107,9 @@ class UserIT extends ITSupport {
             credentials.password = passwordCred
             request1.credentials = credentials
             
-            println "→ Creating user: ${email1}"
-            println "  - activate=true (user will be ACTIVE)"
-            println "  - with password credentials"
+            logger.debug(" Creating user: {}", email1)
+            logger.debug("  - activate=true (user will be ACTIVE)")
+            logger.debug("  - with password credentials")
             
             User user1 = userApi.createUser(request1, true, false, null)
             createdUserIds.add(user1.id)
@@ -127,16 +128,14 @@ class UserIT extends ITSupport {
             assert actualFirstName == firstName1 : "First name mismatch: expected='${firstName1}', actual='${actualFirstName}'"
             assert actualLastName == lastName1 : "Last name mismatch: expected='${lastName1}', actual='${actualLastName}'"
             
-            println "✓ User created successfully:"
-            println "  - ID: ${user1.id}"
-            println "  - Login: ${user1.profile.login}"
-            println "  - Status: ${user1.status}"
-            println "  - Created: ${user1.created}"
+            logger.debug(" User created successfully:")
+            logger.debug("  - ID: {}", user1.id)
+            logger.debug("  - Login: {}", user1.profile.login)
+            logger.debug("  - Status: {}", user1.status)
+            logger.debug("  - Created: {}", user1.created)
             
             // ========== STEP 2: Create User - Staged without Activation ==========
-            println "\n" + "=" * 80
-            println "STEP 2: POST /api/v1/users (Create user - staged without activation)"
-            println "=" * 80
+            logger.debug("STEP 2: POST /api/v1/users (Create user - staged without activation)")
             
             def email2 = "user-test-2-${uniqueId}@example.com"
             def firstName2 = "Staged"
@@ -150,9 +149,9 @@ class UserIT extends ITSupport {
             profile2.login = email2
             request2.profile = profile2
             
-            println "→ Creating user: ${email2}"
-            println "  - activate=false (user will be STAGED)"
-            println "  - without password (will receive activation email)"
+            logger.debug(" Creating user: {}", email2)
+            logger.debug("  - activate=false (user will be STAGED)")
+            logger.debug("  - without password (will receive activation email)")
             
             User user2 = userApi.createUser(request2, false, false, null)
             createdUserIds.add(user2.id)
@@ -166,93 +165,85 @@ class UserIT extends ITSupport {
             assert actualEmail2 == email2 : "Email mismatch: expected='${email2}', actual='${actualEmail2}'"
             assert actualStatus2 in ["STAGED", "PROVISIONED"] : "Status should be STAGED or PROVISIONED, but was: ${actualStatus2}"
             
-            println "✓ User created successfully:"
-            println "  - ID: ${user2.id}"
-            println "  - Login: ${user2.profile.login}"
-            println "  - Status: ${user2.status}"
+            logger.debug(" User created successfully:")
+            logger.debug("  - ID: {}", user2.id)
+            logger.debug("  - Login: {}", user2.profile.login)
+            logger.debug("  - Status: {}", user2.status)
             
             // ========== STEP 3: Get User by ID ==========
-            println "\n" + "=" * 80
-            println "STEP 3: GET /api/v1/users/{id} (Retrieve user by ID)"
-            println "=" * 80
+            logger.debug("STEP 3: GET /api/v1/users/{id} (Retrieve user by ID)")
             
-            println "→ Retrieving user by ID: ${user1.id}"
+            logger.debug(" Retrieving user by ID: {}", user1.id)
             User retrievedById = userApi.getUser(user1.id, null, null)
             
             assertThat "Retrieved user should not be null", retrievedById, notNullValue()
             assert retrievedById.id == user1.id : "ID mismatch"
             assert retrievedById.profile.email == email1 : "Email mismatch"
             
-            println "✓ User retrieved by ID:"
-            println "  - ID: ${retrievedById.id}"
-            println "  - Login: ${retrievedById.profile.login}"
-            println "  - Name: ${retrievedById.profile.firstName} ${retrievedById.profile.lastName}"
-            println "  - Status: ${retrievedById.status}"
+            logger.debug(" User retrieved by ID:")
+            logger.debug("  - ID: {}", retrievedById.id)
+            logger.debug("  - Login: {}", retrievedById.profile.login)
+            logger.debug("  - Name: {} {}", retrievedById.profile.firstName, retrievedById.profile.lastName)
+            logger.debug("  - Status: {}", retrievedById.status)
             
             // ========== STEP 4: Get User by Login ==========
-            println "\n" + "=" * 80
-            println "STEP 4: GET /api/v1/users/{login} (Retrieve user by login)"
-            println "=" * 80
+            logger.debug("STEP 4: GET /api/v1/users/{login} (Retrieve user by login)")
             
-            println "→ Retrieving user by login: ${email1}"
+            logger.debug(" Retrieving user by login: {}", email1)
             User retrievedByLogin = userApi.getUser(email1, null, null)
             
             assertThat "Retrieved user should not be null", retrievedByLogin, notNullValue()
             assert retrievedByLogin.id == user1.id : "ID mismatch"
             assert retrievedByLogin.profile.email == email1 : "Email mismatch"
             
-            println "✓ User retrieved by login:"
-            println "  - ID: ${retrievedByLogin.id}"
-            println "  - Login: ${retrievedByLogin.profile.login}"
+            logger.debug(" User retrieved by login:")
+            logger.debug("  - ID: {}", retrievedByLogin.id)
+            logger.debug("  - Login: {}", retrievedByLogin.profile.login)
             
             // ========== STEP 5: List Users ==========
-            println "\n" + "=" * 80
-            println "STEP 5: GET /api/v1/users (List users with search/filter)"
-            println "=" * 80
+            logger.debug("STEP 5: GET /api/v1/users (List users with search/filter)")
             
             // Test 5a: List with limit (with contentType to cover contentType != null branch)
-            println "→ Test 5a: List users with limit=5 and contentType=application/json"
+            logger.debug(" Test 5a: List users with limit=5 and contentType=application/json")
             List<User> limitedUsers = userApi.listUsers("application/json", null, null, null, null, 5, null, null, null, null)
             
             assertThat "Limited users list should not be null", limitedUsers, notNullValue()
             assertThat "Limited users list should have at most 5 users", limitedUsers.size(), lessThanOrEqualTo(5)
             
-            println "✓ Retrieved ${limitedUsers.size()} users (limit=5)"
+            logger.debug(" Retrieved {} users (limit=5)", limitedUsers.size())
             
             // Test 5b: Search by email
-            println "\n→ Test 5b: Search for specific user by email"
+            logger.debug("\n Test 5b: Search for specific user by email")
             String searchQuery = "profile.email eq \"${email1}\""
             List<User> searchResults = userApi.listUsers(null, searchQuery, null, null, null, null, null, null, null, null)
             
             assertThat "Search results should not be null", searchResults, notNullValue()
-            println "✓ Search found ${searchResults.size()} user(s) matching: ${email1}"
+            logger.debug(" Search found {} user(s) matching: {}", searchResults.size(), email1)
             
             if (searchResults.size() > 0) {
                 User foundUser = searchResults[0]
-                println "  - Found: ${foundUser.profile.login} (ID: ${foundUser.id})"
+                logger.debug("  - Found: {} (ID: {})", foundUser.profile.login, foundUser.id)
             }
             
             // Test 5c: Filter by status
-            println "\n→ Test 5c: Filter users by status=ACTIVE"
+            logger.debug("\n Test 5c: Filter users by status=ACTIVE")
             String filterQuery = "status eq \"ACTIVE\""
             List<User> activeUsers = userApi.listUsers(null, null, filterQuery, null, null, 5, null, null, null, null)
             
             assertThat "Active users list should not be null", activeUsers, notNullValue()
-            println "✓ Retrieved ${activeUsers.size()} ACTIVE users (limit=5)"
+            logger.debug(" Retrieved {} ACTIVE users (limit=5)", activeUsers.size())
             
             activeUsers.each { u ->
-                println "  - ${u.profile.login}: ${u.status}"
+                logger.debug("  - {}: {}", u.profile.login, u.status)
             }
             
             // ========== STEP 6: Update User (Partial - POST) ==========
-            println "\n" + "=" * 80
-            println "STEP 6: POST /api/v1/users/{id} (Partial update - POST)"
-            println "=" * 80
+            logger.debug("STEP 6: POST /api/v1/users/{id} (Partial update - POST)")
             
-            println "→ Updating user ${user1.id} profile"
-            println "  - Original firstName: ${user1.profile.firstName}"
-            println "  - New firstName: Updated"
-            println "  - Adding nickName: TestNick"
+            logger.debug(" Updating user {} profile", user1.id)
+            logger.debug("  - Original firstName: {}", user1.profile.firstName)
+            logger.debug("  - New firstName: Updated")
+            logger.debug("  - Adding nickName: TestNick")
             
             UpdateUserRequest updateRequest = new UpdateUserRequest()
             UserProfile updatedProfile = new UserProfile()
@@ -269,20 +260,18 @@ class UserIT extends ITSupport {
             assert partiallyUpdatedUser.profile.nickName == "TestNick" : "Nickname not added"
             assert partiallyUpdatedUser.profile.email == email1 : "Email should remain unchanged"
             
-            println "✓ User updated (partial):"
-            println "  - firstName: ${partiallyUpdatedUser.profile.firstName}"
-            println "  - nickName: ${partiallyUpdatedUser.profile.nickName}"
-            println "  - lastUpdated: ${partiallyUpdatedUser.lastUpdated}"
+            logger.debug(" User updated (partial):")
+            logger.debug("  - firstName: {}", partiallyUpdatedUser.profile.firstName)
+            logger.debug("  - nickName: {}", partiallyUpdatedUser.profile.nickName)
+            logger.debug("  - lastUpdated: {}", partiallyUpdatedUser.lastUpdated)
             
             // ========== STEP 7: Replace User (Full - PUT) ==========
-            println "\n" + "=" * 80
-            println "STEP 7: PUT /api/v1/users/{id} (Full replace - PUT)"
-            println "=" * 80
+            logger.debug("STEP 7: PUT /api/v1/users/{id} (Full replace - PUT)")
             
-            println "→ Replacing entire user profile for ${user1.id}"
-            println "  - Original firstName: ${partiallyUpdatedUser.profile.firstName}"
-            println "  - New firstName: Replaced"
-            println "  - Removing nickName"
+            logger.debug(" Replacing entire user profile for {}", user1.id)
+            logger.debug("  - Original firstName: {}", partiallyUpdatedUser.profile.firstName)
+            logger.debug("  - New firstName: Replaced")
+            logger.debug("  - Removing nickName")
             
             UpdateUserRequest replaceRequest = new UpdateUserRequest()
             UserProfile replacedProfile = new UserProfile()
@@ -299,47 +288,43 @@ class UserIT extends ITSupport {
             assert replacedUser.profile.lastName == "NewLastName" : "Last name not replaced"
             // nickName should be null or empty (removed by replace)
             
-            println "✓ User replaced (full):"
-            println "  - firstName: ${replacedUser.profile.firstName}"
-            println "  - lastName: ${replacedUser.profile.lastName}"
-            println "  - nickName: ${replacedUser.profile.nickName}"
-            println "  - lastUpdated: ${replacedUser.lastUpdated}"
+            logger.debug(" User replaced (full):")
+            logger.debug("  - firstName: {}", replacedUser.profile.firstName)
+            logger.debug("  - lastName: {}", replacedUser.profile.lastName)
+            logger.debug("  - nickName: {}", replacedUser.profile.nickName)
+            logger.debug("  - lastUpdated: {}", replacedUser.lastUpdated)
             
             // ========== STEP 8: List User Blocks ==========
-            println "\n" + "=" * 80
-            println "STEP 8: GET /api/v1/users/{id}/blocks (List user blocks)"
-            println "=" * 80
+            logger.debug("STEP 8: GET /api/v1/users/{id}/blocks (List user blocks)")
             
-            println "→ Retrieving blocks for user ${user1.id}"
+            logger.debug(" Retrieving blocks for user {}", user1.id)
             
             try {
                 List<UserBlock> userBlocks = userApi.listUserBlocks(user1.id)
                 
                 assertThat "User blocks list should not be null", userBlocks, notNullValue()
-                println "✓ Retrieved ${userBlocks.size()} block(s) for user"
+                logger.debug(" Retrieved {} block(s) for user", userBlocks.size())
                 
                 if (userBlocks.size() > 0) {
                     userBlocks.each { block ->
-                        println "  - Block type: ${block.type}"
+                        logger.debug("  - Block type: {}", block.type)
                     }
                 } else {
-                    println "  - No blocks found (user has no authentication restrictions)"
+                    logger.debug("  - No blocks found (user has no authentication restrictions)")
                 }
             } catch (ApiException e) {
                 if (e.code == 404) {
-                    println "✓ No blocks found for user (404 - expected for users without blocks)"
+                    logger.debug(" No blocks found for user (404 - expected for users without blocks)")
                 } else {
-                    println "⚠ Error retrieving blocks: ${e.message} (Code: ${e.code})"
+                    logger.debug(" Error retrieving blocks: {} (Code: {})", e.message, e.code)
                 }
             }
             
             // ========== STEP 9: Delete User (Deactivate) ==========
-            println "\n" + "=" * 80
-            println "STEP 9: DELETE /api/v1/users/{id} (Deactivate user - first delete)"
-            println "=" * 80
+            logger.debug("STEP 9: DELETE /api/v1/users/{id} (Deactivate user - first delete)")
             
-            println "→ Deactivating user ${user1.id}"
-            println "  - Status before: ${replacedUser.status}"
+            logger.debug(" Deactivating user {}", user1.id)
+            logger.debug("  - Status before: {}", replacedUser.status)
             
             // First delete = deactivate
             userApi.deleteUser(user1.id, false, null)
@@ -350,34 +335,32 @@ class UserIT extends ITSupport {
             
             assert deactivatedUser.status.toString() == "DEPROVISIONED" : "User should be DEPROVISIONED after deactivation"
             
-            println "✓ User deactivated:"
-            println "  - Status after: ${deactivatedUser.status}"
+            logger.debug(" User deactivated:")
+            logger.debug("  - Status after: {}", deactivatedUser.status)
             
             // ========== STEP 10: Delete User (Permanent) ==========
-            println "\n" + "=" * 80
-            println "STEP 10: DELETE /api/v1/users/{id} (Permanent delete - second delete)"
-            println "=" * 80
+            logger.debug("STEP 10: DELETE /api/v1/users/{id} (Permanent delete - second delete)")
             
-            println "→ Permanently deleting user ${user1.id}"
+            logger.debug(" Permanently deleting user {}", user1.id)
             
             // Second delete = permanent deletion
             userApi.deleteUser(user1.id, false, null)
             
             sleep(2000) // Wait for deletion
             
-            println "✓ User permanently deleted"
+            logger.debug(" User permanently deleted")
             
             // Verify deletion
-            println "→ Verifying user is deleted..."
+            logger.debug(" Verifying user is deleted...")
             try {
                 userApi.getUser(user1.id, null, null)
-                println "✗ UNEXPECTED: User still exists after deletion"
+                logger.debug(" UNEXPECTED: User still exists after deletion")
                 assert false : "User should be deleted but still exists"
             } catch (ApiException e) {
                 if (e.code == 404) {
-                    println "✓ Confirmed: User not found (404) - successfully deleted"
+                    logger.debug(" Confirmed: User not found (404) - successfully deleted")
                 } else {
-                    println "✗ Unexpected error: ${e.message}"
+                    logger.debug(" Unexpected error: {}", e.message)
                     throw e
                 }
             }
@@ -386,83 +369,73 @@ class UserIT extends ITSupport {
             createdUserIds.remove(user1.id)
             
             // ========== Final Summary ==========
-            println "\n" + "=" * 80
-            println "TEST SUMMARY"
-            println "=" * 80
-            println "✓ All 7 core User API endpoints tested successfully:"
-            println ""
-            println "  Core Operations (7/7):"
-            println "  ✓ 1. POST   /api/v1/users                 - createUser() [2 scenarios]"
-            println "  ✓ 2. GET    /api/v1/users/{id}            - getUser() [by ID & login]"
-            println "  ✓ 3. GET    /api/v1/users                 - listUsers() [3 scenarios]"
-            println "  ✓ 4. POST   /api/v1/users/{id}            - updateUser() [partial]"
-            println "  ✓ 5. PUT    /api/v1/users/{id}            - replaceUser() [full]"
-            println "  ✓ 6. DELETE /api/v1/users/{id}            - deleteUser() [deactivate]"
-            println "  ✓ 7. DELETE /api/v1/users/{id}            - deleteUser() [permanent]"
-            println "  ✓ 8. GET    /api/v1/users/{id}/blocks     - listUserBlocks()"
-            println ""
-            println "  Scenarios Covered:"
-            println "  ✓ Create user with activation (ACTIVE)"
-            println "  ✓ Create user without activation (STAGED)"
-            println "  ✓ Get user by ID"
-            println "  ✓ Get user by login"
-            println "  ✓ List users with limit"
-            println "  ✓ Search users by email"
-            println "  ✓ Filter users by status"
-            println "  ✓ Partial update (POST)"
-            println "  ✓ Full replace (PUT)"
-            println "  ✓ User blocks endpoint"
-            println "  ✓ User deactivation"
-            println "  ✓ User permanent deletion"
-            println "  ✓ 404 verification after deletion"
-            println ""
-            println "  Cleanup Status:"
-            println "  - ${createdUserIds.size()} user(s) remaining to clean up"
-            println "=" * 80
+            logger.debug("TEST SUMMARY")
+            logger.debug(" All 7 core User API endpoints tested successfully:")
+            logger.debug("  Core Operations (7/7):")
+            logger.debug("   1. POST   /api/v1/users                 - createUser() [2 scenarios]")
+            logger.debug("   2. GET    /api/v1/users/{id}            - getUser() [by ID & login]")
+            logger.debug("   3. GET    /api/v1/users                 - listUsers() [3 scenarios]")
+            logger.debug("   4. POST   /api/v1/users/{id}            - updateUser() [partial]")
+            logger.debug("   5. PUT    /api/v1/users/{id}            - replaceUser() [full]")
+            logger.debug("   6. DELETE /api/v1/users/{id}            - deleteUser() [deactivate]")
+            logger.debug("   7. DELETE /api/v1/users/{id}            - deleteUser() [permanent]")
+            logger.debug("   8. GET    /api/v1/users/{id}/blocks     - listUserBlocks()")
+            logger.debug("  Scenarios Covered:")
+            logger.debug("   Create user with activation (ACTIVE)")
+            logger.debug("   Create user without activation (STAGED)")
+            logger.debug("   Get user by ID")
+            logger.debug("   Get user by login")
+            logger.debug("   List users with limit")
+            logger.debug("   Search users by email")
+            logger.debug("   Filter users by status")
+            logger.debug("   Partial update (POST)")
+            logger.debug("   Full replace (PUT)")
+            logger.debug("   User blocks endpoint")
+            logger.debug("   User deactivation")
+            logger.debug("   User permanent deletion")
+            logger.debug("   404 verification after deletion")
+            logger.debug("  Cleanup Status:")
+            logger.debug("  - {} user(s) remaining to clean up", createdUserIds.size())
             
         } finally {
             // ========== CLEANUP: Delete All Created Users ==========
-            println "\n" + "=" * 80
-            println "CLEANUP: Deleting all created test users"
-            println "=" * 80
+            logger.debug("CLEANUP: Deleting all created test users")
             
             createdUserIds.each { userId ->
                 try {
-                    println "→ Cleaning up user: ${userId}"
+                    logger.debug(" Cleaning up user: {}", userId)
                     
                     // Get current status
                     try {
                         User userToDelete = userApi.getUser(userId, null, null)
-                        println "  - Current status: ${userToDelete.status}"
+                        logger.debug("  - Current status: {}", userToDelete.status)
                         
                         // Deactivate if not already deprovisioned
                         if (userToDelete.status.toString() != "DEPROVISIONED") {
-                            println "  - Deactivating..."
+                            logger.debug("  - Deactivating...")
                             userApi.deleteUser(userId, false, null)
                             sleep(1000)
                         }
                         
                         // Permanent delete
-                        println "  - Permanently deleting..."
+                        logger.debug("  - Permanently deleting...")
                         userApi.deleteUser(userId, false, null)
-                        println "✓ User ${userId} cleaned up successfully"
+                        logger.debug(" User {} cleaned up successfully", userId)
                         
                     } catch (ApiException e) {
                         if (e.code == 404) {
-                            println "✓ User ${userId} already deleted"
+                            logger.debug(" User {} already deleted", userId)
                         } else {
-                            println "⚠ Error during cleanup: ${e.message}"
+                            logger.debug(" Error during cleanup: {}", e.message)
                         }
                     }
                     
                 } catch (Exception e) {
-                    println "✗ Error cleaning up user ${userId}: ${e.message}"
+                    logger.debug(" Error cleaning up user {}: {}", userId, e.message)
                 }
             }
             
-            println "=" * 80
-            println "CLEANUP COMPLETE"
-            println "=" * 80
+            logger.debug("CLEANUP COMPLETE")
         }
     }
 
@@ -471,32 +444,30 @@ class UserIT extends ITSupport {
         def client = getClient()
         UserApi userApi = new UserApi(client)
         
-        println "\n" + "=" * 80
-        println "TESTING USER API NEGATIVE CASES"
-        println "=" * 80
+        logger.debug("TESTING USER API NEGATIVE CASES")
         
         // Test 1: Get user with invalid ID
-        println "\n1. Testing get with invalid user ID..."
+        logger.debug("\n1. Testing get with invalid user ID...")
         try {
             userApi.getUser("invalidUserId12345", null, null)
             assert false, "Should have thrown ApiException for invalid user ID"
         } catch (ApiException e) {
             assertThat "Should return 404 for invalid ID", e.code, equalTo(404)
-            println "   ✓ Correctly returned 404 for invalid user ID"
+            logger.debug("    Correctly returned 404 for invalid user ID")
         }
         
         // Test 2: Get user with empty ID
-        println "\n2. Testing get with empty user ID..."
+        logger.debug("\n2. Testing get with empty user ID...")
         try {
             userApi.getUser("", null, null)
             assert false, "Should have thrown exception for empty user ID"
         } catch (Exception e) {
             // Can be ApiException or other validation exception
-            println "   ✓ Correctly threw exception for empty user ID: ${e.class.simpleName}"
+            logger.debug("    Correctly threw exception for empty user ID: {}", e.class.simpleName)
         }
         
         // Test 3: Create user with missing required fields
-        println "\n3. Testing create user with missing required fields..."
+        logger.debug("\n3. Testing create user with missing required fields...")
         try {
             CreateUserRequest request = new CreateUserRequest()
             UserProfile profile = new UserProfile()
@@ -508,11 +479,11 @@ class UserIT extends ITSupport {
             assert false, "Should have thrown ApiException for missing required fields"
         } catch (ApiException e) {
             assertThat "Should return 400 for missing required fields", e.code, equalTo(400)
-            println "   ✓ Correctly returned 400 for missing required fields"
+            logger.debug("    Correctly returned 400 for missing required fields")
         }
         
         // Test 4: Create user with invalid email format
-        println "\n4. Testing create user with invalid email format..."
+        logger.debug("\n4. Testing create user with invalid email format...")
         try {
             CreateUserRequest request = new CreateUserRequest()
             UserProfile profile = new UserProfile()
@@ -526,11 +497,11 @@ class UserIT extends ITSupport {
             assert false, "Should have thrown ApiException for invalid email"
         } catch (ApiException e) {
             assertThat "Should return 400 for invalid email format", e.code, equalTo(400)
-            println "   ✓ Correctly returned 400 for invalid email format"
+            logger.debug("    Correctly returned 400 for invalid email format")
         }
         
         // Test 5: Update non-existent user
-        println "\n5. Testing update with non-existent user ID..."
+        logger.debug("\n5. Testing update with non-existent user ID...")
         try {
             UpdateUserRequest updateRequest = new UpdateUserRequest()
             UserProfile profile = new UserProfile()
@@ -541,11 +512,11 @@ class UserIT extends ITSupport {
             assert false, "Should have thrown ApiException for non-existent user"
         } catch (ApiException e) {
             assertThat "Should return 404 for non-existent user", e.code, equalTo(404)
-            println "   ✓ Correctly returned 404 for updating non-existent user"
+            logger.debug("    Correctly returned 404 for updating non-existent user")
         }
         
         // Test 6: Replace non-existent user
-        println "\n6. Testing replace with non-existent user ID..."
+        logger.debug("\n6. Testing replace with non-existent user ID...")
         try {
             UpdateUserRequest replaceRequest = new UpdateUserRequest()
             UserProfile profile = new UserProfile()
@@ -559,31 +530,31 @@ class UserIT extends ITSupport {
             assert false, "Should have thrown ApiException for non-existent user"
         } catch (ApiException e) {
             assertThat "Should return 404 for non-existent user", e.code, equalTo(404)
-            println "   ✓ Correctly returned 404 for replacing non-existent user"
+            logger.debug("    Correctly returned 404 for replacing non-existent user")
         }
         
         // Test 7: Delete non-existent user
-        println "\n7. Testing delete with non-existent user ID..."
+        logger.debug("\n7. Testing delete with non-existent user ID...")
         try {
             userApi.deleteUser("nonExistentUserId123", false, null)
             assert false, "Should have thrown ApiException for non-existent user"
         } catch (ApiException e) {
             assertThat "Should return 404 for non-existent user", e.code, equalTo(404)
-            println "   ✓ Correctly returned 404 for deleting non-existent user"
+            logger.debug("    Correctly returned 404 for deleting non-existent user")
         }
         
         // Test 8: List user blocks for non-existent user
-        println "\n8. Testing list blocks with non-existent user ID..."
+        logger.debug("\n8. Testing list blocks with non-existent user ID...")
         try {
             userApi.listUserBlocks("nonExistentUserId123")
             assert false, "Should have thrown ApiException for non-existent user"
         } catch (ApiException e) {
             assertThat "Should return 401 for non-existent user", e.code, equalTo(401)
-            println "   ✓ Correctly returned 401 for listing blocks of non-existent user"
+            logger.debug("    Correctly returned 401 for listing blocks of non-existent user")
         }
         
         // Test 9: Create user with duplicate email
-        println "\n9. Testing create user with duplicate email..."
+        logger.debug("\n9. Testing create user with duplicate email...")
         def uniqueId = UUID.randomUUID().toString().substring(0, 8)
         def testEmail = "duplicate-test-${uniqueId}@example.com"
         
@@ -598,7 +569,7 @@ class UserIT extends ITSupport {
             request1.profile = profile1
             
             def user1 = userApi.createUser(request1, true, false, null)
-            println "   → Created first user: ${user1.id}"
+            logger.debug("    Created first user: {}", user1.id)
             
             try {
                 // Try to create second user with same email
@@ -614,31 +585,31 @@ class UserIT extends ITSupport {
                 assert false, "Should have thrown ApiException for duplicate email"
             } catch (ApiException e) {
                 assertThat "Should return 400 for duplicate email", e.code, equalTo(400)
-                println "   ✓ Correctly returned 400 for duplicate email"
+                logger.debug("    Correctly returned 400 for duplicate email")
             } finally {
                 // Cleanup: delete first user
                 try {
                     userApi.deleteUser(user1.id, false, null)
                     userApi.deleteUser(user1.id, false, null)
                 } catch (Exception cleanupError) {
-                    println "   ⚠ Cleanup failed: ${cleanupError.message}"
+                    logger.debug("    Cleanup failed: {}", cleanupError.message)
                 }
             }
         } catch (Exception e) {
-            println "   ⚠ Duplicate email test setup failed: ${e.message}"
+            logger.debug("    Duplicate email test setup failed: {}", e.message)
         }
         
         // Test 10: List users with invalid search parameter
-        println "\n10. Testing list users with various query parameters..."
+        logger.debug("\n10. Testing list users with various query parameters...")
         try {
             // Test with empty search - should work
             def result = userApi.listUsers(null, null, null, "", null, null)
-            println "   ✓ List users with empty search parameter succeeded"
+            logger.debug("    List users with empty search parameter succeeded")
         } catch (Exception e) {
-            println "   ⚠ List users with empty search may not be supported: ${e.message}"
+            logger.debug("    List users with empty search may not be supported: {}", e.message)
         }
         
-        println "\n✅ All user negative test cases passed successfully!"
+        logger.debug("\n All user negative test cases passed successfully!")
     }
 
     /**
@@ -647,51 +618,49 @@ class UserIT extends ITSupport {
      */
     @Test(groups = "group3")
     void testUserApiAccessorsAndUtilities() {
-        println "\n" + "=" * 80
-        println "TESTING USER API - ACCESSORS & UTILITIES"
-        println "=" * 80
+        logger.debug("TESTING USER API - ACCESSORS & UTILITIES")
 
         // ========================================
         // 1. No-arg constructor: UserApi()
         // ========================================
-        println "\n1. Testing UserApi() no-arg constructor..."
+        logger.debug("\n1. Testing UserApi() no-arg constructor...")
         UserApi defaultApi = new UserApi()
         assertThat "No-arg constructor should create instance", defaultApi, notNullValue()
-        println "   ✓ UserApi() created successfully"
+        logger.debug("    UserApi() created successfully")
 
         // ========================================
         // 2. getApiClient()
         // ========================================
-        println "\n2. Testing getApiClient()..."
+        logger.debug("\n2. Testing getApiClient()...")
         ApiClient retrievedClient = defaultApi.getApiClient()
         assertThat "getApiClient() should return non-null client", retrievedClient, notNullValue()
-        println "   ✓ getApiClient() returned: ${retrievedClient.class.simpleName}"
+        logger.debug("    getApiClient() returned: {}", retrievedClient.class.simpleName)
 
         // ========================================
         // 3. setApiClient(ApiClient)
         // ========================================
-        println "\n3. Testing setApiClient(ApiClient)..."
+        logger.debug("\n3. Testing setApiClient(ApiClient)...")
         ApiClient testClient = getClient()
         defaultApi.setApiClient(testClient)
         ApiClient updatedClient = defaultApi.getApiClient()
         assertThat "setApiClient should update the client", updatedClient, sameInstance(testClient)
-        println "   ✓ setApiClient() updated client successfully"
+        logger.debug("    setApiClient() updated client successfully")
 
         // ========================================
         // 4. getObjectMapper() - protected static, accessed via reflection
         // ========================================
-        println "\n4. Testing getObjectMapper() via reflection..."
+        logger.debug("\n4. Testing getObjectMapper() via reflection...")
         try {
             Method getObjectMapperMethod = UserApi.class.getDeclaredMethod("getObjectMapper")
             getObjectMapperMethod.setAccessible(true)
             def objectMapper = getObjectMapperMethod.invoke(null)
             assertThat "getObjectMapper() should return non-null ObjectMapper", objectMapper, notNullValue()
-            println "   ✓ getObjectMapper() returned: ${objectMapper.class.simpleName}"
+            logger.debug("    getObjectMapper() returned: {}", objectMapper.class.simpleName)
         } catch (Exception e) {
-            println "   ⚠ getObjectMapper() reflection call failed: ${e.message}"
+            logger.debug("    getObjectMapper() reflection call failed: {}", e.message)
         }
 
-        println "\n✅ UserApi accessors and utilities tested"
+        logger.debug("\n UserApi accessors and utilities tested")
     }
 
     /**
@@ -703,93 +672,91 @@ class UserIT extends ITSupport {
         def client = getClient()
         UserApi userApi = new UserApi(client)
 
-        println "\n" + "=" * 80
-        println "TESTING USER API - NULL PARAMETER VALIDATION"
-        println "=" * 80
+        logger.debug("TESTING USER API - NULL PARAMETER VALIDATION")
 
         // 1. createUser(null body)
-        println "\n1. createUser with null body..."
+        logger.debug("\n1. createUser with null body...")
         try {
             userApi.createUser(null, true, false, null)
             assert false, "Should have thrown ApiException"
         } catch (ApiException e) {
             assertThat "Should be 400 for null body", e.code, equalTo(400)
-            println "   ✓ ApiException 400: ${e.message}"
+            logger.debug("    ApiException 400: {}", e.message)
         }
 
         // 2. getUser(null id)
-        println "\n2. getUser with null id..."
+        logger.debug("\n2. getUser with null id...")
         try {
             userApi.getUser(null, null, null)
             assert false, "Should have thrown ApiException"
         } catch (ApiException e) {
             assertThat "Should be 400 for null id", e.code, equalTo(400)
-            println "   ✓ ApiException 400: ${e.message}"
+            logger.debug("    ApiException 400: {}", e.message)
         }
 
         // 3. deleteUser(null id)
-        println "\n3. deleteUser with null id..."
+        logger.debug("\n3. deleteUser with null id...")
         try {
             userApi.deleteUser(null, false, null)
             assert false, "Should have thrown ApiException"
         } catch (ApiException e) {
             assertThat "Should be 400 for null id", e.code, equalTo(400)
-            println "   ✓ ApiException 400: ${e.message}"
+            logger.debug("    ApiException 400: {}", e.message)
         }
 
         // 4. updateUser(null id)
-        println "\n4. updateUser with null id..."
+        logger.debug("\n4. updateUser with null id...")
         try {
             UpdateUserRequest req = new UpdateUserRequest()
             userApi.updateUser(null, req, null, null)
             assert false, "Should have thrown ApiException"
         } catch (ApiException e) {
             assertThat "Should be 400 for null id", e.code, equalTo(400)
-            println "   ✓ ApiException 400: ${e.message}"
+            logger.debug("    ApiException 400: {}", e.message)
         }
 
         // 5. updateUser(id, null body)
-        println "\n5. updateUser with null body..."
+        logger.debug("\n5. updateUser with null body...")
         try {
             userApi.updateUser("someId", null, null, null)
             assert false, "Should have thrown ApiException"
         } catch (ApiException e) {
             assertThat "Should be 400 for null body", e.code, equalTo(400)
-            println "   ✓ ApiException 400: ${e.message}"
+            logger.debug("    ApiException 400: {}", e.message)
         }
 
         // 6. replaceUser(null id)
-        println "\n6. replaceUser with null id..."
+        logger.debug("\n6. replaceUser with null id...")
         try {
             UpdateUserRequest req = new UpdateUserRequest()
             userApi.replaceUser(null, req, null, null)
             assert false, "Should have thrown ApiException"
         } catch (ApiException e) {
             assertThat "Should be 400 for null id", e.code, equalTo(400)
-            println "   ✓ ApiException 400: ${e.message}"
+            logger.debug("    ApiException 400: {}", e.message)
         }
 
         // 7. replaceUser(id, null body)
-        println "\n7. replaceUser with null body..."
+        logger.debug("\n7. replaceUser with null body...")
         try {
             userApi.replaceUser("someId", null, null, null)
             assert false, "Should have thrown ApiException"
         } catch (ApiException e) {
             assertThat "Should be 400 for null body", e.code, equalTo(400)
-            println "   ✓ ApiException 400: ${e.message}"
+            logger.debug("    ApiException 400: {}", e.message)
         }
 
         // 8. listUserBlocks(null id)
-        println "\n8. listUserBlocks with null id..."
+        logger.debug("\n8. listUserBlocks with null id...")
         try {
             userApi.listUserBlocks(null)
             assert false, "Should have thrown ApiException"
         } catch (ApiException e) {
             assertThat "Should be 400 for null id", e.code, equalTo(400)
-            println "   ✓ ApiException 400: ${e.message}"
+            logger.debug("    ApiException 400: {}", e.message)
         }
 
-        println "\n✅ All null-parameter validation branches covered"
+        logger.debug("\n All null-parameter validation branches covered")
     }
 
     /**
@@ -802,9 +769,7 @@ class UserIT extends ITSupport {
         def client = getClient()
         UserApi userApi = new UserApi(client)
 
-        println "\n" + "=" * 80
-        println "TESTING USER API - ifMatch BRANCH COVERAGE"
-        println "=" * 80
+        logger.debug("TESTING USER API - ifMatch BRANCH COVERAGE")
 
         // Create a test user
         def uniqueId = UUID.randomUUID().toString().substring(0, 8)
@@ -819,11 +784,11 @@ class UserIT extends ITSupport {
         request.profile = profile
 
         User user = userApi.createUser(request, true, false, null)
-        println "→ Created test user: ${user.id}"
+        logger.debug(" Created test user: {}", user.id)
 
         try {
             // 1. updateUser with ifMatch (expects error or success - branch coverage is the goal)
-            println "\n1. updateUser with ifMatch='dummy-etag'..."
+            logger.debug("\n1. updateUser with ifMatch='dummy-etag'...")
             try {
                 UpdateUserRequest updateReq = new UpdateUserRequest()
                 UserProfile updateProfile = new UserProfile()
@@ -832,14 +797,14 @@ class UserIT extends ITSupport {
                 updateProfile.email = email
                 updateReq.profile = updateProfile
                 userApi.updateUser(user.id, updateReq, null, "dummy-etag")
-                println "   ✓ updateUser with ifMatch succeeded"
+                logger.debug("    updateUser with ifMatch succeeded")
             } catch (ApiException e) {
                 // Any error is fine - the ifMatch != null branch was executed
-                println "   ✓ updateUser ifMatch branch covered (HTTP ${e.code} - expected)"
+                logger.debug("    updateUser ifMatch branch covered (HTTP {} - expected)", e.code)
             }
 
             // 2. replaceUser with ifMatch (expects error or success - branch coverage is the goal)
-            println "\n2. replaceUser with ifMatch='dummy-etag'..."
+            logger.debug("\n2. replaceUser with ifMatch='dummy-etag'...")
             try {
                 UpdateUserRequest replaceReq = new UpdateUserRequest()
                 UserProfile replaceProfile = new UserProfile()
@@ -849,23 +814,23 @@ class UserIT extends ITSupport {
                 replaceProfile.login = email
                 replaceReq.profile = replaceProfile
                 userApi.replaceUser(user.id, replaceReq, null, "dummy-etag")
-                println "   ✓ replaceUser with ifMatch succeeded"
+                logger.debug("    replaceUser with ifMatch succeeded")
             } catch (ApiException e) {
                 // Any error is fine - the ifMatch != null branch was executed
-                println "   ✓ replaceUser ifMatch branch covered (HTTP ${e.code} - expected)"
+                logger.debug("    replaceUser ifMatch branch covered (HTTP {} - expected)", e.code)
             }
 
         } finally {
             try {
                 userApi.deleteUser(user.id, false, null)
                 userApi.deleteUser(user.id, false, null)
-                println "✓ Test user cleaned up"
+                logger.debug(" Test user cleaned up")
             } catch (Exception e) {
-                println "⚠ Cleanup: ${e.message}"
+                logger.debug(" Cleanup: {}", e.message)
             }
         }
 
-        println "\n✅ ifMatch branch coverage complete"
+        logger.debug("\n ifMatch branch coverage complete")
     }
 
     /**
@@ -877,22 +842,20 @@ class UserIT extends ITSupport {
         def client = getClient()
         UserApi userApi = new UserApi(client)
 
-        println "\n" + "=" * 80
-        println "TESTING USER API - listUsersPaged with contentType"
-        println "=" * 80
+        logger.debug("TESTING USER API - listUsersPaged with contentType")
 
         // Call listUsersPaged with contentType="application/json" and limit=1
         // to force pagination and hit both first-page and subsequent-pages branches
-        println "\n1. listUsersPaged with contentType=application/json, limit=1..."
+        logger.debug("\n1. listUsersPaged with contentType=application/json, limit=1...")
         int count = 0
         for (User user : userApi.listUsersPaged("application/json", null, null, null, null, 1, null, null, null, null)) {
             count++
             if (count >= 3) break  // Only need enough to trigger pagination
         }
-        println "   ✓ Iterated ${count} users with contentType set"
+        logger.debug("    Iterated {} users with contentType set", count)
         assertThat "Should have iterated at least 1 user", count, greaterThanOrEqualTo(1)
 
-        println "\n✅ listUsersPaged contentType branches covered"
+        logger.debug("\n listUsersPaged contentType branches covered")
     }
 
     /**
@@ -905,9 +868,7 @@ class UserIT extends ITSupport {
         def client = getClient()
         UserApi userApi = new UserApi(client)
 
-        println "\n" + "=" * 80
-        println "TESTING USER API - listUserBlocksPaged()"
-        println "=" * 80
+        logger.debug("TESTING USER API - listUserBlocksPaged()")
 
         // Create a test user to query blocks for
         def uniqueId = UUID.randomUUID().toString().substring(0, 8)
@@ -922,13 +883,13 @@ class UserIT extends ITSupport {
         request.profile = profile
 
         User user = userApi.createUser(request, true, false, null)
-        println "→ Created test user: ${user.id} (${email})"
+        logger.debug(" Created test user: {} ({})", user.id, email)
 
         try {
             // ========================================
             // 1. listUserBlocksPaged(String) - single-arg paged variant
             // ========================================
-            println "\n1. Testing listUserBlocksPaged(userId) - single arg..."
+            logger.debug("\n1. Testing listUserBlocksPaged(userId) - single arg...")
             try {
                 Iterable<UserBlock> pagedBlocks = userApi.listUserBlocksPaged(user.id)
                 assertThat "listUserBlocksPaged should return non-null iterable", pagedBlocks, notNullValue()
@@ -936,19 +897,19 @@ class UserIT extends ITSupport {
                 def blockCount = 0
                 for (UserBlock block : pagedBlocks) {
                     blockCount++
-                    println "   - Block: type=${block.type}"
+                    logger.debug("   - Block: type={}", block.type)
                 }
-                println "   ✓ listUserBlocksPaged(String) returned ${blockCount} block(s)"
+                logger.debug("    listUserBlocksPaged(String) returned {} block(s)", blockCount)
             } catch (RuntimeException e) {
                 // The paged lambda wraps ApiException in RuntimeException("Failed to fetch page")
                 // 401 = permission denied on this org, but the lambda code paths are still exercised
-                println "   ✓ listUserBlocksPaged(String) lambda exercised (${e.cause?.message ?: e.message})"
+                logger.debug("    listUserBlocksPaged(String) lambda exercised ({})", e.cause?.message ?: e.message)
             }
 
             // ========================================
             // 2. listUserBlocksPaged(String, Map) - with additional headers
             // ========================================
-            println "\n2. Testing listUserBlocksPaged(userId, headers) - with headers..."
+            logger.debug("\n2. Testing listUserBlocksPaged(userId, headers) - with headers...")
             try {
                 Map<String, String> headers = Collections.emptyMap()
                 Iterable<UserBlock> pagedBlocksWithHeaders = userApi.listUserBlocksPaged(user.id, headers)
@@ -958,39 +919,39 @@ class UserIT extends ITSupport {
                 def blockCount2 = 0
                 for (UserBlock block : pagedBlocksWithHeaders) {
                     blockCount2++
-                    println "   - Block: type=${block.type}"
+                    logger.debug("   - Block: type={}", block.type)
                 }
-                println "   ✓ listUserBlocksPaged(String, Map) returned ${blockCount2} block(s)"
+                logger.debug("    listUserBlocksPaged(String, Map) returned {} block(s)", blockCount2)
             } catch (RuntimeException e) {
-                println "   ✓ listUserBlocksPaged(String, Map) lambda exercised (${e.cause?.message ?: e.message})"
+                logger.debug("    listUserBlocksPaged(String, Map) lambda exercised ({})", e.cause?.message ?: e.message)
             }
 
             // ========================================
             // 3. listUserBlocks(String) - single-arg non-paged variant
             //    (ensure the 1-arg overload is hit, not just the 2-arg)
             // ========================================
-            println "\n3. Testing listUserBlocks(userId) - single arg overload..."
+            logger.debug("\n3. Testing listUserBlocks(userId) - single arg overload...")
             try {
                 List<UserBlock> blockList = userApi.listUserBlocks(user.id)
                 assertThat "listUserBlocks(String) should return non-null list", blockList, notNullValue()
-                println "   ✓ listUserBlocks(String) returned ${blockList.size()} block(s)"
+                logger.debug("    listUserBlocks(String) returned {} block(s)", blockList.size())
             } catch (ApiException e) {
                 // 401 = permission denied on this org, but the 1-arg overload code path is exercised
-                println "   ✓ listUserBlocks(String) 1-arg overload exercised (HTTP ${e.code})"
+                logger.debug("    listUserBlocks(String) 1-arg overload exercised (HTTP {})", e.code)
             }
 
         } finally {
             // Cleanup
-            println "\n→ Cleaning up test user..."
+            logger.debug("\n Cleaning up test user...")
             try {
                 userApi.deleteUser(user.id, false, null)  // deactivate
                 userApi.deleteUser(user.id, false, null)  // permanent delete
-                println "✓ Test user cleaned up"
+                logger.debug(" Test user cleaned up")
             } catch (ApiException e) {
-                println "⚠ Cleanup error: ${e.message}"
+                logger.debug(" Cleanup error: {}", e.message)
             }
         }
 
-        println "\n✅ listUserBlocksPaged tests complete"
+        logger.debug("\n listUserBlocksPaged tests complete")
     }
 }

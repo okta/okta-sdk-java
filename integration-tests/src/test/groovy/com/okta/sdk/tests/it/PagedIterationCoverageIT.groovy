@@ -26,6 +26,8 @@ import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Tests that force multi-page iteration on paged API methods to cover
@@ -34,6 +36,9 @@ import static org.hamcrest.Matchers.*
  * Also exercises additionalHeaders overloads for paged iteration.
  */
 class PagedIterationCoverageIT extends ITSupport {
+
+    private static final Logger logger = LoggerFactory.getLogger(PagedIterationCoverageIT)
+
 
     // APIs under test
     private AuthorizationServerApi authorizationServerApi
@@ -182,96 +187,96 @@ class PagedIterationCoverageIT extends ITSupport {
     @Test(groups = "group3")
     @Scenario("paged-iteration-org-level-coverage")
     void testOrgLevelPagedIteration() {
-        println "Testing org-level paged iteration with limit=1 for subsequent-page branches..."
+        logger.debug("Testing org-level paged iteration with limit=1 for subsequent-page branches...")
         def headers = Collections.emptyMap()
 
         // AuthorizationServerApi - (String q, Integer limit, String after)
         int count = iteratePaged(authorizationServerApi.listAuthorizationServersPaged(null, 1, null), 3)
-        println "   ✓ listAuthorizationServersPaged(limit=1): ${count} items"
+        logger.debug("    listAuthorizationServersPaged(limit=1): {} items", count)
         count = iteratePaged(authorizationServerApi.listAuthorizationServersPaged(null, 1, null, headers), 3)
-        println "   ✓ listAuthorizationServersPaged(limit=1, headers): ${count} items"
+        logger.debug("    listAuthorizationServersPaged(limit=1, headers): {} items", count)
 
         // GroupApi - should have at least Everyone group
         count = iteratePaged(groupApi.listGroupsPaged(null, null, null, null, 1, null, null, null), 3)
-        println "   ✓ listGroupsPaged(limit=1): ${count} items"
+        logger.debug("    listGroupsPaged(limit=1): {} items", count)
         count = iteratePaged(groupApi.listGroupsPaged(null, null, null, null, 1, null, null, null, headers), 3)
-        println "   ✓ listGroupsPaged(limit=1, headers): ${count} items"
+        logger.debug("    listGroupsPaged(limit=1, headers): {} items", count)
 
         // UserApi - should have multiple users
         count = iteratePaged(userApi.listUsersPaged(null, null, null, null, null, 1, null, null, null, null), 3)
-        println "   ✓ listUsersPaged(limit=1): ${count} items"
+        logger.debug("    listUsersPaged(limit=1): {} items", count)
         count = iteratePaged(userApi.listUsersPaged(null, null, null, null, null, 1, null, null, null, null, headers), 3)
-        println "   ✓ listUsersPaged(limit=1, headers): ${count} items"
+        logger.debug("    listUsersPaged(limit=1, headers): {} items", count)
 
         // AuthenticatorApi - list authenticators (no limit param, but should have multiple)
         count = iteratePaged(authenticatorApi.listAuthenticatorsPaged(), 3)
-        println "   ✓ listAuthenticatorsPaged(): ${count} items"
+        logger.debug("    listAuthenticatorsPaged(): {} items", count)
         count = iteratePaged(authenticatorApi.listAuthenticatorsPaged(headers), 3)
-        println "   ✓ listAuthenticatorsPaged(headers): ${count} items"
+        logger.debug("    listAuthenticatorsPaged(headers): {} items", count)
 
         // PolicyApi - list policies by type (8 params: type, status, q, expand, sortBy, limit, resourceId, after)
         count = iteratePaged(policyApi.listPoliciesPaged("OKTA_SIGN_ON", null, null, null, null, null, null, null), 3)
-        println "   ✓ listPoliciesPaged(OKTA_SIGN_ON): ${count} items"
+        logger.debug("    listPoliciesPaged(OKTA_SIGN_ON): {} items", count)
         count = iteratePaged(policyApi.listPoliciesPaged("OKTA_SIGN_ON", null, null, null, null, null, null, null, headers), 3)
-        println "   ✓ listPoliciesPaged(OKTA_SIGN_ON, headers): ${count} items"
+        logger.debug("    listPoliciesPaged(OKTA_SIGN_ON, headers): {} items", count)
 
         // UserTypeApi - list user types
         count = iteratePaged(userTypeApi.listUserTypesPaged(), 3)
-        println "   ✓ listUserTypesPaged(): ${count} items"
+        logger.debug("    listUserTypesPaged(): {} items", count)
         count = iteratePaged(userTypeApi.listUserTypesPaged(headers), 3)
-        println "   ✓ listUserTypesPaged(headers): ${count} items"
+        logger.debug("    listUserTypesPaged(headers): {} items", count)
 
         // RealmApi - list realms
         count = iteratePaged(realmApi.listRealmsPaged(null, null, null, null, null), 3)
-        println "   ✓ listRealmsPaged(): ${count} items"
+        logger.debug("    listRealmsPaged(): {} items", count)
         count = iteratePaged(realmApi.listRealmsPaged(null, null, null, null, null, headers), 3)
-        println "   ✓ listRealmsPaged(headers): ${count} items"
+        logger.debug("    listRealmsPaged(headers): {} items", count)
 
         // ProfileMappingApi - list profile mappings
         count = iteratePaged(profileMappingApi.listProfileMappingsPaged(null, null, null, null), 3)
-        println "   ✓ listProfileMappingsPaged(): ${count} items"
+        logger.debug("    listProfileMappingsPaged(): {} items", count)
         count = iteratePaged(profileMappingApi.listProfileMappingsPaged(null, null, null, null, headers), 3)
-        println "   ✓ listProfileMappingsPaged(headers): ${count} items"
+        logger.debug("    listProfileMappingsPaged(headers): {} items", count)
 
         // GroupRuleApi - list group rules
         count = iteratePaged(groupRuleApi.listGroupRulesPaged(null, null, null, null), 3)
-        println "   ✓ listGroupRulesPaged(): ${count} items"
+        logger.debug("    listGroupRulesPaged(): {} items", count)
         count = iteratePaged(groupRuleApi.listGroupRulesPaged(null, null, null, null, headers), 3)
-        println "   ✓ listGroupRulesPaged(headers): ${count} items"
+        logger.debug("    listGroupRulesPaged(headers): {} items", count)
 
         // OrgSettingContactApi - list contact types
         count = iteratePaged(orgSettingContactApi.listOrgContactTypesPaged(), 3)
-        println "   ✓ listOrgContactTypesPaged(): ${count} items"
+        logger.debug("    listOrgContactTypesPaged(): {} items", count)
         count = iteratePaged(orgSettingContactApi.listOrgContactTypesPaged(headers), 3)
-        println "   ✓ listOrgContactTypesPaged(headers): ${count} items"
+        logger.debug("    listOrgContactTypesPaged(headers): {} items", count)
 
         // ApiTokenApi - list API tokens (0 params)
         count = iteratePaged(apiTokenApi.listApiTokensPaged(), 3)
-        println "   ✓ listApiTokensPaged(): ${count} items"
+        logger.debug("    listApiTokensPaged(): {} items", count)
         count = iteratePaged(apiTokenApi.listApiTokensPaged(headers), 3)
-        println "   ✓ listApiTokensPaged(headers): ${count} items"
+        logger.debug("    listApiTokensPaged(headers): {} items", count)
 
         // ApiServiceIntegrationsApi (1 param: after)
         count = iteratePaged(apiServiceIntegrationsApi.listApiServiceIntegrationInstancesPaged(null as String), 3)
-        println "   ✓ listApiServiceIntegrationInstancesPaged(): ${count} items"
+        logger.debug("    listApiServiceIntegrationInstancesPaged(): {} items", count)
         count = iteratePaged(apiServiceIntegrationsApi.listApiServiceIntegrationInstancesPaged(null as String, headers), 3)
-        println "   ✓ listApiServiceIntegrationInstancesPaged(headers): ${count} items"
+        logger.debug("    listApiServiceIntegrationInstancesPaged(headers): {} items", count)
 
         // SubscriptionApi - list role subscriptions (takes ListSubscriptionsRoleRoleRefParameter)
         try {
             count = iteratePaged(subscriptionApi.listSubscriptionsRolePaged(new ListSubscriptionsRoleRoleRefParameter()), 3)
-            println "   ✓ listSubscriptionsRolePaged(): ${count} items"
+            logger.debug("    listSubscriptionsRolePaged(): {} items", count)
         } catch (Exception e) {
-            println "   ⚠ listSubscriptionsRolePaged: ${e.message}"
+            logger.debug("    listSubscriptionsRolePaged: {}", e.message)
         }
         try {
             count = iteratePaged(subscriptionApi.listSubscriptionsRolePaged(new ListSubscriptionsRoleRoleRefParameter(), headers), 3)
-            println "   ✓ listSubscriptionsRolePaged(headers): ${count} items"
+            logger.debug("    listSubscriptionsRolePaged(headers): {} items", count)
         } catch (Exception e) {
-            println "   ⚠ listSubscriptionsRolePaged(headers): ${e.message}"
+            logger.debug("    listSubscriptionsRolePaged(headers): {}", e.message)
         }
 
-        println "\n✅ Org-level paged iteration tests completed!"
+        logger.debug("\n Org-level paged iteration tests completed!")
     }
 
     /**
@@ -286,7 +291,7 @@ class PagedIterationCoverageIT extends ITSupport {
         def headers = Collections.emptyMap()
 
         try {
-            println "Testing resource-level paged iteration..."
+            logger.debug("Testing resource-level paged iteration...")
 
             // Create auth server
             def authServer = authorizationServerApi.createAuthorizationServer(
@@ -353,66 +358,66 @@ class PagedIterationCoverageIT extends ITSupport {
                             .accessTokenLifetimeMinutes(30).refreshTokenLifetimeMinutes(0).refreshTokenWindowMinutes(10080))))
 
             // Now test paged iteration with limit=1 on scopes
-            println "\n1. Testing scopes paged with limit=1..."
+            logger.debug("\n1. Testing scopes paged with limit=1...")
             int count = iteratePaged(authorizationServerScopesApi.listOAuth2ScopesPaged(authServer.id, null, null, null, 1), 5)
-            println "   ✓ listOAuth2ScopesPaged(limit=1): ${count} items (expect >= 2)"
+            logger.debug("    listOAuth2ScopesPaged(limit=1): {} items (expect >= 2)", count)
             count = iteratePaged(authorizationServerScopesApi.listOAuth2ScopesPaged(authServer.id, null, null, null, 1, headers), 5)
-            println "   ✓ listOAuth2ScopesPaged(limit=1, headers): ${count} items"
+            logger.debug("    listOAuth2ScopesPaged(limit=1, headers): {} items", count)
 
             // Claims paged
-            println "\n2. Testing claims paged..."
+            logger.debug("\n2. Testing claims paged...")
             count = iteratePaged(authorizationServerClaimsApi.listOAuth2ClaimsPaged(authServer.id), 5)
-            println "   ✓ listOAuth2ClaimsPaged(): ${count} items (expect >= 2)"
+            logger.debug("    listOAuth2ClaimsPaged(): {} items (expect >= 2)", count)
             count = iteratePaged(authorizationServerClaimsApi.listOAuth2ClaimsPaged(authServer.id, headers), 5)
-            println "   ✓ listOAuth2ClaimsPaged(headers): ${count} items"
+            logger.debug("    listOAuth2ClaimsPaged(headers): {} items", count)
 
             // Policies paged
-            println "\n3. Testing policies paged..."
+            logger.debug("\n3. Testing policies paged...")
             count = iteratePaged(authorizationServerPoliciesApi.listAuthorizationServerPoliciesPaged(authServer.id), 5)
-            println "   ✓ listAuthorizationServerPoliciesPaged(): ${count} items (expect >= 2)"
+            logger.debug("    listAuthorizationServerPoliciesPaged(): {} items (expect >= 2)", count)
             count = iteratePaged(authorizationServerPoliciesApi.listAuthorizationServerPoliciesPaged(authServer.id, headers), 5)
-            println "   ✓ listAuthorizationServerPoliciesPaged(headers): ${count} items"
+            logger.debug("    listAuthorizationServerPoliciesPaged(headers): {} items", count)
 
             // Rules paged
-            println "\n4. Testing rules paged..."
+            logger.debug("\n4. Testing rules paged...")
             count = iteratePaged(authorizationServerRulesApi.listAuthorizationServerPolicyRulesPaged(authServer.id, policy1.id), 5)
-            println "   ✓ listAuthorizationServerPolicyRulesPaged(): ${count} items (expect >= 2)"
+            logger.debug("    listAuthorizationServerPolicyRulesPaged(): {} items (expect >= 2)", count)
             count = iteratePaged(authorizationServerRulesApi.listAuthorizationServerPolicyRulesPaged(authServer.id, policy1.id, headers), 5)
-            println "   ✓ listAuthorizationServerPolicyRulesPaged(headers): ${count} items"
+            logger.debug("    listAuthorizationServerPolicyRulesPaged(headers): {} items", count)
 
             // Keys paged
-            println "\n5. Testing keys paged..."
+            logger.debug("\n5. Testing keys paged...")
             count = iteratePaged(authorizationServerKeysApi.listAuthorizationServerKeysPaged(authServer.id), 5)
-            println "   ✓ listAuthorizationServerKeysPaged(): ${count} items"
+            logger.debug("    listAuthorizationServerKeysPaged(): {} items", count)
             count = iteratePaged(authorizationServerKeysApi.listAuthorizationServerKeysPaged(authServer.id, headers), 5)
-            println "   ✓ listAuthorizationServerKeysPaged(headers): ${count} items"
+            logger.debug("    listAuthorizationServerKeysPaged(headers): {} items", count)
 
             // Clients paged
-            println "\n6. Testing clients paged..."
+            logger.debug("\n6. Testing clients paged...")
             count = iteratePaged(authorizationServerClientsApi.listOAuth2ClientsForAuthorizationServerPaged(authServer.id), 5)
-            println "   ✓ listOAuth2ClientsForAuthorizationServerPaged(): ${count} items"
+            logger.debug("    listOAuth2ClientsForAuthorizationServerPaged(): {} items", count)
             count = iteratePaged(authorizationServerClientsApi.listOAuth2ClientsForAuthorizationServerPaged(authServer.id, headers), 5)
-            println "   ✓ listOAuth2ClientsForAuthorizationServerPaged(headers): ${count} items"
+            logger.debug("    listOAuth2ClientsForAuthorizationServerPaged(headers): {} items", count)
 
             // Resource server keys paged
-            println "\n7. Testing resource server keys paged..."
+            logger.debug("\n7. Testing resource server keys paged...")
             count = iteratePaged(oAuth2ResourceServerCredentialsKeysApi.listOAuth2ResourceServerJsonWebKeysPaged(authServer.id), 5)
-            println "   ✓ listOAuth2ResourceServerJsonWebKeysPaged(): ${count} items"
+            logger.debug("    listOAuth2ResourceServerJsonWebKeysPaged(): {} items", count)
             count = iteratePaged(oAuth2ResourceServerCredentialsKeysApi.listOAuth2ResourceServerJsonWebKeysPaged(authServer.id, headers), 5)
-            println "   ✓ listOAuth2ResourceServerJsonWebKeysPaged(headers): ${count} items"
+            logger.debug("    listOAuth2ResourceServerJsonWebKeysPaged(headers): {} items", count)
 
             // AssocApi paged
-            println "\n8. Testing assoc paged..."
+            logger.debug("\n8. Testing assoc paged...")
             count = iteratePaged(authorizationServerAssocApi.listAssociatedServersByTrustedTypePaged(authServer.id, true, null, null, null), 3)
-            println "   ✓ listAssociatedServersByTrustedTypePaged(trusted): ${count} items"
+            logger.debug("    listAssociatedServersByTrustedTypePaged(trusted): {} items", count)
             count = iteratePaged(authorizationServerAssocApi.listAssociatedServersByTrustedTypePaged(authServer.id, true, null, null, null, headers), 3)
-            println "   ✓ listAssociatedServersByTrustedTypePaged(trusted, headers): ${count} items"
+            logger.debug("    listAssociatedServersByTrustedTypePaged(trusted, headers): {} items", count)
 
-            println "\n✅ Resource-level paged iteration tests completed!"
+            logger.debug("\n Resource-level paged iteration tests completed!")
 
         } catch (ApiException e) {
-            println "❌ Test failed: ${e.message}"
-            println "Response: ${e.responseBody}"
+            logger.debug(" Test failed: {}", e.message)
+            logger.debug("Response: {}", e.responseBody)
             throw e
         }
     }
@@ -429,7 +434,7 @@ class PagedIterationCoverageIT extends ITSupport {
         def headers = Collections.emptyMap()
 
         try {
-            println "Testing user-level paged iteration..."
+            logger.debug("Testing user-level paged iteration...")
 
             // Create a test user
             def user = userApi.createUser(
@@ -440,87 +445,87 @@ class PagedIterationCoverageIT extends ITSupport {
                         .email("paged-test-${testId}@example.com".toString())
                         .login("paged-test-${testId}@example.com".toString())), true, false, null)
             userId = user.getId()
-            println "   Created test user: ${userId}"
+            logger.debug("   Created test user: {}", userId)
 
             // UserResourcesApi - paged with headers
-            println "\n1. Testing UserResourcesApi paged methods..."
+            logger.debug("\n1. Testing UserResourcesApi paged methods...")
             int count = iteratePaged(userResourcesApi.listAppLinksPaged(userId), 3)
-            println "   ✓ listAppLinksPaged(): ${count} items"
+            logger.debug("    listAppLinksPaged(): {} items", count)
             count = iteratePaged(userResourcesApi.listAppLinksPaged(userId, headers), 3)
-            println "   ✓ listAppLinksPaged(headers): ${count} items"
+            logger.debug("    listAppLinksPaged(headers): {} items", count)
 
             count = iteratePaged(userResourcesApi.listUserClientsPaged(userId), 3)
-            println "   ✓ listUserClientsPaged(): ${count} items"
+            logger.debug("    listUserClientsPaged(): {} items", count)
             count = iteratePaged(userResourcesApi.listUserClientsPaged(userId, headers), 3)
-            println "   ✓ listUserClientsPaged(headers): ${count} items"
+            logger.debug("    listUserClientsPaged(headers): {} items", count)
 
             count = iteratePaged(userResourcesApi.listUserDevicesPaged(userId), 3)
-            println "   ✓ listUserDevicesPaged(): ${count} items"
+            logger.debug("    listUserDevicesPaged(): {} items", count)
             count = iteratePaged(userResourcesApi.listUserDevicesPaged(userId, headers), 3)
-            println "   ✓ listUserDevicesPaged(headers): ${count} items"
+            logger.debug("    listUserDevicesPaged(headers): {} items", count)
 
             count = iteratePaged(userResourcesApi.listUserGroupsPaged(userId), 3)
-            println "   ✓ listUserGroupsPaged(): ${count} items"
+            logger.debug("    listUserGroupsPaged(): {} items", count)
             count = iteratePaged(userResourcesApi.listUserGroupsPaged(userId, headers), 3)
-            println "   ✓ listUserGroupsPaged(headers): ${count} items"
+            logger.debug("    listUserGroupsPaged(headers): {} items", count)
 
             // UserGrantApi - paged
-            println "\n2. Testing UserGrantApi paged methods..."
+            logger.debug("\n2. Testing UserGrantApi paged methods...")
             count = iteratePaged(userGrantApi.listUserGrantsPaged(userId, null, null, null, null), 3)
-            println "   ✓ listUserGrantsPaged(): ${count} items"
+            logger.debug("    listUserGrantsPaged(): {} items", count)
             count = iteratePaged(userGrantApi.listUserGrantsPaged(userId, null, null, null, null, headers), 3)
-            println "   ✓ listUserGrantsPaged(headers): ${count} items"
+            logger.debug("    listUserGrantsPaged(headers): {} items", count)
 
             // UserOAuthApi paged - refresh tokens for user and client
-            println "\n3. Testing UserOAuthApi paged methods..."
+            logger.debug("\n3. Testing UserOAuthApi paged methods...")
             try {
                 count = iteratePaged(userOAuthApi.listRefreshTokensForUserAndClientPaged(userId, "nonexistent-client", null, null, null), 3)
-                println "   ✓ listRefreshTokensForUserAndClientPaged(): ${count} items"
+                logger.debug("    listRefreshTokensForUserAndClientPaged(): {} items", count)
             } catch (Exception e) {
-                println "   ✓ listRefreshTokensForUserAndClientPaged() - exercised (${e.message?.take(50)})"
+                logger.debug("    listRefreshTokensForUserAndClientPaged() - exercised ({})", e.message?.take(50))
             }
             try {
                 count = iteratePaged(userOAuthApi.listRefreshTokensForUserAndClientPaged(userId, "nonexistent-client", null, null, null, headers), 3)
-                println "   ✓ listRefreshTokensForUserAndClientPaged(headers): ${count} items"
+                logger.debug("    listRefreshTokensForUserAndClientPaged(headers): {} items", count)
             } catch (Exception e) {
-                println "   ✓ listRefreshTokensForUserAndClientPaged(headers) - exercised"
+                logger.debug("    listRefreshTokensForUserAndClientPaged(headers) - exercised")
             }
 
             // UserLinkedObjectApi paged (2 params: userIdOrLogin, relationshipName)
-            println "\n4. Testing UserLinkedObjectApi paged methods..."
+            logger.debug("\n4. Testing UserLinkedObjectApi paged methods...")
             try {
                 count = iteratePaged(userLinkedObjectApi.listLinkedObjectsForUserPaged(userId, "primary"), 3)
-                println "   ✓ listLinkedObjectsForUserPaged(): ${count} items"
+                logger.debug("    listLinkedObjectsForUserPaged(): {} items", count)
             } catch (Exception e) {
-                println "   ✓ listLinkedObjectsForUserPaged() - exercised (${e.message?.take(50)})"
+                logger.debug("    listLinkedObjectsForUserPaged() - exercised ({})", e.message?.take(50))
             }
             try {
                 count = iteratePaged(userLinkedObjectApi.listLinkedObjectsForUserPaged(userId, "primary", headers), 3)
-                println "   ✓ listLinkedObjectsForUserPaged(headers): ${count} items"
+                logger.debug("    listLinkedObjectsForUserPaged(headers): {} items", count)
             } catch (Exception e) {
-                println "   ✓ listLinkedObjectsForUserPaged(headers) - exercised"
+                logger.debug("    listLinkedObjectsForUserPaged(headers) - exercised")
             }
 
             // UserGrantApi - grants for user and client (paged)
-            println "\n5. Testing UserGrantApi grants-for-client paged..."
+            logger.debug("\n5. Testing UserGrantApi grants-for-client paged...")
             try {
                 count = iteratePaged(userGrantApi.listGrantsForUserAndClientPaged(userId, "nonexistent-client", null, null, null), 3)
-                println "   ✓ listGrantsForUserAndClientPaged(): ${count} items"
+                logger.debug("    listGrantsForUserAndClientPaged(): {} items", count)
             } catch (Exception e) {
-                println "   ✓ listGrantsForUserAndClientPaged() - exercised"
+                logger.debug("    listGrantsForUserAndClientPaged() - exercised")
             }
             try {
                 count = iteratePaged(userGrantApi.listGrantsForUserAndClientPaged(userId, "nonexistent-client", null, null, null, headers), 3)
-                println "   ✓ listGrantsForUserAndClientPaged(headers): ${count} items"
+                logger.debug("    listGrantsForUserAndClientPaged(headers): {} items", count)
             } catch (Exception e) {
-                println "   ✓ listGrantsForUserAndClientPaged(headers) - exercised"
+                logger.debug("    listGrantsForUserAndClientPaged(headers) - exercised")
             }
 
-            println "\n✅ User-level paged iteration tests completed!"
+            logger.debug("\n User-level paged iteration tests completed!")
 
         } catch (ApiException e) {
-            println "❌ Test failed: ${e.message}"
-            println "Response: ${e.responseBody}"
+            logger.debug(" Test failed: {}", e.message)
+            logger.debug("Response: {}", e.responseBody)
             throw e
         } finally {
             // Cleanup user
@@ -528,9 +533,9 @@ class PagedIterationCoverageIT extends ITSupport {
                 try {
                     userLifecycleApi.deactivateUser(userId, false, null)
                     userApi.deleteUser(userId, false, null)
-                    println "   ✓ Cleaned up test user"
+                    logger.debug("    Cleaned up test user")
                 } catch (Exception e) {
-                    println "   ⚠ Failed to cleanup user: ${e.message}"
+                    logger.debug("    Failed to cleanup user: {}", e.message)
                 }
             }
         }
@@ -548,7 +553,7 @@ class PagedIterationCoverageIT extends ITSupport {
         def headers = Collections.emptyMap()
 
         try {
-            println "Testing application-level paged iteration..."
+            logger.debug("Testing application-level paged iteration...")
 
             // Create a simple Bookmark application (more reliable than OIDC for this test)
             def app = applicationApi.createApplication(
@@ -562,100 +567,100 @@ class PagedIterationCoverageIT extends ITSupport {
                             .url("https://example.com/paged-test-${testId}".toString()))),
                 true, null)
             appId = app.getId()
-            println "   Created test app: ${appId}"
+            logger.debug("   Created test app: {}", appId)
 
             int count
             // Each section wrapped in try/catch so one API error doesn't stop the rest
 
             // ApplicationGroupsApi paged
-            println "\n1. Testing ApplicationGroupsApi paged..."
+            logger.debug("\n1. Testing ApplicationGroupsApi paged...")
             try {
                 count = iteratePaged(applicationGroupsApi.listApplicationGroupAssignmentsPaged(appId, null, null, null, null), 3)
-                println "   ✓ listApplicationGroupAssignmentsPaged(): ${count} items"
+                logger.debug("    listApplicationGroupAssignmentsPaged(): {} items", count)
                 count = iteratePaged(applicationGroupsApi.listApplicationGroupAssignmentsPaged(appId, null, null, null, null, headers), 3)
-                println "   ✓ listApplicationGroupAssignmentsPaged(headers): ${count} items"
-            } catch (Exception e) { println "   ⚠ ApplicationGroupsApi: ${e.message?.take(80)}" }
+                logger.debug("    listApplicationGroupAssignmentsPaged(headers): {} items", count)
+            } catch (Exception e) { logger.debug("    ApplicationGroupsApi: {}", e.message?.take(80)) }
 
             // ApplicationUsersApi paged (5 params: appId, after, limit, q, expand)
-            println "\n2. Testing ApplicationUsersApi paged..."
+            logger.debug("\n2. Testing ApplicationUsersApi paged...")
             try {
                 count = iteratePaged(applicationUsersApi.listApplicationUsersPaged(appId, null, null, null, null), 3)
-                println "   ✓ listApplicationUsersPaged(): ${count} items"
+                logger.debug("    listApplicationUsersPaged(): {} items", count)
                 count = iteratePaged(applicationUsersApi.listApplicationUsersPaged(appId, null, null, null, null, headers), 3)
-                println "   ✓ listApplicationUsersPaged(headers): ${count} items"
-            } catch (Exception e) { println "   ⚠ ApplicationUsersApi: ${e.message?.take(80)}" }
+                logger.debug("    listApplicationUsersPaged(headers): {} items", count)
+            } catch (Exception e) { logger.debug("    ApplicationUsersApi: {}", e.message?.take(80)) }
 
             // ApplicationGrantsApi paged
-            println "\n3. Testing ApplicationGrantsApi paged..."
+            logger.debug("\n3. Testing ApplicationGrantsApi paged...")
             try {
                 count = iteratePaged(applicationGrantsApi.listScopeConsentGrantsPaged(appId, null), 3)
-                println "   ✓ listScopeConsentGrantsPaged(): ${count} items"
+                logger.debug("    listScopeConsentGrantsPaged(): {} items", count)
                 count = iteratePaged(applicationGrantsApi.listScopeConsentGrantsPaged(appId, null, headers), 3)
-                println "   ✓ listScopeConsentGrantsPaged(headers): ${count} items"
-            } catch (Exception e) { println "   ⚠ ApplicationGrantsApi: ${e.message?.take(80)}" }
+                logger.debug("    listScopeConsentGrantsPaged(headers): {} items", count)
+            } catch (Exception e) { logger.debug("    ApplicationGrantsApi: {}", e.message?.take(80)) }
 
             // ApplicationTokensApi paged (4 params: appId, expand, after, limit)
-            println "\n4. Testing ApplicationTokensApi paged..."
+            logger.debug("\n4. Testing ApplicationTokensApi paged...")
             try {
                 count = iteratePaged(applicationTokensApi.listOAuth2TokensForApplicationPaged(appId, null, null, null), 3)
-                println "   ✓ listOAuth2TokensForApplicationPaged(): ${count} items"
+                logger.debug("    listOAuth2TokensForApplicationPaged(): {} items", count)
                 count = iteratePaged(applicationTokensApi.listOAuth2TokensForApplicationPaged(appId, null, null, null, headers), 3)
-                println "   ✓ listOAuth2TokensForApplicationPaged(headers): ${count} items"
-            } catch (Exception e) { println "   ⚠ ApplicationTokensApi: ${e.message?.take(80)}" }
+                logger.debug("    listOAuth2TokensForApplicationPaged(headers): {} items", count)
+            } catch (Exception e) { logger.debug("    ApplicationTokensApi: {}", e.message?.take(80)) }
 
             // ApplicationFeaturesApi paged
-            println "\n5. Testing ApplicationFeaturesApi paged..."
+            logger.debug("\n5. Testing ApplicationFeaturesApi paged...")
             try {
                 count = iteratePaged(applicationFeaturesApi.listFeaturesForApplicationPaged(appId), 3)
-                println "   ✓ listFeaturesForApplicationPaged(): ${count} items"
+                logger.debug("    listFeaturesForApplicationPaged(): {} items", count)
                 count = iteratePaged(applicationFeaturesApi.listFeaturesForApplicationPaged(appId, headers), 3)
-                println "   ✓ listFeaturesForApplicationPaged(headers): ${count} items"
-            } catch (Exception e) { println "   ⚠ ApplicationFeaturesApi: ${e.message?.take(80)}" }
+                logger.debug("    listFeaturesForApplicationPaged(headers): {} items", count)
+            } catch (Exception e) { logger.debug("    ApplicationFeaturesApi: {}", e.message?.take(80)) }
 
             // ApplicationSsoCredentialKeyApi paged
-            println "\n6. Testing ApplicationSsoCredentialKeyApi paged..."
+            logger.debug("\n6. Testing ApplicationSsoCredentialKeyApi paged...")
             try {
                 count = iteratePaged(applicationSsoCredentialKeyApi.listApplicationKeysPaged(appId), 3)
-                println "   ✓ listApplicationKeysPaged(): ${count} items"
+                logger.debug("    listApplicationKeysPaged(): {} items", count)
                 count = iteratePaged(applicationSsoCredentialKeyApi.listApplicationKeysPaged(appId, headers), 3)
-                println "   ✓ listApplicationKeysPaged(headers): ${count} items"
-            } catch (Exception e) { println "   ⚠ ApplicationSsoCredentialKeyApi(keys): ${e.message?.take(80)}" }
+                logger.debug("    listApplicationKeysPaged(headers): {} items", count)
+            } catch (Exception e) { logger.debug("    ApplicationSsoCredentialKeyApi(keys): {}", e.message?.take(80)) }
             try {
                 count = iteratePaged(applicationSsoCredentialKeyApi.listCsrsForApplicationPaged(appId), 3)
-                println "   ✓ listCsrsForApplicationPaged(): ${count} items"
+                logger.debug("    listCsrsForApplicationPaged(): {} items", count)
                 count = iteratePaged(applicationSsoCredentialKeyApi.listCsrsForApplicationPaged(appId, headers), 3)
-                println "   ✓ listCsrsForApplicationPaged(headers): ${count} items"
-            } catch (Exception e) { println "   ⚠ ApplicationSsoCredentialKeyApi(csrs): ${e.message?.take(80)}" }
+                logger.debug("    listCsrsForApplicationPaged(headers): {} items", count)
+            } catch (Exception e) { logger.debug("    ApplicationSsoCredentialKeyApi(csrs): {}", e.message?.take(80)) }
 
             // ApplicationSsoPublicKeysApi paged
-            println "\n7. Testing ApplicationSsoPublicKeysApi paged..."
+            logger.debug("\n7. Testing ApplicationSsoPublicKeysApi paged...")
             try {
                 count = iteratePaged(applicationSsoPublicKeysApi.listJwkPaged(appId), 3)
-                println "   ✓ listJwkPaged(): ${count} items"
+                logger.debug("    listJwkPaged(): {} items", count)
                 count = iteratePaged(applicationSsoPublicKeysApi.listJwkPaged(appId, headers), 3)
-                println "   ✓ listJwkPaged(headers): ${count} items"
-            } catch (Exception e) { println "   ⚠ ApplicationSsoPublicKeysApi(jwk): ${e.message?.take(80)}" }
+                logger.debug("    listJwkPaged(headers): {} items", count)
+            } catch (Exception e) { logger.debug("    ApplicationSsoPublicKeysApi(jwk): {}", e.message?.take(80)) }
             try {
                 count = iteratePaged(applicationSsoPublicKeysApi.listOAuth2ClientSecretsPaged(appId), 3)
-                println "   ✓ listOAuth2ClientSecretsPaged(): ${count} items"
+                logger.debug("    listOAuth2ClientSecretsPaged(): {} items", count)
                 count = iteratePaged(applicationSsoPublicKeysApi.listOAuth2ClientSecretsPaged(appId, headers), 3)
-                println "   ✓ listOAuth2ClientSecretsPaged(headers): ${count} items"
-            } catch (Exception e) { println "   ⚠ ApplicationSsoPublicKeysApi(secrets): ${e.message?.take(80)}" }
+                logger.debug("    listOAuth2ClientSecretsPaged(headers): {} items", count)
+            } catch (Exception e) { logger.debug("    ApplicationSsoPublicKeysApi(secrets): {}", e.message?.take(80)) }
 
             // ApplicationCrossAppAccessConnectionsApi paged
-            println "\n8. Testing ApplicationCrossAppAccessConnectionsApi paged..."
+            logger.debug("\n8. Testing ApplicationCrossAppAccessConnectionsApi paged...")
             try {
                 count = iteratePaged(applicationCrossAppAccessConnectionsApi.getAllCrossAppAccessConnectionsPaged(appId, null, null), 3)
-                println "   ✓ getAllCrossAppAccessConnectionsPaged(): ${count} items"
+                logger.debug("    getAllCrossAppAccessConnectionsPaged(): {} items", count)
                 count = iteratePaged(applicationCrossAppAccessConnectionsApi.getAllCrossAppAccessConnectionsPaged(appId, null, null, headers), 3)
-                println "   ✓ getAllCrossAppAccessConnectionsPaged(headers): ${count} items"
-            } catch (Exception e) { println "   ⚠ ApplicationCrossAppAccessConnectionsApi: ${e.message?.take(80)}" }
+                logger.debug("    getAllCrossAppAccessConnectionsPaged(headers): {} items", count)
+            } catch (Exception e) { logger.debug("    ApplicationCrossAppAccessConnectionsApi: {}", e.message?.take(80)) }
 
-            println "\n✅ Application-level paged iteration tests completed!"
+            logger.debug("\n Application-level paged iteration tests completed!")
 
         } catch (ApiException e) {
-            println "❌ Test failed: ${e.message}"
-            println "Response: ${e.responseBody}"
+            logger.debug(" Test failed: {}", e.message)
+            logger.debug("Response: {}", e.responseBody)
             throw e
         } finally {
             // Cleanup app
@@ -663,9 +668,9 @@ class PagedIterationCoverageIT extends ITSupport {
                 try {
                     applicationApi.deactivateApplication(appId)
                     applicationApi.deleteApplication(appId)
-                    println "   ✓ Cleaned up test app"
+                    logger.debug("    Cleaned up test app")
                 } catch (Exception e) {
-                    println "   ⚠ Failed to cleanup app: ${e.message}"
+                    logger.debug("    Failed to cleanup app: {}", e.message)
                 }
             }
         }
@@ -678,7 +683,7 @@ class PagedIterationCoverageIT extends ITSupport {
                 try { authorizationServerApi.deactivateAuthorizationServer(serverId) } catch (Exception ignored) { }
                 authorizationServerApi.deleteAuthorizationServer(serverId)
             } catch (Exception e) {
-                println "   ⚠ Failed to cleanup auth server ${serverId}: ${e.message}"
+                logger.debug("    Failed to cleanup auth server {}: {}", serverId, e.message)
             }
         }
         createdAuthServerIds.clear()

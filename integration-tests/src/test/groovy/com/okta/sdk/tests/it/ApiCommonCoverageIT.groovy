@@ -26,6 +26,8 @@ import java.lang.reflect.Method
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Coverage test for common boilerplate methods across ALL generated API classes.
@@ -34,6 +36,9 @@ import static org.hamcrest.Matchers.*
  * rarely exercised by functional integration tests.
  */
 class ApiCommonCoverageIT extends ITSupport {
+
+    private static final Logger logger = LoggerFactory.getLogger(ApiCommonCoverageIT)
+
 
     // All 57 API classes from the JaCoCo coverage report
     private static final List<Class> API_CLASSES = [
@@ -103,7 +108,7 @@ class ApiCommonCoverageIT extends ITSupport {
     @Test(groups = "group3")
     @Scenario("api-common-accessors-coverage")
     void testApiAccessorsForAllClasses() {
-        println "Testing accessors for ${API_CLASSES.size()} API classes..."
+        logger.debug("Testing accessors for {} API classes...", API_CLASSES.size())
 
         ApiClient client = getClient()
         int successCount = 0
@@ -125,15 +130,15 @@ class ApiCommonCoverageIT extends ITSupport {
                     updatedClient, notNullValue()
 
                 successCount++
-                println "   ✓ ${apiClass.simpleName}: constructor + getApiClient + setApiClient"
+                logger.debug("    {}: constructor + getApiClient + setApiClient", apiClass.simpleName)
             } catch (Exception e) {
-                println "   ⚠ ${apiClass.simpleName}: ${e.message}"
+                logger.debug("    {}: {}", apiClass.simpleName, e.message)
             }
         }
 
         assertThat "All API classes should pass accessor tests",
             successCount, equalTo(API_CLASSES.size())
-        println "\n✅ Accessors tested for ${successCount}/${API_CLASSES.size()} API classes"
+        logger.debug("\n Accessors tested for {}/{} API classes", successCount, API_CLASSES.size())
     }
 
     /**
@@ -143,7 +148,7 @@ class ApiCommonCoverageIT extends ITSupport {
     @Test(groups = "group3")
     @Scenario("api-common-object-mapper-coverage")
     void testGetObjectMapperForAllClasses() {
-        println "Testing getObjectMapper() for ${API_CLASSES.size()} API classes..."
+        logger.debug("Testing getObjectMapper() for {} API classes...", API_CLASSES.size())
 
         int successCount = 0
 
@@ -156,19 +161,19 @@ class ApiCommonCoverageIT extends ITSupport {
                     objectMapper, notNullValue()
 
                 successCount++
-                println "   ✓ ${apiClass.simpleName}: getObjectMapper()"
+                logger.debug("    {}: getObjectMapper()", apiClass.simpleName)
             } catch (NoSuchMethodException e) {
                 // Some classes might not have getObjectMapper - count as success
                 successCount++
-                println "   ○ ${apiClass.simpleName}: no getObjectMapper method (OK)"
+                logger.debug("    {}: no getObjectMapper method (OK)", apiClass.simpleName)
             } catch (Exception e) {
-                println "   ⚠ ${apiClass.simpleName}: ${e.message}"
+                logger.debug("    {}: {}", apiClass.simpleName, e.message)
             }
         }
 
         assertThat "All API classes should pass getObjectMapper test",
             successCount, equalTo(API_CLASSES.size())
-        println "\n✅ getObjectMapper() tested for ${successCount}/${API_CLASSES.size()} API classes"
+        logger.debug("\n getObjectMapper() tested for {}/{} API classes", successCount, API_CLASSES.size())
     }
 
     /**
@@ -180,7 +185,7 @@ class ApiCommonCoverageIT extends ITSupport {
     @Test(groups = "group3")
     @Scenario("api-common-null-param-coverage")
     void testNullParameterValidationForAllClasses() {
-        println "Testing null parameter validation across API classes..."
+        logger.debug("Testing null parameter validation across API classes...")
 
         ApiClient client = getClient()
         int totalNullChecks = 0
@@ -242,15 +247,15 @@ class ApiCommonCoverageIT extends ITSupport {
                     }
                 }
                 if (classNullChecks > 0) {
-                    println "   ✓ ${apiClass.simpleName}: ${classNullChecks} null-check branches"
+                    logger.debug("    {}: {} null-check branches", apiClass.simpleName, classNullChecks)
                 }
                 totalNullChecks += classNullChecks
             } catch (Exception e) {
-                println "   ⚠ ${apiClass.simpleName}: ${e.message}"
+                logger.debug("    {}: {}", apiClass.simpleName, e.message)
             }
         }
 
-        println "\n✅ Exercised ${totalNullChecks} null-parameter validation branches across all API classes"
+        logger.debug("\n Exercised {} null-parameter validation branches across all API classes", totalNullChecks)
         assertThat "Should have exercised null checks", totalNullChecks, greaterThan(0)
     }
 
@@ -263,7 +268,7 @@ class ApiCommonCoverageIT extends ITSupport {
     @Test(groups = "group3")
     @Scenario("api-common-simple-overload-coverage")
     void testSimpleOverloadDelegation() {
-        println "Testing simple overload delegation across API classes..."
+        logger.debug("Testing simple overload delegation across API classes...")
 
         ApiClient client = getClient()
         int totalDelegations = 0
@@ -309,15 +314,15 @@ class ApiCommonCoverageIT extends ITSupport {
                     }
                 }
                 if (classDelegations > 0) {
-                    println "   ✓ ${apiClass.simpleName}: ${classDelegations} simple overloads"
+                    logger.debug("    {}: {} simple overloads", apiClass.simpleName, classDelegations)
                 }
                 totalDelegations += classDelegations
             } catch (Exception e) {
-                println "   ⚠ ${apiClass.simpleName}: ${e.message}"
+                logger.debug("    {}: {}", apiClass.simpleName, e.message)
             }
         }
 
-        println "\n✅ Exercised ${totalDelegations} simple-overload delegation paths"
+        logger.debug("\n Exercised {} simple-overload delegation paths", totalDelegations)
         assertThat "Should have exercised delegations", totalDelegations, greaterThan(0)
     }
 
@@ -331,7 +336,7 @@ class ApiCommonCoverageIT extends ITSupport {
     @Test(groups = "group3")
     @Scenario("api-common-paged-method-coverage")
     void testPagedMethodEntryForAllClasses() {
-        println "Testing paged method coverage for API classes..."
+        logger.debug("Testing paged method coverage for API classes...")
 
         ApiClient client = getClient()
         int totalPaged = 0
@@ -390,15 +395,15 @@ class ApiCommonCoverageIT extends ITSupport {
                     }
                 }
                 if (classPaged > 0) {
-                    println "   ✓ ${apiClass.simpleName}: ${classPaged} paged methods"
+                    logger.debug("    {}: {} paged methods", apiClass.simpleName, classPaged)
                 }
                 totalPaged += classPaged
             } catch (Exception e) {
-                println "   ⚠ ${apiClass.simpleName}: ${e.message}"
+                logger.debug("    {}: {}", apiClass.simpleName, e.message)
             }
         }
 
-        println "\n✅ Exercised ${totalPaged} paged method variants"
+        logger.debug("\n Exercised {} paged method variants", totalPaged)
         assertThat "Should have exercised paged methods", totalPaged, greaterThan(0)
     }
 }

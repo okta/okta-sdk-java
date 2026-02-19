@@ -99,9 +99,8 @@ class ApplicationUsersIT extends ITSupport {
         // Delete all users
         createdUserIds.each { userId ->
             try {
-                userApi.deactivateUser(userId, false)
-                Thread.sleep(500)
-                userApi.deleteUser(userId, false)
+                userApi.deleteUser(userId, false, null)  // deactivates if not DEPROVISIONED
+                userApi.deleteUser(userId, false, null)  // permanently deletes
                 logger.debug("Deleted user ${userId}")
             } catch (Exception e) {
                 logger.warn("Failed to delete user: ${e.message}")
