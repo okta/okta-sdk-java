@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Test Setup and Execution Script for Okta Java SDK
+# VERBOSE VERSION: Shows Terraform logs, hides Maven logs
 
 # Load credentials from okta-config.yaml if it exists
 if [ -f "./okta-config.yaml" ]; then
@@ -171,7 +172,7 @@ run_phase_setup() {
         if ! OKTA_ORG_NAME="$OKTA_ORG_NAME" \
             OKTA_BASE_URL="$OKTA_BASE_URL" \
             OKTA_API_TOKEN="$OKTA_API_TOKEN" \
-            terraform plan -out=tfplan > /dev/null 2>&1; then
+            terraform plan -out=tfplan; then
             echo "--- ❌ Terraform plan failed for $API ---"
             GLOBAL_EXIT_CODE=1
             continue
@@ -183,7 +184,7 @@ run_phase_setup() {
         OKTA_ORG_NAME="$OKTA_ORG_NAME" \
         OKTA_BASE_URL="$OKTA_BASE_URL" \
         OKTA_API_TOKEN="$OKTA_API_TOKEN" \
-        terraform apply -auto-approve --parallelism=1 tfplan > /dev/null 2>&1
+        terraform apply -auto-approve --parallelism=1 tfplan 
         APPLY_EXIT_CODE=$?
         unset TF_LOG TF_LOG_PATH
 
@@ -250,6 +251,7 @@ run_phase_test() {
             # Run the specific test class with all Okta variables exported and available to Maven subprocess
             # Tests run in parallel for faster execution
             # Only run tests in the api module where the generated tests are located
+            # VERBOSE VERSION: Hide Maven logs
             mvn -U -pl api test \
                -Dtest="com.okta.sdk.resource.api.${API_CLASS}" \
                -Dokta.org.name="$OKTA_ORG_NAME" \
@@ -257,8 +259,7 @@ run_phase_test() {
                -Dokta.api.token="$OKTA_API_TOKEN" \
                -Dokta.client.orgurl="$OKTA_CLIENT_ORGURL" \
                -Dokta.client.token="$OKTA_CLIENT_TOKEN" \
-               -Dtf.outputs="$TF_OUTPUTS" \
-               -e 2>&1
+               -Dtf.outputs="$TF_OUTPUTS" > /dev/null 2>&1
             
             TEST_EXIT_CODE=$?
             
@@ -282,23 +283,24 @@ run_phase_test() {
     # echo "=========================================="
     # echo "--- Phase 2b: Generating coverage report ---"
     # echo "=========================================="
-
+    
+    # # The jacoco.exec file is accumulated during sequential test runs
+    # # Now generate the HTML report from it
     # if [ -f "$BASE_DIR/api/target/jacoco.exec" ]; then
     #     echo "--- Found coverage data, generating report ---"
-
-    #     # Run verify phase on the full reactor to trigger report-aggregate with proper source linking
-    #     # The report-aggregate goal is bound to verify phase in coverage/pom.xml
-    #     # -Dmaven.test.skip=true skips tests (already ran in Phase 1)
-    #     # -Dmaven.javadoc.skip=true skips JavaDoc generation
-    #     # -Dmaven.failsafe.skip=true skips integration tests
-    #     echo "--- Generating aggregated coverage report ---"
-    #     mvn verify -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Dmaven.failsafe.skip=true > /dev/null 2>&1
+        
+    #     # Run jacoco:report-aggregate directly on coverage module
+    #     # This avoids recompiling classes (which would break exec data matching)
+    #     # and avoids resolving test-scoped dependencies that fail due to cert issues
+    #     mvn -pl coverage jacoco:report-aggregate -DskipTests -e 2>&1
+        
     #     COVERAGE_EXIT_CODE=$?
     #     if [ $COVERAGE_EXIT_CODE -eq 0 ]; then
     #         echo "--- ✅ Coverage report generated successfully ---"
     #         echo "--- Coverage report available at: $BASE_DIR/coverage/target/site/jacoco-aggregate/index.html ---"
     #     else
     #         echo "--- ⚠️  Coverage report generation had issues (exit code: $COVERAGE_EXIT_CODE) ---"
+    #         echo "--- Check the configuration above ---"
     #     fi
     # else
     #     echo "--- ⚠️  No coverage data found (jacoco.exec not found) ---"
