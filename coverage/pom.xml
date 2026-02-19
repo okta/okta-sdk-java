@@ -63,6 +63,14 @@
                             <goal>report-aggregate</goal>
                         </goals>
                         <phase>verify</phase>
+                        <configuration>
+                            <sourceEncoding>UTF-8</sourceEncoding>
+                            <sourceDirectories>
+                                <sourceDirectory>../api/target/generated-sources/openapi/src/gen/java/main</sourceDirectory>
+                                <sourceDirectory>../api/src/main/java</sourceDirectory>
+                                <sourceDirectory>../impl/src/main/java</sourceDirectory>
+                            </sourceDirectories>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

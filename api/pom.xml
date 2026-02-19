@@ -293,6 +293,13 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <sourceEncoding>UTF-8</sourceEncoding>
+                            <sourceDirectories>
+                                <sourceDirectory>${basedir}/target/generated-sources/openapi/src/gen/java/main</sourceDirectory>
+                                <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+                            </sourceDirectories>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
