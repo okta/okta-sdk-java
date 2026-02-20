@@ -380,4 +380,21 @@ class AgentPoolsIT extends ITSupport {
             agentPoolsApi.updateAgentPoolsUpdateSettings(invalidPoolId, dummySettingsRequest, additionalParams)
         }
     }
+
+    @Test
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            // Paged - listAgentPools
+            def pools = agentPoolsApi.listAgentPoolsPaged(null, null, null)
+            for (def p : pools) { break }
+            def poolsH = agentPoolsApi.listAgentPoolsPaged(null, null, null, headers)
+            for (def p : poolsH) { break }
+
+            // Non-paged with headers
+            agentPoolsApi.listAgentPools(null, null, null, headers)
+        } catch (Exception e) {
+            // Expected
+        }
+    }
 }

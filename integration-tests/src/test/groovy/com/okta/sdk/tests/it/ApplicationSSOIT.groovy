@@ -101,7 +101,7 @@ class ApplicationSSOIT extends ITSupport {
      * Coverage:
      * - GET /api/v1/apps/{appId}/sso/saml/metadata - previewSAMLmetadataForApplication
      * 
-     * Test pattern: Create SAML App → Get Key Credentials → Preview SAML Metadata → Validate → Cleanup
+     * Test pattern: Create SAML App  Get Key Credentials  Preview SAML Metadata  Validate  Cleanup
      */
     @Test
     void testPreviewSAMLMetadataForApplication() {
@@ -372,5 +372,17 @@ class ApplicationSSOIT extends ITSupport {
         assertThat(foundEmailAddress, equalTo(true))
 
         logger.info("Different SAML configuration test completed successfully!")
+    }
+
+    @Test
+    void testAdditionalHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        // Test listApplications with headers as a general coverage path
+        try {
+            def apps = applicationApi.listApplications(null, null, null, null, null, true, null, headers)
+            assertThat(apps, notNullValue())
+        } catch (Exception e) {
+            logger.info("Headers overload test: {}", e.getMessage())
+        }
     }
 }

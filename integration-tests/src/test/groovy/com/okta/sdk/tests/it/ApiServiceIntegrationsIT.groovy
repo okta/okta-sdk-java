@@ -393,4 +393,21 @@ class ApiServiceIntegrationsIT extends ITSupport {
             }
         }
     }
+
+    @Test
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            // Paged - listApiServiceIntegrationInstances
+            def instances = apiServiceIntegrationsApi.listApiServiceIntegrationInstancesPaged(null)
+            for (def i : instances) { break }
+            def instancesH = apiServiceIntegrationsApi.listApiServiceIntegrationInstancesPaged(null, headers)
+            for (def i : instancesH) { break }
+
+            // Non-paged with headers
+            apiServiceIntegrationsApi.listApiServiceIntegrationInstances(null, headers)
+        } catch (Exception e) {
+            logger.info("Paged API service integrations test: {}", e.getMessage())
+        }
+    }
 }

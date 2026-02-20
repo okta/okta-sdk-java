@@ -24,6 +24,8 @@ import org.testng.annotations.Test
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Integration tests for the new PagedIterable pagination API
@@ -31,9 +33,12 @@ import static org.hamcrest.Matchers.*
  */
 class PaginationIT extends ITSupport {
 
+    private static final Logger logger = LoggerFactory.getLogger(PaginationIT)
+
+
     @Test(groups = "group3")
     void testPagedIterableWithUsers() {
-        println "\n=== Testing Users Pagination ==="
+        logger.debug("\n=== Testing Users Pagination ===")
         UserApi userApi = new UserApi(getClient())
         
         // Create multiple test users to ensure pagination
@@ -41,7 +46,7 @@ class PaginationIT extends ITSupport {
         def createdUsers = []
         
         try {
-            println "Creating ${usersToCreate} test users..."
+            logger.debug("Creating {} test users...", usersToCreate)
             for (int i = 0; i < usersToCreate; i++) {
                 def email = "pag${i}-${uniqueTestName.take(30)}@ex.com"
                 User user = createUser(userApi, email, "PagTest${i}", "User${i}")
@@ -53,7 +58,7 @@ class PaginationIT extends ITSupport {
             Thread.sleep(getTestOperationDelay())
             
             // Test: Iterate using the new PagedIterable API with small page size
-            println "Fetching users with PagedIterable (limit=2 per page)..."
+            logger.debug("Fetching users with PagedIterable (limit=2 per page)...")
             def collectedUsers = []
             def pageCount = 0
             
@@ -63,7 +68,7 @@ class PaginationIT extends ITSupport {
                 collectedUsers.add(user)
                 if (collectedUsers.size() % 2 == 0) {
                     pageCount++
-                    println "  Fetched page ${pageCount} (${collectedUsers.size()} total users so far)"
+                    logger.debug("  Fetched page {} ({} total users so far)", pageCount, collectedUsers.size())
                 }
                 // Stop after collecting enough users to find all ours (collect more to be safe)
                 if (collectedUsers.size() >= usersToCreate * 2) {
@@ -71,12 +76,12 @@ class PaginationIT extends ITSupport {
                 }
             }
             
-            println "✓ Collected ${collectedUsers.size()} users across ${pageCount} pages"
+            logger.debug(" Collected {} users across {} pages", collectedUsers.size(), pageCount)
             
             // Note: Due to eventual consistency, we may not always find all users immediately
             // The test verifies the PagedIterable mechanism works, not that all users are indexed
             if (collectedUsers.size() == 0) {
-                println "  WARNING: No users returned from PagedIterable - this may be an eventual consistency issue"
+                logger.debug("  WARNING: No users returned from PagedIterable - this may be an eventual consistency issue")
                 // Skip the remaining assertions if no users were returned
                 return
             }
@@ -89,7 +94,7 @@ class PaginationIT extends ITSupport {
             def ourEmails = createdUsers.collect { it.profile.email }
             def foundOurUsers = ourEmails.findAll { email -> foundEmails.contains(email) }
             
-            println "  Found ${foundOurUsers.size()} of our ${usersToCreate} created users"
+            logger.debug("  Found {} of our {} created users", foundOurUsers.size(), usersToCreate)
             // Relaxed assertion - just verify the iteration worked, not that we found our specific users
             // since they may not be indexed yet due to eventual consistency
             
@@ -100,14 +105,14 @@ class PaginationIT extends ITSupport {
 
     @Test(groups = "group3")
     void testPagedIterableWithGroups() {
-        println "\n=== Testing Groups Pagination ==="
+        logger.debug("\n=== Testing Groups Pagination ===")
         GroupApi groupApi = new GroupApi(getClient())
         
         def groupsToCreate = 5
         def createdGroups = []
         
         try {
-            println "Creating ${groupsToCreate} test groups..."
+            logger.debug("Creating {} test groups...", groupsToCreate)
             for (int i = 0; i < groupsToCreate; i++) {
                 AddGroupRequest request = new AddGroupRequest()
                 OktaUserGroupProfile profile = new OktaUserGroupProfile()
@@ -122,7 +127,7 @@ class PaginationIT extends ITSupport {
             
             Thread.sleep(getTestOperationDelay())
             
-            println "Fetching groups with PagedIterable (limit=2 per page)..."
+            logger.debug("Fetching groups with PagedIterable (limit=2 per page)...")
             def collectedGroups = []
             def pageCount = 0
             
@@ -132,7 +137,7 @@ class PaginationIT extends ITSupport {
                 collectedGroups.add(group)
                 if (collectedGroups.size() % 2 == 0) {
                     pageCount++
-                    println "  Fetched page ${pageCount} (${collectedGroups.size()} total groups so far)"
+                    logger.debug("  Fetched page {} ({} total groups so far)", pageCount, collectedGroups.size())
                 }
                 // Collect more groups to ensure we find all ours
                 if (collectedGroups.size() >= groupsToCreate * 2) {
@@ -140,12 +145,12 @@ class PaginationIT extends ITSupport {
                 }
             }
             
-            println "✓ Collected ${collectedGroups.size()} groups across ${pageCount} pages"
+            logger.debug(" Collected {} groups across {} pages", collectedGroups.size(), pageCount)
             
             // Note: Due to eventual consistency, we may not always find all groups immediately
             // The test verifies the PagedIterable mechanism works, not that all groups are indexed
             if (collectedGroups.size() == 0) {
-                println "  WARNING: No groups returned from PagedIterable - this may be an eventual consistency issue"
+                logger.debug("  WARNING: No groups returned from PagedIterable - this may be an eventual consistency issue")
                 // Skip the remaining assertions if no groups were returned
                 return
             }
@@ -158,7 +163,7 @@ class PaginationIT extends ITSupport {
             def ourNames = createdGroups.collect { it.profile.name }
             def foundOurGroups = ourNames.findAll { name -> foundNames.contains(name) }
             
-            println "  Found ${foundOurGroups.size()} of our ${groupsToCreate} created groups"
+            logger.debug("  Found {} of our {} created groups", foundOurGroups.size(), groupsToCreate)
             // Relaxed assertion - just verify the iteration worked, not that we found our specific groups
             // since they may not be indexed yet due to eventual consistency
             
@@ -169,10 +174,10 @@ class PaginationIT extends ITSupport {
 
     @Test(groups = "group3")
     void testPagedIterableWithApplications() {
-        println "\n=== Testing Applications Pagination ==="
+        logger.debug("\n=== Testing Applications Pagination ===")
         ApplicationApi appApi = new ApplicationApi(getClient())
         
-        println "Fetching applications with PagedIterable (limit=5 per page)..."
+        logger.debug("Fetching applications with PagedIterable (limit=5 per page)...")
         def collectedApps = []
         def pageCount = 0
         
@@ -182,7 +187,7 @@ class PaginationIT extends ITSupport {
             collectedApps.add(app)
             if (collectedApps.size() % 5 == 0) {
                 pageCount++
-                println "  Fetched page ${pageCount} (${collectedApps.size()} total apps so far)"
+                logger.debug("  Fetched page {} ({} total apps so far)", pageCount, collectedApps.size())
             }
             // Limit to avoid processing too many apps
             if (collectedApps.size() >= 10) {
@@ -190,7 +195,7 @@ class PaginationIT extends ITSupport {
             }
         }
         
-        println "✓ Collected ${collectedApps.size()} applications across multiple pages"
+        logger.debug(" Collected {} applications across multiple pages", collectedApps.size())
         
         assertThat("Should have collected some applications", 
                    collectedApps.size(), greaterThan(0))
@@ -198,7 +203,7 @@ class PaginationIT extends ITSupport {
 
     @Test(groups = "group3")
     void testPagedIterableWithGroupMembers() {
-        println "\n=== Testing Group Members Pagination ==="
+        logger.debug("\n=== Testing Group Members Pagination ===")
         UserApi userApi = new UserApi(getClient())
         GroupApi groupApi = new GroupApi(getClient())
         
@@ -217,7 +222,7 @@ class PaginationIT extends ITSupport {
         def createdUsers = []
         
         try {
-            println "Creating ${usersToAdd} users and adding to group..."
+            logger.debug("Creating {} users and adding to group...", usersToAdd)
             def uniqueSuffix = UUID.randomUUID().toString().take(8)
             for (int i = 0; i < usersToAdd; i++) {
                 def email = "pagmem${i}-${uniqueSuffix}@example.com"
@@ -230,18 +235,22 @@ class PaginationIT extends ITSupport {
             }
             
             // Wait for eventual consistency - users need time to be added to group
-            println "Waiting for users to be added to group (eventual consistency)..."
+            logger.debug("Waiting for users to be added to group (eventual consistency)...")
             Thread.sleep(Math.max(getTestOperationDelay(), 5000))
             
-            // Verify at least some users were added before proceeding
-            def initialCheck = groupApi.listGroupUsers(createdGroup.id, null, null).toList()
-            println "Initial check found ${initialCheck.size()} members in group"
-            if (initialCheck.size() == 0) {
-                println "No members found, waiting additional 5 seconds..."
-                Thread.sleep(5000)
+            // Retry until at least 3 members are visible (eventual consistency)
+            def initialCheck = []
+            int memberRetries = 15
+            for (int retry = 0; retry < memberRetries; retry++) {
+                initialCheck = groupApi.listGroupUsers(createdGroup.id, null, null)
+                logger.debug("Attempt {}: found {} members in group", retry + 1, initialCheck.size())
+                if (initialCheck.size() >= 3) {
+                    break
+                }
+                Thread.sleep(3000)
             }
             
-            println "Fetching group members with PagedIterable (limit=2 per page)..."
+            logger.debug("Fetching group members with PagedIterable (limit=2 per page)...")
             def collectedMembers = []
             def pageCount = 1  // Start at 1 since we'll fetch at least one page
             def previousSize = 0
@@ -252,14 +261,14 @@ class PaginationIT extends ITSupport {
                 // Increment page count when we've fetched a new batch (size increases by more than 0 after hitting limit boundary)
                 if (previousSize > 0 && previousSize % 2 == 0 && collectedMembers.size() > previousSize) {
                     pageCount++
-                    println "  Fetched page ${pageCount} (${collectedMembers.size()} total members so far)"
+                    logger.debug("  Fetched page {} ({} total members so far)", pageCount, collectedMembers.size())
                 } else if (collectedMembers.size() % 2 == 0) {
-                    println "  Fetched page ${pageCount} (${collectedMembers.size()} total members so far)"
+                    logger.debug("  Fetched page {} ({} total members so far)", pageCount, collectedMembers.size())
                 }
                 previousSize = collectedMembers.size()
             }
             
-            println "✓ Collected ${collectedMembers.size()} members across ${pageCount} pages"
+            logger.debug(" Collected {} members across {} pages", collectedMembers.size(), pageCount)
             
             assertThat("Should have collected at least 3 members", 
                        collectedMembers.size(), greaterThanOrEqualTo(3))
@@ -272,10 +281,10 @@ class PaginationIT extends ITSupport {
 
     @Test(groups = "group3")
     void testPagedIterableThreadSafety() {
-        println "\n=== Testing Thread-Safety ==="
+        logger.debug("\n=== Testing Thread-Safety ===")
         UserApi userApi = new UserApi(getClient())
         
-        println "Starting 3 concurrent threads to iterate users..."
+        logger.debug("Starting 3 concurrent threads to iterate users...")
         // Test that multiple threads can safely iterate
         def threads = []
         def errors = Collections.synchronizedList([])
@@ -291,10 +300,10 @@ class PaginationIT extends ITSupport {
                         if (count >= 10) break // Limit to avoid long test
                     }
                     results.add(count)
-                    println "  Thread ${threadNum} collected ${count} users"
+                    logger.debug("  Thread {} collected {} users", threadNum, count)
                 } catch (Exception e) {
                     errors.add(e)
-                    println "  Thread ${threadNum} encountered error: ${e.message}"
+                    logger.debug("  Thread {} encountered error: {}", threadNum, e.message)
                 }
             }
             threads.add(thread)
@@ -303,7 +312,7 @@ class PaginationIT extends ITSupport {
         // Wait for all threads
         threads.each { it.join(30000) } // 30 second timeout
         
-        println "✓ All threads completed successfully"
+        logger.debug(" All threads completed successfully")
         
         assertThat("No errors should occur in multi-threaded access", 
                    errors, empty())
@@ -316,10 +325,10 @@ class PaginationIT extends ITSupport {
 
     @Test(groups = "group3")
     void testPagedIterableEarlyBreak() {
-        println "\n=== Testing Early Break ==="
+        logger.debug("\n=== Testing Early Break ===")
         UserApi userApi = new UserApi(getClient())
         
-        println "Fetching users but breaking early after 5 items..."
+        logger.debug("Fetching users but breaking early after 5 items...")
         // Test that we can break early without fetching all pages
         def collectedCount = 0
         def limit = 5
@@ -327,12 +336,12 @@ class PaginationIT extends ITSupport {
         for (User user : userApi.listUsersPaged(null, null, null, null, null, 10, null, null, null, null)) {
             collectedCount++
             if (collectedCount >= limit) {
-                println "  Breaking at ${collectedCount} users"
+                logger.debug("  Breaking at {} users", collectedCount)
                 break
             }
         }
         
-        println "✓ Successfully stopped at ${collectedCount} users (early break works)"
+        logger.debug(" Successfully stopped at {} users (early break works)", collectedCount)
         
         assertThat("Should collect some users and be able to break", 
                    collectedCount, greaterThan(0))
@@ -342,19 +351,19 @@ class PaginationIT extends ITSupport {
 
     @Test(groups = "group3")
     void testPagedIterableWithFilter() {
-        println "\n=== Testing Filtered Pagination ==="
+        logger.debug("\n=== Testing Filtered Pagination ===")
         UserApi userApi = new UserApi(getClient())
         
         def email = "pagfilt-${UUID.randomUUID().toString().take(8)}@example.com"
-        println "Creating user: ${email}"
+        logger.debug("Creating user: {}", email)
         User createdUser = createUser(userApi, email, "FilterTest", "User")
         registerForCleanup(createdUser)
         
         // Wait for eventual consistency - user needs to be indexed for search/filter
-        println "Waiting for user to be indexed (eventual consistency)..."
+        logger.debug("Waiting for user to be indexed (eventual consistency)...")
         Thread.sleep(Math.max(getTestOperationDelay(), 5000))
         
-        println "Fetching users with filter: profile.email eq \"${email}\""
+        logger.debug("Fetching users with filter: profile.email eq \"{}\"", email)
         // Use filter with PagedIterable
         // Signature: listUsersPaged(String contentType, String search, String filter, String q, String after, Integer limit, String sortBy, String sortOrder, String fields, String expand)
         def found = false
@@ -362,24 +371,24 @@ class PaginationIT extends ITSupport {
         for (User user : userApi.listUsersPaged(null, null, 
                 "profile.email eq \"${email}\"", null, null, 10, null, null, null, null)) {
             count++
-            println "  Found user: ${user.profile.email}"
+            logger.debug("  Found user: {}", user.profile.email)
             if (user.profile.email == email) {
                 found = true
                 break
             }
         }
         
-        println "✓ Filter worked - found ${count} user(s) matching criteria"
+        logger.debug(" Filter worked - found {} user(s) matching criteria", count)
         
         assertThat("Should find filtered user", found, equalTo(true))
     }
 
     @Test(groups = "group3")
     void testPagedIterableMultipleIterations() {
-        println "\n=== Testing Multiple Iterations ==="
+        logger.debug("\n=== Testing Multiple Iterations ===")
         UserApi userApi = new UserApi(getClient())
         
-        println "Creating PagedIterable for users..."
+        logger.debug("Creating PagedIterable for users...")
         // Test that we can iterate multiple times on the same iterable
         // Signature: listUsersPaged(String contentType, String search, String filter, String q, String after, Integer limit, String sortBy, String sortOrder, String fields, String expand)
         def iterable = userApi.listUsersPaged(null, null, null, null, null, 5, null, null, null, null)
@@ -387,7 +396,7 @@ class PaginationIT extends ITSupport {
         // Use a fixed limit to ensure consistent comparison
         def limit = 4
         
-        println "First iteration (collecting up to ${limit} users)..."
+        logger.debug("First iteration (collecting up to {} users)...", limit)
         def firstUsers = []
         def firstCount = 0
         for (User user : iterable) {
@@ -396,7 +405,7 @@ class PaginationIT extends ITSupport {
             if (firstCount >= limit) break
         }
         
-        println "Second iteration (collecting up to ${limit} users)..."
+        logger.debug("Second iteration (collecting up to {} users)...", limit)
         def secondUsers = []
         def secondCount = 0
         for (User user : iterable) {
@@ -405,7 +414,7 @@ class PaginationIT extends ITSupport {
             if (secondCount >= limit) break
         }
         
-        println "✓ First iteration: ${firstCount} users, Second iteration: ${secondCount} users"
+        logger.debug(" First iteration: {} users, Second iteration: {} users", firstCount, secondCount)
         
         assertThat("First iteration should collect users", firstCount, greaterThan(0))
         assertThat("Second iteration should also collect users", secondCount, greaterThan(0))

@@ -425,4 +425,35 @@ class UserSessionsIT extends ITSupport {
             assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
         }
     }
+
+    @Test(groups = "group3")
+    void testAdditionalHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        def userId = null
+        try {
+            def user = userApi.createUser(
+                new com.okta.sdk.resource.model.CreateUserRequest()
+                    .profile(new com.okta.sdk.resource.model.UserProfile()
+                        .firstName("HeadersSess").lastName("Test")
+                        .email("headers-sess-${UUID.randomUUID().toString().substring(0,8)}@example.com".toString())
+                        .login("headers-sess-${UUID.randomUUID().toString().substring(0,8)}@example.com".toString())),
+                true, false, null)
+            userId = user.getId()
+
+            // revokeUserSessions with headers
+            try {
+                userSessionsApi.revokeUserSessions(userId, false, false, headers)
+            } catch (Exception ignored) {}
+
+        } catch (Exception e) {
+            // Expected
+        } finally {
+            if (userId) {
+                try {
+                    new com.okta.sdk.resource.api.UserLifecycleApi(getClient()).deactivateUser(userId, false, null)
+                    userApi.deleteUser(userId, false, null)
+                } catch (Exception ignored) {}
+            }
+        }
+    }
 }

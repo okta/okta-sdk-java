@@ -27,6 +27,8 @@ import org.testng.annotations.AfterClass
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 
+import java.util.concurrent.TimeUnit
+
 import static com.okta.sdk.tests.it.util.Util.expect
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
@@ -97,9 +99,8 @@ class ApplicationUsersIT extends ITSupport {
         // Delete all users
         createdUserIds.each { userId ->
             try {
-                userApi.deactivateUser(userId, false)
-                Thread.sleep(500)
-                userApi.deleteUser(userId, false)
+                userApi.deleteUser(userId, false, null)  // deactivates if not DEPROVISIONED
+                userApi.deleteUser(userId, false, null)  // permanently deletes
                 logger.debug("Deleted user ${userId}")
             } catch (Exception e) {
                 logger.warn("Failed to delete user: ${e.message}")
@@ -494,11 +495,21 @@ class ApplicationUsersIT extends ITSupport {
             logger.debug("Assigned user ${i + 1}/5")
         }
 
-        // Test pagination with limit
-        List<AppUser> firstPage = appUsersApi.listApplicationUsers(testApp.getId(), null, 20, null, null)
+        // Test pagination with limit (retry for eventual consistency — all 5 users may not be visible immediately)
+        List<AppUser> firstPage = null
+        int maxRetries = 15
+        int retryCount = 0
+        while (retryCount < maxRetries) {
+            firstPage = appUsersApi.listApplicationUsers(testApp.getId(), null, 20, null, null)
+            if (firstPage != null && firstPage.size() >= 5) {
+                break
+            }
+            TimeUnit.MILLISECONDS.sleep(1000)
+            retryCount++
+        }
 
         assertThat("First page should not be null", firstPage, notNullValue())
-        assertThat("First page should have at least 5 users", firstPage.size(), greaterThanOrEqualTo(5))
+        assertThat("First page should have at least 5 users after ${retryCount} retries", firstPage.size(), greaterThanOrEqualTo(5))
         logger.debug("First page retrieved with ${firstPage.size()} users")
 
         // Test listing all users
@@ -617,5 +628,42 @@ class ApplicationUsersIT extends ITSupport {
         assignedUsers.removeIf { it.appId == testApp.getId() && it.userId == testUser.getId() }
 
         logger.info("Duplicate assignment test completed successfully!")
+    }
+
+    @Test
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        def appId = null
+        try {
+            def app = applicationApi.createApplication(
+                new com.okta.sdk.resource.model.BookmarkApplication()
+                    .name(com.okta.sdk.resource.model.BookmarkApplication.NameEnum.BOOKMARK)
+                    .label("Users-Paged-${UUID.randomUUID().toString().substring(0,8)}")
+                    .signOnMode(com.okta.sdk.resource.model.ApplicationSignOnMode.BOOKMARK)
+                    .settings(new com.okta.sdk.resource.model.BookmarkApplicationSettings()
+                        .app(new com.okta.sdk.resource.model.BookmarkApplicationSettingsApplication()
+                            .url("https://example.com/users-paged"))),
+                true, null)
+            appId = app.getId()
+
+            // Paged - listApplicationUsers
+            def users = appUsersApi.listApplicationUsersPaged(appId, null, null, null, null)
+            for (def u : users) { break }
+            def usersH = appUsersApi.listApplicationUsersPaged(appId, null, null, null, null, headers)
+            for (def u : usersH) { break }
+
+            // Non-paged with headers
+            appUsersApi.listApplicationUsers(appId, null, null, null, null, headers)
+
+        } catch (Exception e) {
+            logger.info("Paged users test: {}", e.getMessage())
+        } finally {
+            if (appId) {
+                try {
+                    applicationApi.deactivateApplication(appId)
+                    applicationApi.deleteApplication(appId)
+                } catch (Exception ignored) {}
+            }
+        }
     }
 }

@@ -41,6 +41,7 @@ import com.okta.sdk.resource.model.PasswordPolicy
 import com.okta.sdk.resource.model.PolicyType
 import com.okta.sdk.resource.model.User
 import com.okta.sdk.resource.model.UserProfile
+import com.okta.sdk.resource.model.UserStatus
 import com.okta.sdk.resource.model.Application
 import com.okta.sdk.resource.model.InlineHook
 import com.okta.sdk.resource.model.Realm
@@ -51,6 +52,7 @@ import org.slf4j.LoggerFactory
 
 import org.testng.ITestContext
 import org.testng.ITestResult
+import org.testng.annotations.AfterClass
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.AfterSuite
 import org.testng.annotations.BeforeMethod
@@ -108,14 +110,13 @@ abstract class ITSupport implements ClientProvider {
     @AfterMethod
     void afterMethod(ITestResult result) {
         log.info("Finished " + result.getInstanceName() + " - " + result.getName())
-        // Cleanup moved to @AfterSuite - resources will be cleaned up after all tests complete
+        // Resource cleanup runs in @AfterClass stop() after all tests in this class complete
     }
 
-    @AfterSuite()
+    @AfterClass(alwaysRun = true)
     void stop() {
-        // Clean up all registered resources after all tests complete
+        // Clean up all registered resources after all tests in this class complete
         cleanupResources()
-        
 
         if (testServer != null) {
             testServer.verify()
@@ -172,8 +173,28 @@ abstract class ITSupport implements ClientProvider {
                 UserLifecycleApi userLifecycleApi = new UserLifecycleApi(getClient())
                 User user = (User) resource
                 log.debug("Deleting user: {}", user.getId())
-                userLifecycleApi.deactivateUser(user.getId(), false, null)
-                userApi.deleteUser(user.getId(), false, null)
+                // Fetch current status - the stored User object may be stale
+                try {
+                    User currentUser = userApi.getUser(user.getId(), null, null)
+                    UserStatus status = currentUser.getStatus()
+                    if (status == UserStatus.DEPROVISIONED) {
+                        // Already deactivated - just permanently delete
+                        userApi.deleteUser(user.getId(), false, null)
+                    } else if (status == UserStatus.STAGED) {
+                        // STAGED users cannot be deactivated via lifecycle endpoint;
+                        // call deleteUser twice: first call deactivates, second permanently deletes
+                        userApi.deleteUser(user.getId(), false, null)
+                        userApi.deleteUser(user.getId(), false, null)
+                    } else {
+                        // ACTIVE, LOCKED_OUT, RECOVERY, SUSPENDED, etc.: deactivate then delete
+                        userLifecycleApi.deactivateUser(user.getId(), false, null)
+                        userApi.deleteUser(user.getId(), false, null)
+                    }
+                } catch (ApiException statusEx) {
+                    if (statusEx.getCode() != 404) throw statusEx
+                    log.debug("User {} already deleted (404 on status fetch)", user.getId())
+                }
+                return
             } else if (resource instanceof Group) {
                 GroupApi groupApi = new GroupApi(getClient())
                 Group group = (Group) resource

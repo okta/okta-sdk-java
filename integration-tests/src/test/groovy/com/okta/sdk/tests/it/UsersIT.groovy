@@ -37,12 +37,16 @@ import java.util.stream.Collectors
 import static com.okta.sdk.tests.it.util.Util.*
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Integration tests for User API operations.
  * Tests cover the complete CRUD lifecycle and various User API endpoints.
  */
 class UsersIT extends ITSupport {
+
+    private static final Logger logger = LoggerFactory.getLogger(UsersIT)
 
     private ApplicationApi applicationApi
     private GroupApi groupApi
@@ -56,7 +60,6 @@ class UsersIT extends ITSupport {
     private UserResourcesApi userResourcesApi
     private UserTypeApi userTypeApi
     private List<String> usersToCleanup = Collections.synchronizedList(new ArrayList<>())
-    private List<Object> resourcesToCleanup = Collections.synchronizedList(new ArrayList<>())
 
     UsersIT() {
         ApiClient client = getClient()
@@ -1610,10 +1613,10 @@ class UsersIT extends ITSupport {
                 userApi.deleteUser(userId, false, null)
             } catch (ApiException e) {
                 if (e.getCode() != 404) {
-                    System.err.println("Error cleaning up user ${userId}: ${e.getMessage()}")
+                    logger.warn("Error cleaning up user {}: {}", userId, e.getMessage())
                 }
             } catch (Exception e) {
-                System.err.println("Error cleaning up user ${userId}: ${e.getMessage()}")
+                logger.warn("Error cleaning up user {}: {}", userId, e.getMessage())
             }
         }
     }
