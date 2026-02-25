@@ -61,13 +61,16 @@ public class {{classname}}Test {
 
         // Extract parameters from prerequisite data
         Map<String, Object> payload = (Map<String, Object>) prerequisiteData.getOrDefault("payload", new HashMap<>());
-        Map<String, Object> prerequisiteObject = (Map<String, Object>) prerequisiteData.getOrDefault("prerequisite_object", new HashMap<>());
 
-        // Handle file uploads if present
-        byte[] fileContent = null;
+        // Handle file uploads if present - creates a temp File from file_path for APIs that accept File parameters
+        File tempFile = null;
         if (payload.containsKey("file_path")) {
             String filePath = payload.get("file_path").toString();
-            fileContent = Files.readAllBytes(Paths.get(filePath));
+            byte[] fileContent = Files.readAllBytes(Paths.get(filePath));
+            // Create a temporary file that can be passed to API methods expecting File parameters
+            tempFile = Files.createTempFile("okta-test-", ".tmp").toFile();
+            Files.write(tempFile.toPath(), fileContent);
+            tempFile.deleteOnExit();
         }
 
         // Execute the API method with parameters extracted from prerequisiteData
@@ -115,6 +118,27 @@ public class {{classname}}Test {
     @SuppressWarnings("unchecked")
     private <T> T extractParameter(Map<String, Object> prerequisiteData, String paramName, T defaultValue) {
         Object value = TerraformHelper.extractParameter(prerequisiteData, paramName, defaultValue);
+        return (T) value;
+    }
+
+    /**
+     * Helper method to extract a parameter from prerequisite data, with special handling for File parameters.
+     * If the parameter is a File type and not found in prerequisiteData, attempts to get it from tempFile.
+     * Delegates to TerraformHelper.extractParameter for smart field name resolution.
+     * 
+     * @param prerequisiteData Map containing Terraform prerequisite data
+     * @param paramName Name of the parameter to extract
+     * @param defaultValue Default value if parameter is not found
+     * @param tempFile Temporary file created from file_path if present in payload
+     * @return The extracted parameter value, tempFile if parameter is a File type, or default value
+     */
+    @SuppressWarnings("unchecked")
+    private <T> T extractParameterWithFile(Map<String, Object> prerequisiteData, String paramName, T defaultValue, File tempFile) {
+        Object value = TerraformHelper.extractParameter(prerequisiteData, paramName, defaultValue);
+        // If value is null and we have a temp file, use it for File-type parameters
+        if (value == null && tempFile != null && (paramName.contains("file") || paramName.contains("File"))) {
+            return (T) tempFile;
+        }
         return (T) value;
     }
 

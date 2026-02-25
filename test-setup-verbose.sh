@@ -42,30 +42,30 @@ echo "  Base URL: $OKTA_BASE_URL"
 echo "  API Token: ${OKTA_API_TOKEN:0:10}***"
 
 APIS=(
-    #"test_application_api"  # 13 test cases
-    # "test_application_groups_api"  # 4 test cases
-    # "test_application_policies_api"  # 1 test cases working
-    # "test_application_sso_api"  # 2 test cases
-    # "test_application_users_api"  # 5 test cases
-    # "test_authenticator_api"  # 23 test cases
-    # "test_authorization_server_api"  # 7 test cases working
-    # "test_authorization_server_assoc_api"  # 3 test cases working
-    # "test_authorization_server_claims_api"  # 10 test cases
-    # "test_authorization_server_clients_api"  # 2 test cases
-     "test_authorization_server_keys_api"  # 4 test cases
-    # "test_authorization_server_policies_api"  # 14 test cases
-    # "test_authorization_server_rules_api"  # 14 test cases
-    # "test_authorization_server_scopes_api"  # 10 test cases
-    # "test_behavior_api"  # 13 test cases
-    # "test_brands_api"  # 12 test cases
-    # "test_captcha_api"  # 17 test cases
-    # "test_custom_domain_api"  # 12 test cases
-    # "test_custom_pages_api"  # 38 test cases
-    # "test_custom_templates_api"  # 28 test cases
-    # "test_device_assurance_api"  # 5 test cases
-    # "test_email_customization_api"  # 2 test cases
-    # "test_email_domain_api"  # 12 test cases
-    # "test_email_server_api"  # 11 test cases
+    "test_application_api"  # 13 test cases
+    "test_application_groups_api"  # 4 test cases
+    "test_application_policies_api"  # 1 test cases working
+    "test_application_sso_api"  # 2 test cases
+    "test_application_users_api"  # 5 test cases
+    "test_authenticator_api"  # 23 test cases
+    "test_authorization_server_api"  # 7 test cases working
+    "test_authorization_server_assoc_api"  # 3 test cases working
+    "test_authorization_server_claims_api"  # 10 test cases
+    "test_authorization_server_clients_api"  # 2 test cases
+    "test_authorization_server_keys_api"  # 4 test cases
+    "test_authorization_server_policies_api"  # 14 test cases
+     "test_authorization_server_rules_api"  # 14 test cases
+     "test_authorization_server_scopes_api"  # 10 test cases
+     "test_behavior_api"  # 13 test cases
+     "test_brands_api"  # 12 test cases
+     "test_captcha_api"  # 17 test cases
+     "test_custom_domain_api"  # 12 test cases
+    "test_custom_pages_api"  # 38 test cases
+    "test_custom_templates_api"  # 28 test cases
+    "test_device_assurance_api"  # 5 test cases
+    "test_email_customization_api"  # 2 test cases
+     "test_email_domain_api"  # 12 test cases
+    #  "test_email_server_api"  # 11 test cases
     # "test_event_hook_api"  # 16 test cases
     # "test_feature_api"  # 10 test cases
     # "test_group_api"  # 22 test cases
@@ -281,9 +281,23 @@ run_phase_test() {
     echo "--- ✅ All tests completed (ran $TEST_COUNTER test suites) ---"
 
     # echo "=========================================="
-    # echo "--- Phase 2b: Generating coverage report ---"
+    # echo "--- Phase 2b: Running generated API coverage tests ---"
     # echo "=========================================="
-    
+    # 
+    # # Run generated API coverage tests to touch uncovered lines in constructors, getters/setters, null validation
+    # echo "--- Running coverage tests for generated API classes ---"
+    # mvn -U -pl api test -Dtest="*ApiCoverageTest" -DskipITs 2>&1 | tail -20
+    # COVERAGE_TEST_EXIT_CODE=$?
+    # if [ $COVERAGE_TEST_EXIT_CODE -eq 0 ]; then
+    #     echo "--- ✅ Generated API coverage tests passed ---"
+    # else
+    #     echo "--- ⚠️  Some generated API coverage tests had issues (non-blocking) ---"
+    # fi
+
+    # echo "=========================================="
+    # echo "--- Phase 2c: Generating coverage report ---"
+    # echo "=========================================="
+    # 
     # # The jacoco.exec file is accumulated during sequential test runs
     # # Now generate the HTML report from it
     # if [ -f "$BASE_DIR/api/target/jacoco.exec" ]; then

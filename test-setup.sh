@@ -41,21 +41,21 @@ echo "  Base URL: $OKTA_BASE_URL"
 echo "  API Token: ${OKTA_API_TOKEN:0:10}***"
 
 APIS=(
-    #"test_application_api"  # 13 test cases
+     "test_application_api"  # 13 test cases
     # "test_application_groups_api"  # 4 test cases
-    # "test_application_policies_api"  # 1 test cases working
+    #  "test_application_policies_api"  # 1 test cases working
     # "test_application_sso_api"  # 2 test cases
     # "test_application_users_api"  # 5 test cases
     # "test_authenticator_api"  # 23 test cases
-    # "test_authorization_server_api"  # 7 test cases working
-    # "test_authorization_server_assoc_api"  # 3 test cases working
+    #   "test_authorization_server_api"  # 7 test cases working
+    #  "test_authorization_server_assoc_api"  # 3 test cases working
     # "test_authorization_server_claims_api"  # 10 test cases
     # "test_authorization_server_clients_api"  # 2 test cases
-     "test_authorization_server_keys_api"  # 4 test cases
+    # "test_authorization_server_keys_api"  # 4 test cases
     # "test_authorization_server_policies_api"  # 14 test cases
     # "test_authorization_server_rules_api"  # 14 test cases
     # "test_authorization_server_scopes_api"  # 10 test cases
-    # "test_behavior_api"  # 13 test cases
+    #  "test_behavior_api"  # 13 test cases
     # "test_brands_api"  # 12 test cases
     # "test_captcha_api"  # 17 test cases
     # "test_custom_domain_api"  # 12 test cases
@@ -64,10 +64,10 @@ APIS=(
     # "test_device_assurance_api"  # 5 test cases
     # "test_email_customization_api"  # 2 test cases
     # "test_email_domain_api"  # 12 test cases
-    # "test_email_server_api"  # 11 test cases
-    # "test_event_hook_api"  # 16 test cases
-    # "test_feature_api"  # 10 test cases
-    # "test_group_api"  # 22 test cases
+    # # "test_email_server_api"  # 11 test cases
+    #  "test_event_hook_api"  # 16 test cases
+    #  "test_feature_api"  # 10 test cases
+    #  "test_group_api"  # 22 test cases
     # "test_group_owner_api"  # 7 test cases
     # "test_group_rule_api"  # 23 test cases
     # "test_identity_provider_api"  # 13 test cases
@@ -159,7 +159,11 @@ run_phase_setup() {
             continue
         fi
 
-        cd "$TF_DIR" || exit 1
+        if ! cd "$TF_DIR"; then
+            echo "--- ❌ Failed to cd to $TF_DIR ---"
+            GLOBAL_EXIT_CODE=1
+            continue
+        fi
         echo "--- 🧹 Cleaning Terraform cache for $API ---"
         rm -rf "$TF_DIR/.terraform"
         rm -f "$TF_DIR/.terraform.lock.hcl"
@@ -193,9 +197,13 @@ run_phase_setup() {
         else
             echo "--- ✅ Terraform setup complete for $API ---"
         fi
-        
+
         # Return to base directory for next iteration
-        cd "$BASE_DIR" || exit 1
+        if ! cd "$BASE_DIR"; then
+            echo "--- ❌ Failed to cd back to $BASE_DIR ---"
+            GLOBAL_EXIT_CODE=1
+            continue
+        fi
     done
 }
 
@@ -204,15 +212,46 @@ run_phase_test() {
     echo "=========================================="
     echo "--- Phase 2: Running tests in parallel ---"
     echo "=========================================="
-    
+
+    # Ensure we're in the correct directory where mvnw is located
+    cd "$BASE_DIR" || {
+        echo "--- ❌ Failed to cd to $BASE_DIR ---"
+        GLOBAL_EXIT_CODE=1
+        return
+    }
+
     # Clear Maven cache to avoid certificate issues
     echo "--- Clearing Maven local repository cache ---"
     find ~/.m2/repository -name "_remote.repositories" -delete 2>/dev/null || true
     find ~/.m2/repository -name "*.lastUpdated" -delete 2>/dev/null || true
-    
+
+    # IMPORTANT: Compile once before parallel tests to avoid race conditions
+    # Multiple parallel Maven processes triggering generate-sources will corrupt generated files
+    echo "--- 🏗️  Pre-compiling api module (including test classes) to avoid parallel code generation issues ---"
+
+    # Capture compilation output to temp file so we can show errors if it fails
+    COMPILE_LOG=$(mktemp)
+    ./mvnw clean test-compile -pl api > "$COMPILE_LOG" 2>&1
+    COMPILE_EXIT_CODE=$?
+
+    if [ $COMPILE_EXIT_CODE -ne 0 ]; then
+        echo "--- ❌ Pre-compilation failed (exit code: $COMPILE_EXIT_CODE), skipping test execution ---"
+        echo "--- Compilation error details: ---"
+        tail -50 "$COMPILE_LOG"
+        echo "--- End of compilation errors ---"
+        GLOBAL_EXIT_CODE=1
+        SKIP_TESTS=true
+    else
+        echo "--- ✅ Pre-compilation successful (source and test classes compiled) ---"
+        SKIP_TESTS=false
+    fi
+
+    rm -f "$COMPILE_LOG"
+
     TEST_COUNTER=0
 
-    for API in "${APIS[@]}"; do
+    if [ "$SKIP_TESTS" = "false" ]; then
+        for API in "${APIS[@]}"; do
         TF_DIR="$TERRAFORM_DIR/${API}"
 
         if [ ! -d "$TF_DIR" ]; then
@@ -220,10 +259,19 @@ run_phase_test() {
         fi
 
         # Get Terraform outputs BEFORE subshell so they can be exported properly
-        cd "$TF_DIR" || exit 1
-        TF_OUTPUTS_DATA=$(terraform output -json test_prerequisites 2>&1)
-        TF_EXIT_CODE=$?
-        cd "$BASE_DIR" || exit 1
+        if ! cd "$TF_DIR"; then
+            echo "--- ❌ Failed to cd to $TF_DIR ---"
+            TF_EXIT_CODE=1
+            TF_OUTPUTS_DATA="{}"
+        else
+            TF_OUTPUTS_DATA=$(terraform output -json test_prerequisites 2>&1)
+            TF_EXIT_CODE=$?
+        fi
+
+        if ! cd "$BASE_DIR"; then
+            echo "--- ❌ Failed to cd back to $BASE_DIR ---"
+            continue
+        fi
 
         (
             # Export in subshell so it's available to Maven subprocess
@@ -250,7 +298,9 @@ run_phase_test() {
             # Run the specific test class with all Okta variables exported and available to Maven subprocess
             # Tests run in parallel for faster execution
             # Only run tests in the api module where the generated tests are located
-            mvn -U -pl api test \
+            # NOTE: Using test goal but skipping compilation since we pre-compiled everything
+            ./mvnw -pl api test \
+               -Dmaven.compiler.skip=true \
                -Dtest="com.okta.sdk.resource.api.${API_CLASS}" \
                -Dokta.org.name="$OKTA_ORG_NAME" \
                -Dokta.base.url="$OKTA_BASE_URL" \
@@ -272,38 +322,55 @@ run_phase_test() {
             fi
         ) &
         
-        TEST_COUNTER=$((TEST_COUNTER + 1))
-    done
+            TEST_COUNTER=$((TEST_COUNTER + 1))
+        done
 
-    wait
+        wait
 
-    echo "--- ✅ All tests completed (ran $TEST_COUNTER test suites) ---"
+        echo "--- ✅ All tests completed (ran $TEST_COUNTER test suites) ---"
+    else
+        echo "--- ⚠️  Skipping parallel tests due to compilation failure ---"
+    fi
 
-    # echo "=========================================="
-    # echo "--- Phase 2b: Generating coverage report ---"
-    # echo "=========================================="
-
-    # if [ -f "$BASE_DIR/api/target/jacoco.exec" ]; then
-    #     echo "--- Found coverage data, generating report ---"
-
-    #     # Run verify phase on the full reactor to trigger report-aggregate with proper source linking
-    #     # The report-aggregate goal is bound to verify phase in coverage/pom.xml
-    #     # -Dmaven.test.skip=true skips tests (already ran in Phase 1)
-    #     # -Dmaven.javadoc.skip=true skips JavaDoc generation
-    #     # -Dmaven.failsafe.skip=true skips integration tests
-    #     echo "--- Generating aggregated coverage report ---"
-    #     mvn verify -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Dmaven.failsafe.skip=true > /dev/null 2>&1
-    #     COVERAGE_EXIT_CODE=$?
-    #     if [ $COVERAGE_EXIT_CODE -eq 0 ]; then
-    #         echo "--- ✅ Coverage report generated successfully ---"
-    #         echo "--- Coverage report available at: $BASE_DIR/coverage/target/site/jacoco-aggregate/index.html ---"
-    #     else
-    #         echo "--- ⚠️  Coverage report generation had issues (exit code: $COVERAGE_EXIT_CODE) ---"
-    #     fi
-    # else
-    #     echo "--- ⚠️  No coverage data found (jacoco.exec not found) ---"
-    #     echo "--- This may indicate tests were not executed or JaCoCo was not properly configured ---"
-    # fi
+    echo "=========================================="
+    echo "--- Phase 2b: Running generated API coverage tests ---"
+    echo "=========================================="
+    
+    # Run generated API coverage tests to touch uncovered lines in constructors, getters/setters, null validation
+    # NOTE: Using test goal but skipping compilation since we pre-compiled everything
+    ./mvnw -pl api test -Dmaven.compiler.skip=true -Dtest="*ApiCoverageTest" > /dev/null 2>&1
+    COVERAGE_TEST_EXIT_CODE=$?
+    if [ $COVERAGE_TEST_EXIT_CODE -eq 0 ]; then
+        echo "--- ✅ Generated API coverage tests passed ---"
+    else
+        echo "--- ⚠️  Some generated API coverage tests had issues (non-blocking) ---"
+    fi
+    
+    echo "=========================================="
+    echo "--- Phase 2c: Generating coverage report ---"
+    echo "=========================================="
+    
+    if [ -f "$BASE_DIR/api/target/jacoco.exec" ]; then
+        echo "--- Found coverage data, generating report ---"
+    
+        # Run verify phase on the full reactor to trigger report-aggregate with proper source linking
+        # The report-aggregate goal is bound to verify phase in coverage/pom.xml
+        # -Dmaven.test.skip=true skips tests (already ran in Phase 1)
+        # -Dmaven.javadoc.skip=true skips JavaDoc generation
+        # -Dmaven.failsafe.skip=true skips integration tests
+        echo "--- Generating aggregated coverage report ---"
+        ./mvnw verify -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Dmaven.failsafe.skip=true > /dev/null 2>&1
+        COVERAGE_EXIT_CODE=$?
+        if [ $COVERAGE_EXIT_CODE -eq 0 ]; then
+            echo "--- ✅ Coverage report generated successfully ---"
+            echo "--- Coverage report available at: $BASE_DIR/coverage/target/site/jacoco-aggregate/index.html ---"
+        else
+            echo "--- ⚠️  Coverage report generation had issues (exit code: $COVERAGE_EXIT_CODE) ---"
+        fi
+    else
+        echo "--- ⚠️  No coverage data found (jacoco.exec not found) ---"
+        echo "--- This may indicate tests were not executed or JaCoCo was not properly configured ---"
+    fi
 }
 
 # Phase 3: Cleanup Terraform
@@ -319,7 +386,11 @@ run_phase_destroy() {
             continue
         fi
 
-        cd "$TF_DIR" || exit 1
+        if ! cd "$TF_DIR"; then
+            echo "--- ❌ Failed to cd to $TF_DIR ---"
+            GLOBAL_EXIT_CODE=1
+            continue
+        fi
 
         echo "=========================================="
         echo "--- Cleaning up orphaned resources from state for $API ---"

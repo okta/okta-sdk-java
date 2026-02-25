@@ -66,9 +66,14 @@
                         <configuration>
                             <sourceEncoding>UTF-8</sourceEncoding>
                             <sourceDirectories>
+                                <!-- Main source directories -->
                                 <sourceDirectory>../api/target/generated-sources/openapi/src/gen/java/main</sourceDirectory>
                                 <sourceDirectory>../api/src/main/java</sourceDirectory>
                                 <sourceDirectory>../impl/src/main/java</sourceDirectory>
+                                <!-- Test source directories for coverage report navigation -->
+                                <sourceDirectory>../api/src/test/java</sourceDirectory>
+                                <sourceDirectory>../api/target/generated-sources/openapi/src/test/java</sourceDirectory>
+                                <sourceDirectory>../integration-tests/src/test/groovy</sourceDirectory>
                             </sourceDirectories>
                         </configuration>
                     </execution>
