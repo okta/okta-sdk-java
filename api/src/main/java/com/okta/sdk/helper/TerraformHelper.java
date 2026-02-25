@@ -361,6 +361,24 @@ public class TerraformHelper {
             }
         }
         
+        // 8. Special handling for File type parameters
+        if (extractedValue == null && "java.io.File".equals(targetClassName)) {
+            // Check if payload contains a file_path
+            Object payloadValue = prerequisiteData.get("payload");
+            if (payloadValue instanceof Map) {
+                Map<String, Object> payload = (Map<String, Object>) payloadValue;
+                Object filePath = payload.get("file_path");
+                if (filePath instanceof String) {
+                    try {
+                        java.nio.file.Path path = java.nio.file.Paths.get((String) filePath);
+                        extractedValue = path.toFile();
+                    } catch (Exception e) {
+                        // If file reading fails, fall back to default value
+                    }
+                }
+            }
+        }
+        
         return extractedValue != null ? extractedValue : defaultValue;
     }
 
