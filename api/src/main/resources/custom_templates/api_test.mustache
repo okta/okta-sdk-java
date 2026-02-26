@@ -1,0 +1,123 @@
+package {{package}};
+
+import {{invokerPackage}}.ApiException;
+import {{modelPackage}}.*;
+import com.okta.sdk.helper.PresetHelper;
+import com.okta.sdk.helper.TerraformHelper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+
+{{#imports}}
+import {{import}};
+{{/imports}}
+
+import java.util.*;
+
+/**
+ * Auto-generated unit tests for {{classname}} operations
+ * 
+ * NOTE: This test class requires Terraform-generated prerequisite data to run.
+ * Tests will fail if the TF_OUTPUTS environment variable is not set with the
+ * required test prerequisite data.
+ */
+public class {{classname}}Test {
+
+    private {{classname}} apiClient;
+    private PresetHelper presetHelper;
+    private TerraformHelper terraformHelper;
+
+    @BeforeEach
+    public void setUp() {
+        presetHelper = new PresetHelper();
+        terraformHelper = new TerraformHelper();
+        apiClient = new {{classname}}(presetHelper.getApiClient());
+    }
+
+{{#operations}}
+{{#operation}}
+    /**
+     * Test case for {{operationId}} operation.
+     * 
+     * This test executes the actual API method with parameters extracted from 
+     * prerequisite data created by Terraform. It validates HTTP response codes.
+     * 
+     * Method name: test_{{operationId}}
+     */
+    @Test
+    @DisplayName("Test {{operationId}} operation")
+    @SuppressWarnings("unchecked")
+    public void test_{{operationId}}() throws Exception {
+        // Load prerequisite data from Terraform
+        Map<String, Object> prerequisiteData = terraformHelper.getPrerequisiteDataForTest("test_{{operationId}}");
+        
+        // Fail if no prerequisite data found - tests require Terraform data
+        if (prerequisiteData.isEmpty()) {
+            throw new AssertionError("No prerequisite data found in Terraform output for test: test_{{operationId}}");
+        }
+
+        // Execute the API method with parameters extracted from prerequisiteData
+        try {
+            {{#returnType}}
+            {{{returnType}}} response = apiClient.{{operationId}}(
+                {{#allParams}}
+                {{#isBodyParam}}extractParameterWithType(prerequisiteData, "{{paramName}}", null, "{{datatype}}", "{{paramName}}"){{/isBodyParam}}{{^isBodyParam}}extractParameter(prerequisiteData, "{{paramName}}", null){{/isBodyParam}}{{^-last}}, {{/-last}}
+                {{/allParams}}
+            );
+
+            // Verify response is not null
+            if (response == null) {
+                throw new AssertionError("Response should not be null for {{operationId}}");
+            }
+            {{/returnType}}
+            {{^returnType}}
+            apiClient.{{operationId}}(
+                {{#allParams}}
+                {{#isBodyParam}}extractParameterWithType(prerequisiteData, "{{paramName}}", null, "{{datatype}}", "{{paramName}}"){{/isBodyParam}}{{^isBodyParam}}extractParameter(prerequisiteData, "{{paramName}}", null){{/isBodyParam}}{{^-last}}, {{/-last}}
+                {{/allParams}}
+            );
+            {{/returnType}}
+        } catch (ApiException e) {
+            // Verify the HTTP response status code is valid (200, 201, 202, 204)
+            int code = e.getCode();
+            if (!(code == 200 || code == 201 || code == 202 || code == 204)) {
+                throw new AssertionError("API returned unexpected status code: " + code);
+            }
+        }
+    }
+
+{{/operation}}
+{{/operations}}
+
+    /**
+     * Helper method to extract a parameter from prerequisite data.
+     * Delegates to TerraformHelper.extractParameter for smart field name resolution.
+     * 
+     * @param prerequisiteData Map containing Terraform prerequisite data
+     * @param paramName Name of the parameter to extract
+     * @param defaultValue Default value if parameter is not found
+     * @return The extracted parameter value or default value
+     */
+    @SuppressWarnings("unchecked")
+    private <T> T extractParameter(Map<String, Object> prerequisiteData, String paramName, T defaultValue) {
+        Object value = TerraformHelper.extractParameter(prerequisiteData, paramName, defaultValue);
+        return (T) value;
+    }
+
+    /**
+     * Helper method to extract a parameter with a specific target class for deserialization.
+     * This is useful when a parameter can be multiple model types (e.g., Group vs AddGroupRequest).
+     *
+     * @param prerequisiteData Map containing Terraform prerequisite data
+     * @param paramName Name of the parameter to extract
+     * @param defaultValue Default value if parameter is not found
+     * @param targetClassName Fully qualified class name for deserialization
+     * @param typeHint Parameter name hint for intelligent type inference
+     * @return The extracted parameter value deserialized to the target class, or default value
+     */
+    @SuppressWarnings("unchecked")
+    private <T> T extractParameterWithType(Map<String, Object> prerequisiteData, String paramName, T defaultValue, String targetClassName, String typeHint) {
+        Object value = TerraformHelper.extractParameter(prerequisiteData, paramName, defaultValue, targetClassName, typeHint);
+        return (T) value;
+    }
+}
