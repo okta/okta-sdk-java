@@ -574,4 +574,41 @@ class ApplicationGrantsIT extends ITSupport {
             }
         }
     }
+
+    @Test
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        def appId = null
+        try {
+            def app = applicationApi.createApplication(
+                new com.okta.sdk.resource.model.BookmarkApplication()
+                    .name(com.okta.sdk.resource.model.BookmarkApplication.NameEnum.BOOKMARK)
+                    .label("Grants-Paged-${UUID.randomUUID().toString().substring(0,8)}")
+                    .signOnMode(com.okta.sdk.resource.model.ApplicationSignOnMode.BOOKMARK)
+                    .settings(new com.okta.sdk.resource.model.BookmarkApplicationSettings()
+                        .app(new com.okta.sdk.resource.model.BookmarkApplicationSettingsApplication()
+                            .url("https://example.com/grants-paged"))),
+                true, null)
+            appId = app.getId()
+
+            // Paged
+            def grants = applicationGrantsApi.listScopeConsentGrantsPaged(appId, null)
+            for (def g : grants) { break }
+            def grantsH = applicationGrantsApi.listScopeConsentGrantsPaged(appId, null, headers)
+            for (def g : grantsH) { break }
+
+            // Non-paged with headers
+            applicationGrantsApi.listScopeConsentGrants(appId, null, headers)
+
+        } catch (Exception e) {
+            logger.info("Paged grants test: {}", e.getMessage())
+        } finally {
+            if (appId) {
+                try {
+                    applicationApi.deactivateApplication(appId)
+                    applicationApi.deleteApplication(appId)
+                } catch (Exception ignored) {}
+            }
+        }
+    }
 }

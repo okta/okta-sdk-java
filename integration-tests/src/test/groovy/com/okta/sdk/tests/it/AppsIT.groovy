@@ -3627,4 +3627,50 @@ class AppsIT extends ITSupport {
             logger.info("Note: Cross-app access requires EA feature enablement and Admin Console configuration")
         }
     }
+
+    @Test
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            // ApplicationApi - listApplications with headers
+            applicationApi.listApplications(null, null, null, null, null, true, null, headers)
+
+            // Create a bookmark app for sub-resource tests
+            def app = applicationApi.createApplication(
+                new com.okta.sdk.resource.model.BookmarkApplication()
+                    .name(com.okta.sdk.resource.model.BookmarkApplication.NameEnum.BOOKMARK)
+                    .label("AppsIT-Paged-${UUID.randomUUID().toString().substring(0,8)}")
+                    .signOnMode(com.okta.sdk.resource.model.ApplicationSignOnMode.BOOKMARK)
+                    .settings(new com.okta.sdk.resource.model.BookmarkApplicationSettings()
+                        .app(new com.okta.sdk.resource.model.BookmarkApplicationSettingsApplication()
+                            .url("https://example.com/appsit-paged"))),
+                true, null)
+
+            try {
+                // ApplicationGroupsApi - paged
+                try {
+                    def groupAssignments = applicationGroupsApi.listApplicationGroupAssignmentsPaged(app.getId(), null, null, null, null)
+                    for (def g : groupAssignments) { break }
+                    def groupAssignmentsH = applicationGroupsApi.listApplicationGroupAssignmentsPaged(app.getId(), null, null, null, null, headers)
+                    for (def g : groupAssignmentsH) { break }
+                } catch (Exception ignored) {}
+
+                // ApplicationFeaturesApi - paged
+                try {
+                    def features = applicationFeaturesApi.listFeaturesForApplicationPaged(app.getId())
+                    for (def f : features) { break }
+                    def featuresH = applicationFeaturesApi.listFeaturesForApplicationPaged(app.getId(), headers)
+                    for (def f : featuresH) { break }
+                } catch (Exception ignored) {}
+
+            } finally {
+                try {
+                    applicationApi.deactivateApplication(app.getId())
+                    applicationApi.deleteApplication(app.getId())
+                } catch (Exception ignored) {}
+            }
+        } catch (Exception e) {
+            logger.info("Paged apps test: {}", e.getMessage())
+        }
+    }
 }

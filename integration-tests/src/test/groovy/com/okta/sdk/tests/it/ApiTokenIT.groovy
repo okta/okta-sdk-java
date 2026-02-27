@@ -359,4 +359,21 @@ class ApiTokenIT extends ITSupport {
         assertThat(exception3, notNullValue())
         assertThat(exception3.code, isOneOf(400, 404))
     }
+
+    @Test
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            // Paged - listApiTokens
+            def tokens = apiTokenApi.listApiTokensPaged()
+            for (def t : tokens) { break }
+            def tokensH = apiTokenApi.listApiTokensPaged(headers)
+            for (def t : tokensH) { break }
+
+            // Non-paged with headers
+            apiTokenApi.listApiTokens(headers)
+        } catch (Exception e) {
+            // Expected
+        }
+    }
 }

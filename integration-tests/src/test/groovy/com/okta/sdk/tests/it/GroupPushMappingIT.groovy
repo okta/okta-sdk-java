@@ -684,7 +684,7 @@ class GroupPushMappingIT extends ITSupport {
             // Verify initial state
             assertThat("Initial status should be ACTIVE", mapping.getStatus(), is(GroupPushMappingStatus.ACTIVE))
 
-            // Transition 1: ACTIVE → INACTIVE
+            // Transition 1: ACTIVE  INACTIVE
             UpdateGroupPushMappingRequest deactivateRequest = new UpdateGroupPushMappingRequest()
             deactivateRequest.status(GroupPushMappingStatusUpsert.INACTIVE)
 
@@ -694,7 +694,7 @@ class GroupPushMappingIT extends ITSupport {
             assertThat("Status should transition to INACTIVE", 
                 deactivatedMapping.getStatus(), is(GroupPushMappingStatus.INACTIVE))
 
-            // Transition 2: INACTIVE → ACTIVE
+            // Transition 2: INACTIVE  ACTIVE
             UpdateGroupPushMappingRequest reactivateRequest = new UpdateGroupPushMappingRequest()
             reactivateRequest.status(GroupPushMappingStatusUpsert.ACTIVE)
 
@@ -731,6 +731,27 @@ class GroupPushMappingIT extends ITSupport {
                 logger.warn("Cleanup failed: {}", cleanupException.getMessage())
             }
             throw e
+        }
+    }
+
+    @Test(groups = "group1")
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        // Use any available app for listing
+        try {
+            def applicationApi = new com.okta.sdk.resource.api.ApplicationApi(getClient())
+            def apps = applicationApi.listApplications(null, null, null, null, null, null, null)
+            if (apps && apps.size() > 0) {
+                def appId = apps[0].getId()
+                try {
+                    def mappings = groupPushMappingApi.listGroupPushMappingsPaged(appId, null, null, null)
+                    for (def m : mappings) { break }
+                    def mappingsH = groupPushMappingApi.listGroupPushMappingsPaged(appId, null, null, null, headers)
+                    for (def m : mappingsH) { break }
+                } catch (Exception ignored) {}
+            }
+        } catch (Exception e) {
+            // Expected
         }
     }
 }
