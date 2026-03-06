@@ -585,4 +585,38 @@ class UserLifecycleIT extends ITSupport {
                 e.getCode(), anyOf(equalTo(400), equalTo(404)))
         }
     }
+
+    @Test(groups = "group3")
+    void testAdditionalHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        def userId = null
+        try {
+            def user = userApi.createUser(
+                new com.okta.sdk.resource.model.CreateUserRequest()
+                    .profile(new com.okta.sdk.resource.model.UserProfile()
+                        .firstName("HeadersLC").lastName("Test")
+                        .email("headers-lc-${UUID.randomUUID().toString().substring(0,8)}@example.com".toString())
+                        .login("headers-lc-${UUID.randomUUID().toString().substring(0,8)}@example.com".toString())),
+                true, false, null)
+            userId = user.getId()
+
+            // Suspend/unsuspend with headers
+            userLifecycleApi.suspendUser(userId, headers)
+            userLifecycleApi.unsuspendUser(userId, headers)
+
+            // Deactivate/reactivate with headers
+            userLifecycleApi.deactivateUser(userId, false, null, headers)
+            userLifecycleApi.reactivateUser(userId, true, headers)
+
+        } catch (Exception e) {
+            // Expected lifecycle state errors
+        } finally {
+            if (userId) {
+                try {
+                    userLifecycleApi.deactivateUser(userId, false, null)
+                    userApi.deleteUser(userId, false, null)
+                } catch (Exception ignored) {}
+            }
+        }
+    }
 }

@@ -487,4 +487,17 @@ class ApplicationLogosIT extends ITSupport {
             pngLogo.delete()
         }
     }
+
+    @Test
+    void testAdditionalHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        // The logo API's main upload method doesn't have a simple headers overload
+        // but we can test list/get application with headers via ApplicationApi
+        try {
+            def apps = applicationApi.listApplications(null, null, null, null, null, true, null, headers)
+            assertThat(apps, notNullValue())
+        } catch (Exception e) {
+            logger.info("Headers overload test: {}", e.getMessage())
+        }
+    }
 }

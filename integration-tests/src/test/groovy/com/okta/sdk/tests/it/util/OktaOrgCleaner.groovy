@@ -49,24 +49,35 @@ class OktaOrgCleaner {
 
         UserApi userApi = new UserApi(client)
 
-        log.info("Deleting Active Users:")
-        userApi.listUsers(null, null, null, null,'status eq \"ACTIVE\"', null, null, null, null, null)
+        // Collect all users with @example.com email in any non-DEPROVISIONED state,
+        // plus all DEPROVISIONED users, for cleanup.
+        log.info("Deleting test users (STAGED, ACTIVE, LOCKED_OUT, RECOVERY, SUSPENDED, etc.):")
+        userApi.listUsers(null, null, null, null, null, null, null, null, null, null)
             .stream()
             .filter { it.getProfile().getEmail().endsWith("@example.com") }
+            .filter { it.getStatus().name() != "DEPROVISIONED" }
             .forEach {
-                log.info("\t ${it.getProfile().getEmail()}")
-                // deactivate
-                userApi.deleteUser(it.getId(), false, null)
-                // delete
-                // second delete API call is required
-                // see https://developer.okta.com/docs/api/openapi/okta-management/management/tag/User/#tag/User/operation/deleteUser
-                userApi.deleteUser(it.getId(), false, null)
+                log.info("\t ${it.getProfile().getEmail()} [${it.getStatus()}]")
+                try {
+                    // First call deactivates (works for STAGED, ACTIVE, and all other states),
+                    // second call permanently deletes.
+                    // See https://developer.okta.com/docs/api/openapi/okta-management/management/tag/User/#tag/User/operation/deleteUser
+                    userApi.deleteUser(it.getId(), false, null)
+                    userApi.deleteUser(it.getId(), false, null)
+                } catch (Exception e) {
+                    log.warn("Failed to delete user ${it.getProfile().getEmail()}: ${e.getMessage()}")
+                }
             }
 
+        log.info("Deleting already-DEPROVISIONED users:")
         userApi.listUsers(null, null, null, null, 'status eq \"DEPROVISIONED\"', null, null, null, null, null)
             .forEach {
-                log.info("Deleting deactivated user: ${it.getProfile().getEmail()}")
-                userApi.deleteUser(it.getId(), false, null)
+                log.info("\tDeleting deprovisioned user: ${it.getProfile().getEmail()}")
+                try {
+                    userApi.deleteUser(it.getId(), false, null)
+                } catch (Exception e) {
+                    log.warn("Failed to permanently delete deprovisioned user ${it.getProfile().getEmail()}: ${e.getMessage()}")
+                }
             }
 
         ApplicationApi applicationApi = new ApplicationApi(client)

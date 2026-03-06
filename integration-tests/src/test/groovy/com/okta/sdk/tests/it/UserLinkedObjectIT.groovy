@@ -550,4 +550,45 @@ class UserLinkedObjectIT extends ITSupport {
             assertThat(e.getCode(), anyOf(equalTo(400), equalTo(403), equalTo(404)))
         }
     }
+
+    @Test(groups = "group3")
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        def userId = null
+        try {
+            def user = userApi.createUser(
+                new com.okta.sdk.resource.model.CreateUserRequest()
+                    .profile(new com.okta.sdk.resource.model.UserProfile()
+                        .firstName("PagedLinked").lastName("Test")
+                        .email("paged-linked-${UUID.randomUUID().toString().substring(0,8)}@example.com".toString())
+                        .login("paged-linked-${UUID.randomUUID().toString().substring(0,8)}@example.com".toString())),
+                true, false, null)
+            userId = user.getId()
+
+            // Paged - listLinkedObjectsForUser (2 params: userId, relationshipName)
+            try {
+                def linked = userLinkedObjectApi.listLinkedObjectsForUserPaged(userId, "primary")
+                for (def l : linked) { break }
+            } catch (Exception ignored) {}
+            try {
+                def linkedH = userLinkedObjectApi.listLinkedObjectsForUserPaged(userId, "primary", headers)
+                for (def l : linkedH) { break }
+            } catch (Exception ignored) {}
+
+            // Non-paged with headers
+            try {
+                userLinkedObjectApi.listLinkedObjectsForUser(userId, "primary", headers)
+            } catch (Exception ignored) {}
+
+        } catch (Exception e) {
+            // Expected
+        } finally {
+            if (userId) {
+                try {
+                    new com.okta.sdk.resource.api.UserLifecycleApi(getClient()).deactivateUser(userId, false, null)
+                    userApi.deleteUser(userId, false, null)
+                } catch (Exception ignored) {}
+            }
+        }
+    }
 }

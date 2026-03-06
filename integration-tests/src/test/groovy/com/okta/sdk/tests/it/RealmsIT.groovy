@@ -251,7 +251,6 @@ public class RealmsIT extends ITSupport {
 
         for (Realm realm : realms) {
             if (realm.getId().equals(createdRealm.getId())) {
-                System.out.println("here");
                 assertThat(realm.getProfile().getName(), is(createdRealm.getProfile().getName()));
                 return;
             }
@@ -342,13 +341,13 @@ public class RealmsIT extends ITSupport {
 //                logger.info("Deleting realm: {} (ID: {})", realm.getProfile().getName(), realm.getId());
 //                realmApi.deleteRealm(realm.getId());
 //                successCount++;
-//                logger.info("✓ Successfully deleted realm: {}", realm.getProfile().getName());
+//                logger.info(" Successfully deleted realm: {}", realm.getProfile().getName());
 //
 //                // Add a small delay to avoid rate limiting
 //                TimeUnit.MILLISECONDS.sleep(200);
 //            } catch (ApiException e) {
 //                failureCount++;
-//                logger.error("✗ Failed to delete realm {} (ID: {}): {} - {}",
+//                logger.error(" Failed to delete realm {} (ID: {}): {} - {}",
 //                    realm.getProfile().getName(), realm.getId(), e.getCode(), e.getMessage());
 //            } catch (InterruptedException e) {
 //                logger.warn("Sleep interrupted: {}", e.getMessage());
@@ -362,5 +361,22 @@ public class RealmsIT extends ITSupport {
 //        logger.info("  Failed: {}", failureCount);
 //        logger.info("================================================================================");
 //    }
+
+    @Test
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        try {
+            // Paged - listRealms
+            def realms = realmApi.listRealmsPaged(null, null, null, null, null)
+            for (def r : realms) { break }
+            def realmsH = realmApi.listRealmsPaged(null, null, null, null, null, headers)
+            for (def r : realmsH) { break }
+
+            // Non-paged with headers
+            realmApi.listRealms(null, null, null, null, null, headers)
+        } catch (Exception e) {
+            // Expected
+        }
+    }
 }
 

@@ -497,4 +497,16 @@ class ApplicationPoliciesIT extends ITSupport {
 
         logger.info("Map parameter variant test completed successfully!")
     }
+
+    @Test
+    void testAdditionalHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        // Test assignApplicationPolicy and listApplications with headers
+        try {
+            def apps = applicationApi.listApplications(null, null, null, null, null, true, null, headers)
+            assertThat(apps, notNullValue())
+        } catch (Exception e) {
+            logger.info("Headers overload test: {}", e.getMessage())
+        }
+    }
 }

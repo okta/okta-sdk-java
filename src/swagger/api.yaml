@@ -11508,7 +11508,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EmailServerListResponse'
+                $ref: '#/components/schemas/EmailServerResponse'
         '403':
           $ref: '#/components/responses/ErrorAccessDenied403'
         '404':
@@ -60328,6 +60328,8 @@ components:
       description: Specifies conditions that must be met during policy evaluation to apply the rule. All policy conditions and conditions for at least one rule must be met to apply the settings specified in the policy and the associated rule.
       type: object
       properties:
+        app:
+          $ref: '#/components/schemas/AppAndInstancePolicyRuleCondition'
         network:
           $ref: '#/components/schemas/PolicyNetworkCondition'
         people:
@@ -64672,12 +64674,9 @@ components:
                 defaultContent:
                   $ref: '#/components/schemas/HrefObject'
     EmailServerListResponse:
-      type: object
-      properties:
-        email-servers:
-          type: array
-          items:
-            $ref: '#/components/schemas/EmailServerResponse'
+      type: array
+      items:
+        $ref: '#/components/schemas/EmailServerResponse'
     EmailServerPost:
       allOf:
         - $ref: '#/components/schemas/EmailServerRequest'
@@ -64850,9 +64849,13 @@ components:
               description: The list of geolocations to include or exclude for an Enhanced Dynamic Network Zone
               properties:
                 include:
-                  $ref: '#/components/schemas/NetworkZoneLocationArray'
+                  allOf:
+                    - $ref: '#/components/schemas/NetworkZoneLocationArray'
+                    - description: An array of geolocations to include for an Enhanced Dynamic Network Zone
                 exclude:
-                  $ref: '#/components/schemas/NetworkZoneLocationArray'
+                  allOf:
+                    - $ref: '#/components/schemas/NetworkZoneLocationArray'
+                    - description: An array of geolocations to exclude for an Enhanced Dynamic Network Zone
             ipServiceCategories:
               x-okta-lifecycle:
                 lifecycle: GA
@@ -70091,6 +70094,11 @@ components:
         isGenerallyAvailable: true
       type: object
       properties:
+        alg:
+          type: string
+          description: Algorithm used in the key
+          example: RSA-OAEP
+          nullable: false
         e:
           type: string
           description: RSA key value (exponent) for key binding
@@ -70273,13 +70281,6 @@ components:
         - $ref: '#/components/schemas/OAuth2ClientJsonSigningKeyRequest'
         - type: object
       properties:
-        kty:
-          type: string
-          description: Cryptographic algorithm family for the certificate's key pair
-          example: RSA
-          nullable: false
-          enum:
-            - EC
         x:
           type: string
           description: The public x coordinate for the elliptic curve point
@@ -70421,13 +70422,6 @@ components:
           description: RSA key value (exponent) for key binding
           example: AQAB
           nullable: false
-        kty:
-          type: string
-          description: Cryptographic algorithm family for the certificate's key pair
-          example: RSA
-          nullable: false
-          enum:
-            - RSA
         n:
           type: string
           description: RSA key value (modulus) for key binding

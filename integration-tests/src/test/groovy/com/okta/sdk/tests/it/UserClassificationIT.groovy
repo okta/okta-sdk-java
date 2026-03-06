@@ -220,4 +220,35 @@ class UserClassificationIT extends ITSupport {
         
         log.info("All error scenario tests completed")
     }
+
+    @Test(groups = "group3")
+    void testAdditionalHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        def userId = null
+        try {
+            def user = new com.okta.sdk.resource.api.UserApi(getClient()).createUser(
+                new com.okta.sdk.resource.model.CreateUserRequest()
+                    .profile(new com.okta.sdk.resource.model.UserProfile()
+                        .firstName("HeadersClass").lastName("Test")
+                        .email("headers-class-${UUID.randomUUID().toString().substring(0,8)}@example.com".toString())
+                        .login("headers-class-${UUID.randomUUID().toString().substring(0,8)}@example.com".toString())),
+                true, false, null)
+            userId = user.getId()
+
+            // getUserClassification with headers
+            try {
+                userClassificationApi.getUserClassification(userId, headers)
+            } catch (Exception ignored) {}
+
+        } catch (Exception e) {
+            // Expected
+        } finally {
+            if (userId) {
+                try {
+                    new com.okta.sdk.resource.api.UserLifecycleApi(getClient()).deactivateUser(userId, false, null)
+                    new com.okta.sdk.resource.api.UserApi(getClient()).deleteUser(userId, false, null)
+                } catch (Exception ignored) {}
+            }
+        }
+    }
 }

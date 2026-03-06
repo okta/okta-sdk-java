@@ -1436,18 +1436,18 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
                                                                                             if (!method.equals(HttpMethod.GET.name())) {
                                                                                             // Wrap cache operations in try-catch to prevent interference with API exceptions
                                                                                             try {
-                                                                                                System.out.println("DEBUG: Invalidating cache for " + method + " " + cacheKey);
-                                                                                                System.out.println("DEBUG: Path: " + path);
-                                                                                                System.out.println("DEBUG: Current cache: " + cache.getClass().getName());
+                                                                                                log.debug("Invalidating cache for {} {}", method, cacheKey);
+                                                                                                log.debug("Path: {}", path);
+                                                                                                log.debug("Current cache: {}", cache.getClass().getName());
                                                                                                 
                                                                                                 // Remove from current cache (based on returnType)
                                                                                                 cache.remove(cacheKey);
-                                                                                                System.out.println("DEBUG: Removed from current cache");
+                                                                                                log.debug("Removed from current cache");
                                                                                                 
                                                                                                 // Also remove from default cache in case it was cached there
                                                                                                 if (cache != defaultCache) {
                                                                                                     defaultCache.remove(cacheKey);
-                                                                                                    System.out.println("DEBUG: Removed from default cache");
+                                                                                                    log.debug("Removed from default cache");
                                                                                                 }
                                                                                                 
                                                                                                 // For DELETE/PUT/POST, the returnType might be void/null, so cache = defaultCache

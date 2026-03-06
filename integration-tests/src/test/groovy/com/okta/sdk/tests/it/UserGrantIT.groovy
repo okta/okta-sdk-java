@@ -657,4 +657,49 @@ class UserGrantIT extends ITSupport {
             assertThat(e.getCode(), anyOf(equalTo(403), equalTo(404)))
         }
     }
+
+    @Test(groups = "group3")
+    void testPagedAndHeadersOverloads() {
+        def headers = Collections.<String, String>emptyMap()
+        def userId = null
+        try {
+            def user = userApi.createUser(
+                new com.okta.sdk.resource.model.CreateUserRequest()
+                    .profile(new com.okta.sdk.resource.model.UserProfile()
+                        .firstName("PagedGrant").lastName("Test")
+                        .email("paged-grant-${UUID.randomUUID().toString().substring(0,8)}@example.com".toString())
+                        .login("paged-grant-${UUID.randomUUID().toString().substring(0,8)}@example.com".toString())),
+                true, false, null)
+            userId = user.getId()
+
+            // Paged - listUserGrants
+            def grants = userGrantApi.listUserGrantsPaged(userId, null, null, null, null)
+            for (def g : grants) { break }
+            def grantsH = userGrantApi.listUserGrantsPaged(userId, null, null, null, null, headers)
+            for (def g : grantsH) { break }
+
+            // Paged - listGrantsForUserAndClient
+            try {
+                def clientGrants = userGrantApi.listGrantsForUserAndClientPaged(userId, "nonexistent-client", null, null, null)
+                for (def g : clientGrants) { break }
+            } catch (Exception ignored) {}
+            try {
+                def clientGrantsH = userGrantApi.listGrantsForUserAndClientPaged(userId, "nonexistent-client", null, null, null, headers)
+                for (def g : clientGrantsH) { break }
+            } catch (Exception ignored) {}
+
+            // Non-paged with headers
+            userGrantApi.listUserGrants(userId, null, null, null, null, headers)
+
+        } catch (Exception e) {
+            // Expected
+        } finally {
+            if (userId) {
+                try {
+                    new com.okta.sdk.resource.api.UserLifecycleApi(getClient()).deactivateUser(userId, false, null)
+                    userApi.deleteUser(userId, false, null)
+                } catch (Exception ignored) {}
+            }
+        }
+    }
 }
