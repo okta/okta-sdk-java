@@ -60195,32 +60195,39 @@ components:
       type: object
       properties:
         createdBy:
+          description: The Okta user ID of the user who created the principle rate limit entity
           type: string
           readOnly: true
         createdDate:
+          description: The date and time the principle rate limit entity was created
           type: string
           format: date-time
           readOnly: true
         defaultConcurrencyPercentage:
+          description: The default percentage of a given concurrency limit threshold that the owning principal can consume
           type: integer
-          readOnly: true
         defaultPercentage:
+          description: The default percentage of a given rate limit threshold that the owning principal can consume
           type: integer
-          readOnly: true
         id:
+          description: The unique identifier of the principle rate limit entity
           type: string
           readOnly: true
         lastUpdate:
+          description: The date and time the principle rate limit entity was last updated
           type: string
           format: date-time
           readOnly: true
         lastUpdatedBy:
+          description: The Okta user ID of the user who last updated the principle rate limit entity
           type: string
           readOnly: true
         orgId:
+          description: The unique identifier of the Okta org
           type: string
           readOnly: true
         principalId:
+          description: The unique identifier of the principal. This is the ID of the API token or OAuth 2.0 app.
           type: string
         principalType:
           $ref: '#/components/schemas/PrincipalType'
@@ -60228,8 +60235,10 @@ components:
         - principalId
         - principalType
     PrincipalType:
+      description: The type of principal, either an API token or an OAuth 2.0 app
       type: string
       enum:
+        - OAUTH_CLIENT
         - SSWS_TOKEN
     PrivilegedAccount:
       type: object
