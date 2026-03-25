@@ -61,19 +61,20 @@ public class {{classname}}Test {
             {{#returnType}}
             {{{returnType}}} response = apiClient.{{operationId}}(
                 {{#allParams}}
-                {{#isBodyParam}}extractParameterWithType(prerequisiteData, "{{paramName}}", null, "{{datatype}}", "{{paramName}}"){{/isBodyParam}}{{^isBodyParam}}extractParameter(prerequisiteData, "{{paramName}}", null){{/isBodyParam}}{{^-last}}, {{/-last}}
+                {{#isBodyParam}}extractParameterWithType(prerequisiteData, "{{paramName}}", null, "{{#isArray}}LIST:{{items.datatype}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}", "{{paramName}}"){{/isBodyParam}}{{^isBodyParam}}extractParameter(prerequisiteData, "{{paramName}}", null){{/isBodyParam}}{{^-last}}, {{/-last}}
                 {{/allParams}}
             );
 
-            // Verify response is not null
+            // Verify response is not null and properly deserialized
             if (response == null) {
-                throw new AssertionError("Response should not be null for {{operationId}}");
+                throw new AssertionError("Response should not be null for {{operationId}}. " +
+                    "This may indicate a deserialization failure. Check that prerequisite data structure matches expected API model.");
             }
             {{/returnType}}
             {{^returnType}}
             apiClient.{{operationId}}(
                 {{#allParams}}
-                {{#isBodyParam}}extractParameterWithType(prerequisiteData, "{{paramName}}", null, "{{datatype}}", "{{paramName}}"){{/isBodyParam}}{{^isBodyParam}}extractParameter(prerequisiteData, "{{paramName}}", null){{/isBodyParam}}{{^-last}}, {{/-last}}
+                {{#isBodyParam}}extractParameterWithType(prerequisiteData, "{{paramName}}", null, "{{#isArray}}LIST:{{items.datatype}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}", "{{paramName}}"){{/isBodyParam}}{{^isBodyParam}}extractParameter(prerequisiteData, "{{paramName}}", null){{/isBodyParam}}{{^-last}}, {{/-last}}
                 {{/allParams}}
             );
             {{/returnType}}
@@ -81,7 +82,9 @@ public class {{classname}}Test {
             // Verify the HTTP response status code is valid (200, 201, 202, 204)
             int code = e.getCode();
             if (!(code == 200 || code == 201 || code == 202 || code == 204)) {
-                throw new AssertionError("API returned unexpected status code: " + code);
+                System.err.println("API Error: " + e.getMessage());
+                System.err.println("Response Body: " + e.getResponseBody());
+                throw new AssertionError("API returned unexpected status code: " + code + ". Error: " + e.getMessage());
             }
         }
     }
