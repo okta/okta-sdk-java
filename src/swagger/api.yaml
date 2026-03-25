@@ -60328,6 +60328,8 @@ components:
       description: Specifies conditions that must be met during policy evaluation to apply the rule. All policy conditions and conditions for at least one rule must be met to apply the settings specified in the policy and the associated rule.
       type: object
       properties:
+        app:
+          $ref: '#/components/schemas/AppAndInstancePolicyRuleCondition'
         network:
           $ref: '#/components/schemas/PolicyNetworkCondition'
         people:
@@ -64847,9 +64849,13 @@ components:
               description: The list of geolocations to include or exclude for an Enhanced Dynamic Network Zone
               properties:
                 include:
+                  allOf:
                     - $ref: '#/components/schemas/NetworkZoneLocationArray'
+                    - description: An array of geolocations to include for an Enhanced Dynamic Network Zone
                 exclude:
+                  allOf:
                     - $ref: '#/components/schemas/NetworkZoneLocationArray'
+                    - description: An array of geolocations to exclude for an Enhanced Dynamic Network Zone
             ipServiceCategories:
               x-okta-lifecycle:
                 lifecycle: GA
@@ -70088,6 +70094,11 @@ components:
         isGenerallyAvailable: true
       type: object
       properties:
+        alg:
+          type: string
+          description: Algorithm used in the key
+          example: RSA-OAEP
+          nullable: false
         e:
           type: string
           description: RSA key value (exponent) for key binding
@@ -70184,15 +70195,15 @@ components:
           nullable: false
           enum:
             - sig
-        discriminator:
-          propertyName: kty
-          mapping:
-            RSA: '#/components/schemas/OAuth2ClientJsonWebKeyRsaRequest'
-            EC: '#/components/schemas/OAuth2ClientJsonWebKeyECRequest'
-        required:
-          - kty
-          - alg
-          - use
+      discriminator:
+        propertyName: kty
+        mapping:
+          RSA: '#/components/schemas/OAuth2ClientJsonWebKeyRsaRequest'
+          EC: '#/components/schemas/OAuth2ClientJsonWebKeyECRequest'
+      required:
+        - kty
+        - alg
+        - use
     OAuth2ClientJsonSigningKeyResponse:
       title: Signing Key
       description: A [JSON Web Key (JWK)](https://tools.ietf.org/html/rfc7517) is a JSON representation of a cryptographic key. Okta uses signing keys to verify the signature of a JWT when provided for the `private_key_jwt` client authentication method or for a signed authorize request object. Okta supports both RSA and Elliptic Curve (EC) keys for signing tokens.
@@ -70270,13 +70281,6 @@ components:
         - $ref: '#/components/schemas/OAuth2ClientJsonSigningKeyRequest'
         - type: object
       properties:
-        kty:
-          type: string
-          description: Cryptographic algorithm family for the certificate's key pair
-          example: RSA
-          nullable: false
-          enum:
-            - EC
         x:
           type: string
           description: The public x coordinate for the elliptic curve point
@@ -70418,13 +70422,6 @@ components:
           description: RSA key value (exponent) for key binding
           example: AQAB
           nullable: false
-        kty:
-          type: string
-          description: Cryptographic algorithm family for the certificate's key pair
-          example: RSA
-          nullable: false
-          enum:
-            - RSA
         n:
           type: string
           description: RSA key value (modulus) for key binding
