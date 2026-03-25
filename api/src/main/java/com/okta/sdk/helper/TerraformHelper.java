@@ -17,6 +17,9 @@
 package com.okta.sdk.helper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.openapitools.jackson.nullable.JsonNullableModule;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -332,15 +335,71 @@ public class TerraformHelper {
             }
         }
         
-        // 6. If we found a value and it's a string, try to convert it to an enum if possible
+        // 6. If we extracted a List but the target is a single object, take the first element
+        // This handles the case where Terraform stores single objects as arrays for consistency
+        if (extractedValue != null &&
+            extractedValue instanceof java.util.List &&
+            targetClassName != null &&
+            !targetClassName.startsWith("LIST:")) {
+
+            java.util.List<?> list = (java.util.List<?>) extractedValue;
+            if (!list.isEmpty()) {
+                // Take first element from list
+                Object firstElement = list.get(0);
+
+                // If targetClassName is provided, convert the first element to target type
+                extractedValue = convertMapToSdkObject(firstElement, targetClassName);
+            } else {
+                // Empty list - return null (will fall back to default value)
+                extractedValue = null;
+            }
+        }
+
+        // 7. If we found a value and it's a string, try to convert it to an enum if possible
         if (extractedValue != null && extractedValue instanceof String) {
             Object enumValue = tryConvertStringToEnum((String) extractedValue, parameterName);
             if (enumValue != null && enumValue != extractedValue) {
                 extractedValue = enumValue;
             }
         }
-        
-        // 7. Generic handling for object types - try targetClassName if provided,
+
+        // 7.5. If we have a String and targetClassName is a wrapper class (not enum),
+        // wrap the string in a Map for deserialization
+        if (extractedValue != null &&
+            extractedValue instanceof String &&
+            targetClassName != null &&
+            !targetClassName.isEmpty()) {
+
+            try {
+                // Check if target class exists and is NOT an enum
+                String fullyQualifiedClassName = targetClassName;
+                if (!targetClassName.contains(".")) {
+                    fullyQualifiedClassName = "com.okta.sdk.resource.model." + targetClassName;
+                }
+
+                Class<?> targetClass = Class.forName(fullyQualifiedClassName);
+
+                // Only wrap if it's NOT an enum (enums are handled by tryConvertStringToEnum above)
+                if (!targetClass.isEnum()) {
+                    // Wrap the string in a Map with an intelligent property name
+                    // Use the parameter name or infer from the class name
+                    String propertyName = inferPropertyNameForWrapper(targetClassName, parameterName);
+
+                    Map<String, Object> wrappedMap = new HashMap<>();
+                    wrappedMap.put(propertyName, extractedValue);
+
+                    // Now deserialize the map to the target class
+                    Object converted = convertMapToSdkObject(wrappedMap, targetClassName);
+                    if (converted != null) {
+                        extractedValue = converted;
+                    }
+                }
+            } catch (ClassNotFoundException e) {
+                // Target class doesn't exist, leave extractedValue as-is
+            }
+        }
+
+        // 8. Generic handling for object types - try targetClassName if provided,
         // otherwise try to deserialize from the data object generically
         if (extractedValue == null && targetClassName != null && !targetClassName.isEmpty()) {
             // If explicit target class is provided, use it
@@ -360,8 +419,8 @@ public class TerraformHelper {
                 extractedValue = convertMapToSdkObject(objectToDeserialize, targetClassName);
             }
         }
-        
-        // 8. Special handling for File type parameters
+
+        // 9. Special handling for File type parameters
         if (extractedValue == null && "java.io.File".equals(targetClassName)) {
             // Check if payload contains a file_path
             Object payloadValue = prerequisiteData.get("payload");
@@ -394,6 +453,13 @@ public class TerraformHelper {
      * @return the extracted parameter value, or defaultValue if not found
      */
     public static Object extractParameter(Map<String, Object> prerequisiteData, String parameterName, Object defaultValue, String targetClassName, String typeHint) {
+        // Check if targetClassName indicates a List type (format: "LIST:ElementType")
+        if (targetClassName != null && targetClassName.startsWith("LIST:")) {
+            String elementType = targetClassName.substring(5); // Remove "LIST:" prefix
+            String fullElementClassName = "com.okta.sdk.resource.model." + elementType;
+            return extractListParameter(prerequisiteData, parameterName, defaultValue, fullElementClassName);
+        }
+
         // If targetClassName is provided and not empty, use it directly
         if (targetClassName != null && !targetClassName.isEmpty()) {
             return extractParameter(prerequisiteData, parameterName, defaultValue, targetClassName);
@@ -409,6 +475,97 @@ public class TerraformHelper {
         
         // Fall back to basic extraction without type conversion
         return extractParameter(prerequisiteData, parameterName, defaultValue);
+    }
+
+    /**
+     * Extract a List parameter from prerequisite data and deserialize to a List of SDK objects.
+     *
+     * This method handles List-typed parameters (e.g., List<JsonPatchOperation>) by:
+     * 1. Extracting the raw List from prerequisite data
+     * 2. Deserializing each element to the target element class
+     * 3. Returning the typed List
+     *
+     * @param prerequisiteData the test data from Terraform
+     * @param parameterName the parameter name to extract
+     * @param defaultValue the default value if parameter not found
+     * @param elementClassName fully qualified class name of the list element type
+     * @return List of deserialized objects, or defaultValue if not found
+     */
+    @SuppressWarnings("unchecked")
+    private static Object extractListParameter(Map<String, Object> prerequisiteData, String parameterName, Object defaultValue, String elementClassName) {
+        if (prerequisiteData == null || parameterName == null) {
+            return defaultValue;
+        }
+
+        // Extract raw list data using the same field resolution logic as extractParameter
+        java.util.List<String> fieldNameVariations = new java.util.ArrayList<>();
+        fieldNameVariations.add(parameterName);
+        fieldNameVariations.add(toSnakeCase(parameterName));
+        if (parameterName.endsWith("Id")) {
+            fieldNameVariations.add("id");
+        }
+
+        Object rawListData = null;
+
+        // Try prerequisite_object first
+        if (prerequisiteData.containsKey("prerequisite_object")) {
+            Object objValue = prerequisiteData.get("prerequisite_object");
+            if (objValue instanceof Map) {
+                Map<String, Object> prerequisiteObject = (Map<String, Object>) objValue;
+                for (String fieldName : fieldNameVariations) {
+                    if (prerequisiteObject.containsKey(fieldName)) {
+                        rawListData = prerequisiteObject.get(fieldName);
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Try payload second
+        if (rawListData == null && prerequisiteData.containsKey("payload")) {
+            Object payloadValue = prerequisiteData.get("payload");
+            if (payloadValue instanceof Map) {
+                Map<String, Object> payload = (Map<String, Object>) payloadValue;
+                for (String fieldName : fieldNameVariations) {
+                    if (payload.containsKey(fieldName)) {
+                        rawListData = payload.get(fieldName);
+                        break;
+                    }
+                }
+            }
+        }
+
+        // If no data found, return default
+        if (rawListData == null) {
+            return defaultValue;
+        }
+
+        // If the data is already a List, deserialize each element
+        if (rawListData instanceof java.util.List) {
+            java.util.List<?> rawList = (java.util.List<?>) rawListData;
+            java.util.List<Object> typedList = new java.util.ArrayList<>();
+
+            for (Object element : rawList) {
+                // Deserialize each element to the target class
+                Object deserializedElement = convertMapToSdkObject(element, elementClassName);
+                if (deserializedElement != null) {
+                    typedList.add(deserializedElement);
+                }
+            }
+
+            return typedList;
+        }
+
+        // If the data is a single object, wrap it in a List
+        // This handles the case where Terraform outputs a single object instead of an array
+        Object deserializedElement = convertMapToSdkObject(rawListData, elementClassName);
+        if (deserializedElement != null) {
+            java.util.List<Object> singletonList = new java.util.ArrayList<>();
+            singletonList.add(deserializedElement);
+            return singletonList;
+        }
+
+        return defaultValue;
     }
 
     /**
@@ -478,7 +635,7 @@ public class TerraformHelper {
         if (!(obj instanceof Map)) {
             return obj;  // Not a map, can't convert via JSON
         }
-        
+
         try {
             // Convert Map to target SDK class using Jackson
             ObjectMapper mapper = new ObjectMapper();
@@ -486,17 +643,34 @@ public class TerraformHelper {
             mapper.disable(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
             // Also allow empty beans
             mapper.disable(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES);
-            
+
+            // Configure property naming strategy to handle snake_case from Terraform
+            // The models use camelCase (e.g., userId), but Terraform outputs use snake_case (e.g., user_id)
+            mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+
+            // Register JavaTimeModule to handle OffsetDateTime deserialization
+            // Terraform outputs dates like "1970-01-01T00:00:00Z" which need proper parsing
+            mapper.registerModule(new JavaTimeModule());
+
+            // Register JsonNullableModule to handle JsonNullable<T> fields in models
+            mapper.registerModule(new JsonNullableModule());
+
             String json = mapper.writeValueAsString(obj);
-            
+
+            // If targetClassName is a simple name (no package), prepend the standard model package
+            String fullyQualifiedClassName = targetClassName;
+            if (!targetClassName.contains(".")) {
+                fullyQualifiedClassName = "com.okta.sdk.resource.model." + targetClassName;
+            }
+
             // Try the target class first
             try {
-                Class<?> targetClass = Class.forName(targetClassName);
+                Class<?> targetClass = Class.forName(fullyQualifiedClassName);
                 return mapper.readValue(json, targetClass);
             } catch (Exception primaryException) {
                 // Primary target class failed, try alternative class names
-                String[] alternativeNames = generateAlternativeClassNames(targetClassName);
-                
+                String[] alternativeNames = generateAlternativeClassNames(fullyQualifiedClassName);
+
                 for (String altClassName : alternativeNames) {
                     try {
                         Class<?> altClass = Class.forName(altClassName);
@@ -508,14 +682,21 @@ public class TerraformHelper {
                         continue;
                     }
                 }
-                
-                // All attempts failed, return the original object as-is
-                // The caller (test) will need to handle the type mismatch
-                return obj;
+
+                // All attempts failed. Returning the raw Map would cause ClassCastException.
+                // Log warning and return null to fail gracefully.
+                System.err.println("WARNING: Failed to deserialize Map to " + targetClassName +
+                                   ". Attempted alternatives but none succeeded. Returning null.");
+                System.err.println("Raw data: " + obj);
+                return null;  // Return null instead of LinkedHashMap
             }
         } catch (Exception e) {
-            // If all conversion attempts fail, return the original object
-            return obj;
+            // If all conversion attempts fail, returning the raw Map would cause ClassCastException.
+            // Log warning and return null to fail gracefully.
+            System.err.println("WARNING: Failed to deserialize Map to " + targetClassName +
+                               " due to exception: " + e.getMessage());
+            System.err.println("Raw data: " + obj);
+            return null;  // Return null instead of LinkedHashMap
         }
     }
     
@@ -534,11 +715,22 @@ public class TerraformHelper {
      */
     private static String[] generateAlternativeClassNames(String targetClassName) {
         java.util.List<String> alternatives = new java.util.ArrayList<>();
-        
-        // Extract the simple class name (e.g., "Group" from "com.okta.sdk.resource.model.Group")
-        String simpleClassName = targetClassName.substring(targetClassName.lastIndexOf('.') + 1);
-        String packageName = targetClassName.substring(0, targetClassName.lastIndexOf('.'));
-        
+
+        // Check if targetClassName contains a package (has a dot)
+        int lastDotIndex = targetClassName.lastIndexOf('.');
+        String simpleClassName;
+        String packageName;
+
+        if (lastDotIndex == -1) {
+            // Simple class name without package - use standard model package
+            simpleClassName = targetClassName;
+            packageName = "com.okta.sdk.resource.model";
+        } else {
+            // Fully qualified class name - extract package and simple name
+            simpleClassName = targetClassName.substring(lastDotIndex + 1);
+            packageName = targetClassName.substring(0, lastDotIndex);
+        }
+
         // Generate common alternative names for request models
         String[] patterns = {
             "Add{0}Request",      // AddGroupRequest, AddApplicationRequest, etc.
@@ -547,7 +739,7 @@ public class TerraformHelper {
             "{0}Request",         // GroupRequest, ApplicationRequest, etc.
             "Okta{0}",           // OktaGroup, OktaApplication, etc.
         };
-        
+
         for (String pattern : patterns) {
             String altName = pattern.replace("{0}", simpleClassName);
             // Only add if different from original
@@ -664,12 +856,45 @@ public class TerraformHelper {
     }
 
     /**
+     * Infer the property name to use when wrapping a scalar value for a wrapper class.
+     *
+     * For example:
+     *   JwkUse class has a "use" property
+     *   Certificate class has a "certificate" property
+     *
+     * Strategy:
+     *   1. Use the parameter name if it matches the pattern
+     *   2. Convert class name to property name (JwkUse → "use")
+     *
+     * @param targetClassName the target class name (e.g., "JwkUse")
+     * @param parameterName the parameter name from the API (e.g., "use")
+     * @return the inferred property name
+     */
+    private static String inferPropertyNameForWrapper(String targetClassName, String parameterName) {
+        // Extract simple class name if fully qualified
+        String simpleClassName = targetClassName;
+        if (targetClassName.contains(".")) {
+            simpleClassName = targetClassName.substring(targetClassName.lastIndexOf('.') + 1);
+        }
+
+        // Try parameter name first if it's not generic
+        if (parameterName != null && !parameterName.isEmpty() &&
+            !parameterName.equals("body") && !parameterName.equals("request")) {
+            return parameterName;
+        }
+
+        // Convert class name to property name
+        // JwkUse → "use", Certificate → "certificate", DomainCertificate → "domain_certificate"
+        return toSnakeCase(simpleClassName);
+    }
+
+    /**
      * Convert camelCase string to snake_case.
      * Examples:
      *   "appId" -> "app_id"
      *   "userId" -> "user_id"
      *   "groupId" -> "group_id"
-     * 
+     *
      * @param camelCase the camelCase string
      * @return the snake_case string
      */
