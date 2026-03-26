@@ -66239,9 +66239,7 @@ components:
           description: Description of the property
         enum:
           items:
-            anyOf:
-              - type: string
-              - type: integer
+            type: string
           type: array
           nullable: true
           description: |-
@@ -70288,7 +70286,7 @@ components:
         y:
           type: string
           description: The public y coordinate for the elliptic curve point
-          nullabe: false
+          nullable: false
         crv:
           type: string
           description: The cryptographic curve used with the key
@@ -81002,6 +81000,12 @@ components:
     UserFactorActivateResponse:
       type: object
       properties:
+        created:
+          description: Timestamp when the factor was enrolled
+          type: string
+          format: date-time
+          example: '2022-08-25T00:31:00.000Z'
+          readOnly: true
         factorType:
           description: Type of the factor
           type: string
@@ -81013,6 +81017,36 @@ components:
             - token:software:totp
             - u2f
             - webauthn
+        id:
+          description: ID of the factor
+          type: string
+          example: caf8m6jbcvUH8mAep1d7
+          readOnly: true
+        lastUpdated:
+          description: Timestamp when the factor was last updated
+          type: string
+          format: date-time
+          example: '2022-08-25T00:31:00.000Z'
+          readOnly: true
+        profile:
+          type: object
+          description: Specific attributes related to the factor
+        provider:
+          description: Provider for the factor. Each provider can support a subset of factor types.
+          type: string
+        status:
+          $ref: '#/components/schemas/UserFactorStatus'
+        vendorName:
+          description: Name of the factor vendor. This is usually the same as the provider except for On-Prem MFA, which depends on admin settings.
+          type: string
+          example: OKTA
+          readOnly: true
+        _embedded:
+          type: object
+          additionalProperties:
+            type: object
+            properties: {}
+          readOnly: true
         _links:
           allOf:
             - $ref: '#/components/schemas/LinksSelf'
@@ -82338,9 +82372,7 @@ components:
 
             The value of the property is limited to one of the values specified in the enum definition. The list of values for the enum must consist of unique elements.
           items:
-            anyOf:
-              - type: string
-              - type: integer
+            type: string
         externalName:
           type: string
           description: |-
