@@ -11508,7 +11508,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EmailServerListResponse'
+                $ref: '#/components/schemas/EmailServerResponse'
         '403':
           $ref: '#/components/responses/ErrorAccessDenied403'
         '404':
@@ -20039,9 +20039,7 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/SimulatePolicyBody'
+              $ref: '#/components/schemas/SimulatePolicyBody'
             examples:
               SimulatePolicy:
                 $ref: '#/components/examples/SimulatePolicyBody'
@@ -24571,6 +24569,7 @@ paths:
         '429':
           $ref: '#/components/responses/ErrorTooManyRequests429'
       security:
+        - apiToken: []
         - oauth2:
             - okta.users.manage
       tags:
@@ -56603,12 +56602,7 @@ components:
       description: A reference to an existing role. Standard roles require a `roleType`, while Custom Roles require a `roleId`. See [Standard roles](/openapi/okta-management/guides/roles/#standard-roles).
       required: true
       schema:
-        oneOf:
-          - title: roleType
-            type: string
-            $ref: '#/components/schemas/RoleType'
-          - title: roleId
-            type: string
+        type: string
     pathRuleId:
       name: ruleId
       description: '`id` of the policy rule'
@@ -64672,12 +64666,9 @@ components:
                 defaultContent:
                   $ref: '#/components/schemas/HrefObject'
     EmailServerListResponse:
-      type: object
-      properties:
-        email-servers:
-          type: array
-          items:
-            $ref: '#/components/schemas/EmailServerResponse'
+      type: array
+      items:
+        $ref: '#/components/schemas/EmailServerResponse'
     EmailServerPost:
       allOf:
         - $ref: '#/components/schemas/EmailServerRequest'
@@ -65960,7 +65951,6 @@ components:
         lastUpdated:
           description: Timestamp when the group owner was last updated
           type: string
-          format: date-time
           readOnly: true
         originId:
           description: The ID of the app instance if the `originType` is `APPLICATION`. This value is `NULL` if `originType` is `OKTA_DIRECTORY`.
@@ -72588,9 +72578,6 @@ components:
         - BILLING
         - TECHNICAL
     OrgContactTypeObj:
-      anyOf:
-        - $ref: '#/components/schemas/orgBillingContactType'
-        - $ref: '#/components/schemas/orgTechnicalContactType'
       type: object
       properties:
         contactType:
@@ -74879,6 +74866,14 @@ components:
           $ref: '#/components/schemas/OAuthCredentials'
         endpoints:
           $ref: '#/components/schemas/OAuthEndpoints'
+        issuer:
+          type: object
+          description: Issuer URI of the IdP for OpenID Connect
+          properties:
+            url:
+              type: string
+              description: URI of the OIDC IdP issuer
+              example: https://idp.example.com
         oktaIdpOrgUrl:
           type: string
           description: URL of the IdP org
@@ -83552,19 +83547,19 @@ components:
       readOnly: true
     orgBillingContactType:
       description: Org billing contact
-      type: object
-      properties:
-        contactType:
-          $ref: '#/components/schemas/OrgContactType'
-        _links:
-          type: object
-          description: Specifies link relations (see [Web Linking](https://www.rfc-editor.org/rfc/rfc8288)) available for the org billing contact type object using the [JSON Hypertext Application Language](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06) specification
-          readOnly: true
+      allOf:
+        - $ref: '#/components/schemas/OrgContactTypeObj'
+        - type: object
           properties:
-            billing:
-              allOf:
-                - $ref: '#/components/schemas/HrefObject'
-                - description: Link to the org billing [contact type user](/openapi/okta-management/management/tag/OrgSettingContact/#tag/OrgSettingContact/operation/getOrgContactUser) resource
+            _links:
+              type: object
+              description: Specifies link relations (see [Web Linking](https://www.rfc-editor.org/rfc/rfc8288)) available for the org billing contact type object using the [JSON Hypertext Application Language](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06) specification
+              readOnly: true
+              properties:
+                billing:
+                  allOf:
+                    - $ref: '#/components/schemas/HrefObject'
+                    - description: Link to the org billing [contact type user](/openapi/okta-management/management/tag/OrgSettingContact/#tag/OrgSettingContact/operation/getOrgContactUser) resource
     orgGeneralSettingLinks:
       description: Specifies link relations (see [Web Linking](https://www.rfc-editor.org/rfc/rfc8288)) available for the org using the [JSON Hypertext Application Language](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06) specification
       type: object
@@ -83596,19 +83591,19 @@ components:
       readOnly: true
     orgTechnicalContactType:
       description: Org technical contact
-      type: object
-      properties:
-        contactType:
-          $ref: '#/components/schemas/OrgContactType'
-        _links:
-          type: object
-          description: Specifies link relations (see [Web Linking](https://www.rfc-editor.org/rfc/rfc8288)) available for the org technical Contact Type object using the [JSON Hypertext Application Language](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06) specification
-          readOnly: true
+      allOf:
+        - $ref: '#/components/schemas/OrgContactTypeObj'
+        - type: object
           properties:
-            technical:
-              allOf:
-                - $ref: '#/components/schemas/HrefObject'
-                - description: Link to the org technical [Contact Type User](/openapi/okta-management/management/tag/OrgSettingContact/#tag/OrgSettingContact/operation/getOrgContactUser) resource
+            _links:
+              type: object
+              description: Specifies link relations (see [Web Linking](https://www.rfc-editor.org/rfc/rfc8288)) available for the org technical Contact Type object using the [JSON Hypertext Application Language](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-06) specification
+              readOnly: true
+              properties:
+                technical:
+                  allOf:
+                    - $ref: '#/components/schemas/HrefObject'
+                    - description: Link to the org technical [Contact Type User](/openapi/okta-management/management/tag/OrgSettingContact/#tag/OrgSettingContact/operation/getOrgContactUser) resource
     postAPIServiceIntegrationInstance:
       allOf:
         - $ref: '#/components/schemas/APIServiceIntegrationInstance'
