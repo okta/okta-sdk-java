@@ -334,7 +334,16 @@ public class TerraformHelper {
                 }
             }
         }
-        
+
+        // 5.5. If we extracted a Map and targetClassName is provided, convert it to the target type
+        // This handles nested objects in terraform outputs (e.g., instance = { language = "en", ... })
+        if (extractedValue != null &&
+            extractedValue instanceof Map &&
+            targetClassName != null &&
+            !targetClassName.isEmpty()) {
+            extractedValue = convertMapToSdkObject(extractedValue, targetClassName);
+        }
+
         // 6. If we extracted a List but the target is a single object, take the first element
         // This handles the case where Terraform stores single objects as arrays for consistency
         if (extractedValue != null &&
@@ -402,21 +411,23 @@ public class TerraformHelper {
         // 8. Generic handling for object types - try targetClassName if provided,
         // otherwise try to deserialize from the data object generically
         if (extractedValue == null && targetClassName != null && !targetClassName.isEmpty()) {
+
             // If explicit target class is provided, use it
             Object objectToDeserialize = prerequisiteData.get(parameterName);
-            
+
             if (objectToDeserialize == null || isEmptyMap(objectToDeserialize)) {
                 // If the direct parameter is empty/missing, try payload
                 objectToDeserialize = prerequisiteData.getOrDefault("payload", null);
             }
-            
+
             if (objectToDeserialize == null) {
                 // If still no data, try prerequisite_object
                 objectToDeserialize = prerequisiteData.getOrDefault("prerequisite_object", null);
             }
-            
+
             if (objectToDeserialize != null) {
                 extractedValue = convertMapToSdkObject(objectToDeserialize, targetClassName);
+            } else {
             }
         }
 
@@ -637,38 +648,73 @@ public class TerraformHelper {
         }
 
         try {
-            // Convert Map to target SDK class using Jackson
-            ObjectMapper mapper = new ObjectMapper();
-            // Lenient deserialization: ignore unknown properties
-            mapper.disable(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-            // Also allow empty beans
-            mapper.disable(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES);
-
-            // Configure property naming strategy to handle snake_case from Terraform
-            // The models use camelCase (e.g., userId), but Terraform outputs use snake_case (e.g., user_id)
-            mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-
-            // Register JavaTimeModule to handle OffsetDateTime deserialization
-            // Terraform outputs dates like "1970-01-01T00:00:00Z" which need proper parsing
-            mapper.registerModule(new JavaTimeModule());
-
-            // Register JsonNullableModule to handle JsonNullable<T> fields in models
-            mapper.registerModule(new JsonNullableModule());
-
-            String json = mapper.writeValueAsString(obj);
-
-            // If targetClassName is a simple name (no package), prepend the standard model package
+            String json;
             String fullyQualifiedClassName = targetClassName;
             if (!targetClassName.contains(".")) {
                 fullyQualifiedClassName = "com.okta.sdk.resource.model." + targetClassName;
             }
 
-            // Try the target class first
+            // Create base mapper configuration
+            ObjectMapper baseMapper = new ObjectMapper();
+            baseMapper.disable(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+            baseMapper.disable(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES);
+            baseMapper.registerModule(new JavaTimeModule());
+            baseMapper.registerModule(new JsonNullableModule());
+
+            json = baseMapper.writeValueAsString(obj);
+
+            Class<?> targetClass = Class.forName(fullyQualifiedClassName);
+
+            // STRATEGY 1: Try with SNAKE_CASE naming (primary - Terraform data is snake_case)
             try {
-                Class<?> targetClass = Class.forName(fullyQualifiedClassName);
-                return mapper.readValue(json, targetClass);
-            } catch (Exception primaryException) {
-                // Primary target class failed, try alternative class names
+                ObjectMapper mapperSnakeCase = com.fasterxml.jackson.databind.json.JsonMapper.builder()
+                    .disable(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                    .disable(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES)
+                    .disable(com.fasterxml.jackson.databind.MapperFeature.USE_ANNOTATIONS)
+                    .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
+                    .addModule(new JavaTimeModule())
+                    .addModule(new JsonNullableModule())
+                    .build();
+                Object snakeResult = mapperSnakeCase.readValue(json, targetClass);
+                // Check if we got a meaningful result (not all nulls) by re-serializing
+                String reSerializedSnake = baseMapper.writeValueAsString(snakeResult);
+                if (!reSerializedSnake.equals("{}") && !reSerializedSnake.equals("null")) {
+                    return snakeResult;
+                }
+                // Fall through to Strategy 2 if result was empty
+            } catch (Exception snakeCaseException) {
+                // Snake case failed, try camelCase annotations
+            }
+
+            // STRATEGY 2: Try with @JsonProperty annotations (fallback - handles camelCase)
+            try {
+                ObjectMapper mapperWithAnnotations = baseMapper.copy();
+                // Uses @JsonProperty annotations - expects camelCase like "brandId", "displayName"
+                Object result = mapperWithAnnotations.readValue(json, targetClass);
+                return result;
+            } catch (Exception annotationsException) {
+                throw annotationsException;
+            }
+        } catch (ClassNotFoundException e) {
+            System.err.println("WARNING: Class not found: " + targetClassName);
+            System.err.println("Raw data: " + obj);
+            return null;
+        } catch (Exception primaryException) {
+
+            try {
+                // Recreate for alternative attempts
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.disable(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+                mapper.disable(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES);
+                mapper.registerModule(new JavaTimeModule());
+                mapper.registerModule(new JsonNullableModule());
+
+                String json = mapper.writeValueAsString(obj);
+                String fullyQualifiedClassName = targetClassName;
+                if (!targetClassName.contains(".")) {
+                    fullyQualifiedClassName = "com.okta.sdk.resource.model." + targetClassName;
+                }
+                // Try alternative class names
                 String[] alternativeNames = generateAlternativeClassNames(fullyQualifiedClassName);
 
                 for (String altClassName : alternativeNames) {
@@ -683,20 +729,17 @@ public class TerraformHelper {
                     }
                 }
 
-                // All attempts failed. Returning the raw Map would cause ClassCastException.
-                // Log warning and return null to fail gracefully.
+                // All attempts failed
                 System.err.println("WARNING: Failed to deserialize Map to " + targetClassName +
-                                   ". Attempted alternatives but none succeeded. Returning null.");
+                                   ". Attempted both naming strategies and alternatives but none succeeded. Returning null.");
                 System.err.println("Raw data: " + obj);
-                return null;  // Return null instead of LinkedHashMap
+                return null;
+            } catch (Exception innerException) {
+                System.err.println("WARNING: Failed to deserialize Map to " + targetClassName +
+                                   " due to exception: " + innerException.getMessage());
+                System.err.println("Raw data: " + obj);
+                return null;
             }
-        } catch (Exception e) {
-            // If all conversion attempts fail, returning the raw Map would cause ClassCastException.
-            // Log warning and return null to fail gracefully.
-            System.err.println("WARNING: Failed to deserialize Map to " + targetClassName +
-                               " due to exception: " + e.getMessage());
-            System.err.println("Raw data: " + obj);
-            return null;  // Return null instead of LinkedHashMap
         }
     }
     

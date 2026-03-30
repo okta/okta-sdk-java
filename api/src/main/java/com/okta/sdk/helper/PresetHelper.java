@@ -16,10 +16,13 @@
 
 package com.okta.sdk.helper;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.okta.sdk.resource.client.ApiClient;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
-import java.io.InputStream;
-import java.util.Properties;
+import com.okta.sdk.resource.model.AssignRoleToClient200Response;
+import com.okta.sdk.resource.model.AssignRoleToGroup200Response;
+import com.okta.sdk.resource.model.AssignRoleToUser201Response;
+import com.okta.sdk.resource.model.ListGroupAssignedRoles200ResponseInner;
 
 /**
  * Helper class to create and configure Okta API clients for testing.
@@ -71,6 +74,15 @@ public class PresetHelper {
             // Set API key with SSWS prefix for Okta API token authentication
             this.apiClient.setApiKeyPrefix("SSWS");
             this.apiClient.setApiKey(apiToken);
+
+            // Register mix-ins to disable @JsonTypeInfo on classes where the declared
+            // subtypes (StandardRole, CustomRole) don't actually extend the wrapper class.
+            // Without this, Jackson throws "not a subtype" InvalidTypeIdException.
+            ObjectMapper mapper = this.apiClient.getObjectMapper();
+            mapper.addMixIn(AssignRoleToGroup200Response.class, IgnoreTypeInfoMixIn.class);
+            mapper.addMixIn(AssignRoleToUser201Response.class, IgnoreTypeInfoMixIn.class);
+            mapper.addMixIn(AssignRoleToClient200Response.class, IgnoreTypeInfoMixIn.class);
+            mapper.addMixIn(ListGroupAssignedRoles200ResponseInner.class, IgnoreTypeInfoMixIn.class);
             
         } catch (Exception e) {
             throw new RuntimeException(
@@ -145,5 +157,14 @@ public class PresetHelper {
         public V remove(K key) {
             return null;
         }
+    }
+
+    /**
+     * Mix-in to disable @JsonTypeInfo on generated wrapper classes whose declared
+     * subtypes (e.g. StandardRole, CustomRole) don't actually extend them.
+     * Prevents Jackson from throwing InvalidTypeIdException during deserialization.
+     */
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
+    private abstract static class IgnoreTypeInfoMixIn {
     }
 }

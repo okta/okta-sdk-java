@@ -41,82 +41,80 @@ echo "  Base URL: $OKTA_BASE_URL"
 echo "  API Token: ${OKTA_API_TOKEN:0:10}***"
 
 APIS=(
-     "test_application_api"  # 13 test cases
-    # "test_application_groups_api"  # 4 test cases
-    #  "test_application_policies_api"  # 1 test cases working
-    # "test_application_sso_api"  # 2 test cases
-    # "test_application_users_api"  # 5 test cases
+     "test_application_api"  # 13 test cases working
+     "test_application_groups_api"  # 4 test cases
+      "test_application_policies_api"  # 1 test cases working
+     "test_application_sso_api"  # 2 test cases
+     "test_application_users_api"  # 5 test cases working
     # "test_authenticator_api"  # 23 test cases
-    #   "test_authorization_server_api"  # 7 test cases working
-    #  "test_authorization_server_assoc_api"  # 3 test cases working
-    # "test_authorization_server_claims_api"  # 10 test cases
-    # "test_authorization_server_clients_api"  # 2 test cases
-    # "test_authorization_server_keys_api"  # 4 test cases
-    # "test_authorization_server_policies_api"  # 14 test cases
-    # "test_authorization_server_rules_api"  # 14 test cases
-    # "test_authorization_server_scopes_api"  # 10 test cases
-    #  "test_behavior_api"  # 13 test cases
-    # "test_brands_api"  # 12 test cases
-    # "test_captcha_api"  # 17 test cases
-    # "test_custom_domain_api"  # 12 test cases
-    # "test_custom_pages_api"  # 38 test cases
-    # "test_custom_templates_api"  # 28 test cases
-    # "test_device_assurance_api"  # 5 test cases
-    # "test_email_customization_api"  # 2 test cases
-    # "test_email_domain_api"  # 12 test cases
-    # # "test_email_server_api"  # 11 test cases
-    #  "test_event_hook_api"  # 16 test cases
-    #  "test_feature_api"  # 10 test cases
-    #  "test_group_api"  # 22 test cases
-    # "test_group_owner_api"  # 7 test cases
-    # "test_group_rule_api"  # 23 test cases
-    # "test_identity_provider_api"  # 13 test cases
-    # "test_identity_provider_keys_api"  # 8 test cases
-    # "test_identity_provider_signing_keys_api"  # 18 test cases
-    # "test_identity_provider_users_api"  # 11 test cases
-    # "test_inline_hook_api"  # 15 test cases
-    # "test_linked_object_api"  # 8 test cases
-    # "test_log_stream_api"  # 14 test cases
-    # "test_network_zone_api"  # 7 test cases
-    # "test_org_setting_api"  # 8 test cases
-    # "test_org_setting_communication_api"  # 6 test cases
-    # "test_org_setting_contact_api"  # 4 test cases
-    # "test_org_setting_customization_api"  # 2 test cases
-    # "test_org_setting_general_api"  # 6 test cases
-    # "test_org_setting_metadata_api"  # 2 test cases
-    # "test_org_setting_support_api"  # 8 test cases
-    # "test_policy_api"  # 40 test cases
-    # "test_profile_mapping_api"  # 6 test cases
-    # "test_push_provider_api"  # 9 test cases
-    # "test_rate_limit_settings_api"  # 12 test cases
-    # "test_realm_api"  # 9 test cases
-    # "test_resource_set_api"  # 1 test cases
-    # "test_role_assignment_a_user_api"  # 5 test cases
-    # "test_role_assignment_b_group_api"  # 4 test cases
-    # "test_role_b_target_admin_api"  # 18 test cases
-    # "test_role_b_target_b_group_api"  # 16 test cases
-    # "test_role_c_resource_set_api"  # 8 test cases
-    # "test_role_c_resource_set_resource_api"  # 4 test cases
-    # "test_role_d_resource_set_binding_api"  # 8 test cases
-    # "test_role_d_resource_set_binding_member_api"  # 8 test cases
-    # "test_role_e_custom_api"  # 10 test cases
-    # "test_role_e_custom_permission_api"  # 10 test cases
-    # "test_schema_api"  # 23 test cases
-    # "test_subscription_api"  # 16 test cases
-    # "test_system_log_api"  # 1 test cases
-    # "test_template_api"  # 11 test cases
-    # "test_themes_api"  # 18 test cases
-    # "test_threat_insight_api"  # 4 test cases
-    # "test_trusted_origin_api"  # 13 test cases
-    # "test_user_api"  # 10 test cases
-    # "test_user_cred_api"  # 7 test cases
-    # "test_user_grant_api"  # 6 test cases
-    # "test_user_lifecycle_api"  # 7 test cases
-    # "test_user_linked_object_api"  # 2 test cases
-    # "test_user_o_auth_api"  # 4 test cases
-    # "test_user_resources_api"  # 3 test cases
-    # "test_user_sessions_api"  # 1 test cases
-    # "test_user_type_api"  # 12 test cases
+    "test_authorization_server_api"  # 7 test cases working
+      "test_authorization_server_assoc_api"  # 3 test cases working
+      "test_authorization_server_claims_api"  # 10 test cases workin
+     "test_authorization_server_clients_api"  # 2 test cases
+     "test_authorization_server_keys_api"  # 4 test cases
+     "test_authorization_server_policies_api"  # 14 test cases
+     "test_authorization_server_rules_api"  # 14 test cases
+     "test_authorization_server_scopes_api"  # 10 test cases
+     "test_behavior_api"  # 13 test cases
+     "test_brands_api"  # 12 test cases
+     "test_captcha_api"  # 17 test cases
+     "test_custom_domain_api"  # 12 test cases
+     "test_custom_pages_api"  # 38 test cases
+     "test_custom_templates_api"  # 28 test cases
+     "test_device_assurance_api"  # 5 test cases
+     "test_email_customization_api"  # 2 test cases
+     "test_email_domain_api"  # 12 test cases
+      "test_email_server_api"  # 11 test cases
+     "test_event_hook_api"  # 16 test cases
+     "test_feature_api"  # 10 test cases
+     "test_group_api"  # 22 test cases
+     "test_group_owner_api"  # 7 test cases
+     "test_group_rule_api"  # 23 test cases
+     "test_identity_provider_api"  # 13 test cases
+     "test_identity_provider_keys_api"  # 8 test cases
+     "test_identity_provider_signing_keys_api"  # 18 test cases
+     "test_identity_provider_users_api"  # 11 test cases
+     "test_inline_hook_api"  # 15 test cases
+     "test_linked_object_api"  # 8 test cases
+     "test_log_stream_api"  # 14 test cases
+     "test_network_zone_api"  # 7 test cases
+     "test_org_setting_communication_api"  # 6 test cases
+     "test_org_setting_contact_api"  # 4 test cases
+     "test_org_setting_customization_api"  # 2 test cases
+     "test_org_setting_general_api"  # 6 test cases
+     "test_org_setting_metadata_api"  # 2 test cases
+     "test_org_setting_support_api"  # 8 test cases
+     "test_policy_api"  # 40 test cases
+     "test_profile_mapping_api"  # 6 test cases
+     "test_push_provider_api"  # 9 test cases
+     "test_rate_limit_settings_api"  # 12 test cases
+     "test_realm_api"  # 9 test cases
+     "test_role_assignment_a_user_api"  # 5 test cases
+     "test_role_assignment_b_group_api"  # 4 test cases
+     "test_role_b_target_admin_api"  # 18 test cases
+     "test_role_b_target_b_group_api"  # 16 test cases
+     "test_role_c_resource_set_api"  # 8 test cases
+     "test_role_c_resource_set_resource_api"  # 4 test cases
+     "test_role_d_resource_set_binding_api"  # 8 test cases
+    "test_role_d_resource_set_binding_member_api"  # 8 test cases
+     "test_role_e_custom_api"  # 10 test cases
+     "test_role_e_custom_permission_api"  # 10 test cases
+     "test_schema_api"  # 23 test cases
+     "test_subscription_api"  # 16 test cases
+     "test_system_log_api"  # 1 test cases
+     "test_template_api"  # 11 test cases
+     "test_themes_api"  # 18 test cases
+     "test_threat_insight_api"  # 4 test cases
+     "test_trusted_origin_api"  # 13 test cases
+     "test_user_api"  # 10 test cases
+     "test_user_cred_api"  # 7 test cases
+    "test_user_grant_api"  # 6 test cases
+     "test_user_lifecycle_api"  # 7 test cases
+     "test_user_linked_object_api"  # 2 test cases
+     "test_user_o_auth_api"  # 4 test cases
+     "test_user_resources_api"  # 3 test cases
+    "test_user_sessions_api"  # 1 test cases
+     "test_user_type_api"  # 12 test cases
 )
 # Total: 76 APIs with terraform prerequisite data
 
@@ -140,6 +138,7 @@ RESOURCES_TO_REMOVE=(
     'module.resource_set_for_delete_resource_set.okta_resource_set.this[0]'
     'module.delete_trusted_origin.okta_trusted_origin.this[0]'
     'module.delete_associated_server.okta_trusted_server.this[0]'
+    'module.test_email_customization.okta_brand.this[0]'
 )
 
 # Phase 1: Setup Terraform
@@ -175,6 +174,9 @@ run_phase_setup() {
         if ! OKTA_ORG_NAME="$OKTA_ORG_NAME" \
             OKTA_BASE_URL="$OKTA_BASE_URL" \
             OKTA_API_TOKEN="$OKTA_API_TOKEN" \
+            TF_VAR_okta_org_name="$OKTA_ORG_NAME" \
+            TF_VAR_okta_base_url="$OKTA_BASE_URL" \
+            TF_VAR_okta_api_token="$OKTA_API_TOKEN" \
             terraform plan -out=tfplan > /dev/null 2>&1; then
             echo "--- ❌ Terraform plan failed for $API ---"
             GLOBAL_EXIT_CODE=1
@@ -187,6 +189,9 @@ run_phase_setup() {
         OKTA_ORG_NAME="$OKTA_ORG_NAME" \
         OKTA_BASE_URL="$OKTA_BASE_URL" \
         OKTA_API_TOKEN="$OKTA_API_TOKEN" \
+        TF_VAR_okta_org_name="$OKTA_ORG_NAME" \
+        TF_VAR_okta_base_url="$OKTA_BASE_URL" \
+        TF_VAR_okta_api_token="$OKTA_API_TOKEN" \
         terraform apply -auto-approve --parallelism=1 tfplan > /dev/null 2>&1
         APPLY_EXIT_CODE=$?
         unset TF_LOG TF_LOG_PATH
@@ -207,7 +212,7 @@ run_phase_setup() {
     done
 }
 
-# Phase 2: Run Tests
+Phase 2: Run Tests
 run_phase_test() {
     echo "=========================================="
     echo "--- Phase 2: Running tests in parallel ---"
@@ -402,6 +407,12 @@ run_phase_destroy() {
         done
 
         echo "--- 🗑️  Destroying $API resources ---"
+        OKTA_ORG_NAME="$OKTA_ORG_NAME" \
+        OKTA_BASE_URL="$OKTA_BASE_URL" \
+        OKTA_API_TOKEN="$OKTA_API_TOKEN" \
+        TF_VAR_okta_org_name="$OKTA_ORG_NAME" \
+        TF_VAR_okta_base_url="$OKTA_BASE_URL" \
+        TF_VAR_okta_api_token="$OKTA_API_TOKEN" \
         terraform destroy -auto-approve > /dev/null 2>&1
         DESTROY_EXIT_CODE=$?
 
