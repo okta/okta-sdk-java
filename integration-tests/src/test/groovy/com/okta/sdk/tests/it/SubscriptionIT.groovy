@@ -94,8 +94,11 @@ class SubscriptionIT extends ITSupport {
             assertThat subscriptions, is(notNullValue())
         } catch (ApiException e) {
             logger.debug("    Expected error due to SDK code-gen limitation: HTTP {}", e.code)
+            // 401 is also valid: Okta evaluates scope (okta.roles.read) BEFORE path-param
+            // validation, so tokens without that scope receive 401 instead of 404/400.
+            // See integration-tests/src/test/resources/okta.yaml.sample for required scopes.
             assertThat "listSubscriptionsRole should fail with invalid roleRef",
-                       e.code, is(oneOf(404, 400))
+                       e.code, is(oneOf(404, 400, 401))
         }
 
         //  2. getSubscriptionsNotificationTypeRole 
@@ -106,8 +109,9 @@ class SubscriptionIT extends ITSupport {
             logger.debug("    Unexpectedly succeeded  status: {}", sub.getStatus())
         } catch (ApiException e) {
             logger.debug("    Expected error due to SDK code-gen limitation: HTTP {}", e.code)
+            // 401 is also valid: see listSubscriptionsRole note above (scope: okta.roles.read).
             assertThat "getSubscriptionsNotificationTypeRole should fail with invalid roleRef",
-                       e.code, is(oneOf(404, 400))
+                       e.code, is(oneOf(404, 400, 401))
         }
 
         //  3. subscribeByNotificationTypeRole 
@@ -118,8 +122,9 @@ class SubscriptionIT extends ITSupport {
             logger.debug("    Unexpectedly succeeded")
         } catch (ApiException e) {
             logger.debug("    Expected error due to SDK code-gen limitation: HTTP {}", e.code)
+            // 401 is also valid: scope okta.roles.manage is checked before path-param validation.
             assertThat "subscribeByNotificationTypeRole should fail with invalid roleRef",
-                       e.code, is(oneOf(404, 400))
+                       e.code, is(oneOf(404, 400, 401))
         }
 
         //  4. unsubscribeByNotificationTypeRole 
@@ -130,8 +135,9 @@ class SubscriptionIT extends ITSupport {
             logger.debug("    Unexpectedly succeeded")
         } catch (ApiException e) {
             logger.debug("    Expected error due to SDK code-gen limitation: HTTP {}", e.code)
+            // 401 is also valid: scope okta.roles.manage is checked before path-param validation.
             assertThat "unsubscribeByNotificationTypeRole should fail with invalid roleRef",
-                       e.code, is(oneOf(404, 400))
+                       e.code, is(oneOf(404, 400, 401))
         }
 
         logger.debug("\n Role-based subscription tests complete (SDK code-gen limitation documented)")
