@@ -1,0 +1,71 @@
+#
+# Sample ~/.okta/okta.yaml for running the Okta Java SDK integration tests.
+#
+# Copy this file to ~/.okta/okta.yaml and fill in the values for your org.
+#
+# ----------------------------------------------------------------------------
+# SSWS (API Token) — simplest setup
+# ----------------------------------------------------------------------------
+# okta:
+#   client:
+#     orgUrl: https://YOUR_ORG.okta.com
+#     token: YOUR_API_TOKEN
+#     authenticationScheme: SSWS
+
+# ----------------------------------------------------------------------------
+# OAuth2 (Private Key / Service App) — recommended for production
+#
+# The OAuth2 service app in your Okta org MUST be granted ALL of the scopes
+# listed below, otherwise specific API endpoints will return 401 instead of
+# their documented error code (e.g. the Subscription role endpoints require
+# okta.roles.read / okta.roles.manage before they will validate the roleRef
+# path parameter and return 404/400 for an invalid value).
+# ----------------------------------------------------------------------------
+# okta:
+#   client:
+#     orgUrl: https://YOUR_ORG.okta.com
+#     authenticationScheme: OAUTH2_PRIVATE_KEY
+#     clientId: YOUR_SERVICE_APP_CLIENT_ID
+#     privateKey: /path/to/private_key.pem    # or inline PEM content
+#     scopes: >
+#       okta.users.read
+#       okta.users.manage
+#       okta.groups.read
+#       okta.groups.manage
+#       okta.apps.read
+#       okta.apps.manage
+#       okta.policies.read
+#       okta.policies.manage
+#       okta.roles.read
+#       okta.roles.manage
+#       okta.idps.read
+#       okta.idps.manage
+#       okta.authorizationServers.read
+#       okta.authorizationServers.manage
+#       okta.inlineHooks.read
+#       okta.inlineHooks.manage
+#       okta.eventHooks.read
+#       okta.eventHooks.manage
+#       okta.schemas.read
+#       okta.schemas.manage
+#       okta.realm.read
+#       okta.realm.manage
+#       okta.userTypes.read
+#       okta.userTypes.manage
+#       okta.logs.read
+
+# ----------------------------------------------------------------------------
+# Notes on specific scopes:
+#
+#   okta.roles.read    — required by Subscription role-based endpoints:
+#                          GET /api/v1/roles/{roleRef}/subscriptions
+#                          GET /api/v1/roles/{roleRef}/subscriptions/{type}
+#
+#   okta.roles.manage  — required by Subscription role mutation endpoints:
+#                          POST /api/v1/roles/{roleRef}/subscriptions/{type}/subscribe
+#                          POST /api/v1/roles/{roleRef}/subscriptions/{type}/unsubscribe
+#
+#   Without these scopes the Subscription role tests receive HTTP 401 (scope
+#   check) instead of HTTP 404/400 (invalid roleRef), which causes the
+#   SubscriptionIT.testRoleSubscriptionLifecycle assertions to fail.
+# ----------------------------------------------------------------------------

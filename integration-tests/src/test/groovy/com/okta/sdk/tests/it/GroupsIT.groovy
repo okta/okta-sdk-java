@@ -260,15 +260,23 @@ class GroupsIT extends ITSupport {
 
         validateGroup(createdGroup, groupName)
 
-        // Allow time for the group to be indexed and available in list results
-        Thread.sleep(1000)
-
-        // 2. List all groups and find the group created
-        List<Group> groups = groupApi.listGroups(null, null, null, null, null, null, null, null)
+        // 2. Search for the group by name with retry to handle Okta indexing lag.
+        // An unfiltered listGroups() only returns the first page and the newly created
+        // group may not be indexed yet, so we use q=groupName and retry.
+        List<Group> groups = null
+        int maxRetries = 20
+        int retryCount = 0
+        while (retryCount < maxRetries) {
+            groups = groupApi.listGroups(null, null, groupName, null, null, null, null, null)
+            if (groups != null && isGroupPresent(groups, createdGroup)) {
+                break
+            }
+            Thread.sleep(1000)
+            retryCount++
+        }
 
         // 3. Assert that the list is valid and contains our newly created group
-        assertThat(groups, notNullValue())
-        assertThat(groups, not(empty()))
+        assertThat("Group should appear in search results after ${retryCount} retries", groups, notNullValue())
         assertGroupPresent(groups, createdGroup)
     }
 

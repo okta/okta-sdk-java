@@ -958,11 +958,21 @@ class PoliciesIT extends ITSupport {
 
         String accessPolicyId = oidcApp.getLinks().getAccessPolicy().getHref().replaceAll("]", "").tokenize("/")[-1]
 
-        Thread.sleep(1000)
-
-        // Test listPolicyApps with Map parameter
-        def additionalParams = [:]
-        List<Application> policyApps = policyApi.listPolicyApps(accessPolicyId, additionalParams)
+        // Retry listPolicyApps to handle app-policy association indexing lag (up to 15s)
+        List<Application> policyApps = null
+        for (int attempt = 0; attempt < 5; attempt++) {
+            Thread.sleep(3000)
+            try {
+                policyApps = policyApi.listPolicyApps(accessPolicyId, [:])
+                break
+            } catch (ApiException e) {
+                if (e.getCode() == 404 && attempt < 4) {
+                    logger.warn("listPolicyApps attempt {} returned 404, retrying...", attempt + 1)
+                } else {
+                    throw e
+                }
+            }
+        }
         assertThat(policyApps, notNullValue())
     }
 

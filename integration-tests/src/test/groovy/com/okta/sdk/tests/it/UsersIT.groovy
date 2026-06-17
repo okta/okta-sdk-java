@@ -552,10 +552,10 @@ class UsersIT extends ITSupport {
         // Wait for users to be indexed
         Thread.sleep(3000)
 
-        // Since test org has many users, use search to find our specific users
-        def foundUser1 = userApi.getUser(user1.getId(), null, null)
-        def foundUser2 = userApi.getUser(user2.getId(), null, null)
-        
+        // Fetch users by ID with retry to handle cross-cell replication lag
+        def foundUser1 = getUserWithRetry(user1.getId())
+        def foundUser2 = getUserWithRetry(user2.getId())
+
         assertThat(foundUser1, notNullValue())
         assertThat(foundUser2, notNullValue())
         assertThat(foundUser1.getProfile().getEmail(), equalTo(email1))
@@ -637,11 +637,11 @@ class UsersIT extends ITSupport {
             assertThat(u.getStatus(), equalTo(UserStatus.ACTIVE))
         }
         
-        // Verify our created user exists by directly fetching it
-        def directUser = userApi.getUser(user.getId(), null, null)
+        // Verify our created user exists by directly fetching it (retry for replication lag)
+        def directUser = getUserWithRetry(user.getId())
         assertThat(directUser, notNullValue())
         assertThat(directUser.getStatus(), equalTo(UserStatus.ACTIVE))
-        
+
         // Note: The user might not appear in filter results immediately due to indexing
         // but direct fetch confirms user was created correctly with ACTIVE status
     }
@@ -1582,6 +1582,28 @@ class UsersIT extends ITSupport {
         messageDigest.update(StringUtils.getBytes(salt, StandardCharsets.UTF_8))
         def bytes = messageDigest.digest(StringUtils.getBytes(password, StandardCharsets.UTF_8))
         return Base64.getEncoder().encodeToString(bytes)
+    }
+
+    // ==================== Helpers ====================
+
+    /**
+     * Fetch a user by ID with retry to handle Okta cross-cell replication lag.
+     * Even direct ID lookups can transiently return 404 in distributed Okta environments.
+     */
+    private User getUserWithRetry(String userId, int maxAttempts = 8, long sleepMs = 1500) {
+        for (int attempt = 0; attempt < maxAttempts; attempt++) {
+            try {
+                return userApi.getUser(userId, null, null)
+            } catch (ApiException e) {
+                if (e.getCode() == 404 && attempt < maxAttempts - 1) {
+                    logger.debug("getUser({}) attempt {} returned 404, retrying in {}ms", userId, attempt + 1, sleepMs)
+                    Thread.sleep(sleepMs)
+                } else {
+                    throw e
+                }
+            }
+        }
+        return null  // unreachable, but satisfies compiler
     }
 
     // ==================== Cleanup ====================

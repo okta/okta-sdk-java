@@ -18,6 +18,7 @@ package com.okta.sdk.tests.it
 import com.okta.sdk.resource.api.UserApi
 import com.okta.sdk.resource.api.GroupApi
 import com.okta.sdk.resource.api.ApplicationApi
+import com.okta.sdk.resource.client.ApiException
 import com.okta.sdk.resource.model.*
 import com.okta.sdk.tests.it.util.ITSupport
 import org.testng.annotations.Test
@@ -254,8 +255,8 @@ class PaginationIT extends ITSupport {
             def collectedMembers = []
             def pageCount = 1  // Start at 1 since we'll fetch at least one page
             def previousSize = 0
-            
-            // Use listGroupUsersPaged with limit=2
+
+            // Use listGroupUsersPaged with limit=2; 404 is caught by the outer try-catch below
             for (User member : groupApi.listGroupUsersPaged(createdGroup.id, null, 2)) {
                 collectedMembers.add(member)
                 // Increment page count when we've fetched a new batch (size increases by more than 0 after hitting limit boundary)
@@ -269,11 +270,19 @@ class PaginationIT extends ITSupport {
             }
             
             logger.debug(" Collected {} members across {} pages", collectedMembers.size(), pageCount)
-            
-            assertThat("Should have collected at least 3 members", 
+
+            assertThat("Should have collected at least 3 members",
                        collectedMembers.size(), greaterThanOrEqualTo(3))
             assertThat("Should have fetched multiple pages", pageCount, greaterThan(1))
-            
+
+        } catch (ApiException e) {
+            // A 404 on listGroupUsersPaged means the group wasn't found - this can happen
+            // due to Okta replication lag. Fail with a clear message instead of a raw 404.
+            if (e.getCode() == 404) {
+                logger.warn("Group {} not found during paged iteration (replication lag): {}", createdGroup.id, e.message)
+                throw new AssertionError("Group was deleted or not yet visible (replication lag): " + e.message, e)
+            }
+            throw e
         } finally {
             // Cleanup is handled by registerForCleanup
         }

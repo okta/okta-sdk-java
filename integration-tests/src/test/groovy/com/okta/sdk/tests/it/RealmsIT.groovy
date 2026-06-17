@@ -275,9 +275,9 @@ public class RealmsIT extends ITSupport {
         // 3. Test listing with a 'search' parameter using the 'co' (contains) operator
         String searchQuery = "profile.name co \"" + createdRealm.getProfile().getName() + "\"";
 
-// Retry logic to handle indexing delay
+// Retry logic to handle indexing delay (up to 20 seconds)
         List<Realm> searchedRealms = null;
-        int maxRetries = 10;
+        int maxRetries = 20;
         int retryCount = 0;
 
         while (retryCount < maxRetries) {
@@ -285,7 +285,7 @@ public class RealmsIT extends ITSupport {
             if (!searchedRealms.isEmpty()) {
                 break;
             }
-            TimeUnit.MILLISECONDS.sleep(500);
+            TimeUnit.MILLISECONDS.sleep(1000);
             retryCount++;
         }
 
