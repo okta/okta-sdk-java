@@ -655,12 +655,24 @@ class GroupsIT extends ITSupport {
 
         // Wait for eventual consistency with retry logic
         List<User> groupMembers = null
-        int maxRetries = 10
+        int maxRetries = 20
         int retryCount = 0
         while (retryCount < maxRetries) {
             // Use explicit 500ms delay to allow for API eventual consistency
             TimeUnit.MILLISECONDS.sleep(500)
-            groupMembers = groupApi.listGroupUsers(group.getId(), null, null)
+            try {
+                groupMembers = groupApi.listGroupUsers(group.getId(), null, null)
+            } catch (ApiException e) {
+                // The newly created group can be absent from the replica serving this
+                // read for a short window (replication lag), returning 404 (UserGroup).
+                // Treat as not-yet-consistent and keep retrying instead of failing.
+                if (e.code == 404) {
+                    retryCount++
+                    logger.debug("Retry {}/{}: group not yet visible (404), retrying", retryCount, maxRetries)
+                    continue
+                }
+                throw e
+            }
             if (groupMembers.size() >= 3) {
                 break
             }
