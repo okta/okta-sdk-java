@@ -42,7 +42,7 @@
         <jakarta-annotation.version>2.1.1</jakarta-annotation.version>
         <jsr305.version>3.0.2</jsr305.version>
         <junit.version>4.13.2</junit.version>
-        <com.github.jknack.handlebars.version>4.4.0</com.github.jknack.handlebars.version>
+        <com.github.jknack.handlebars.version>4.5.2</com.github.jknack.handlebars.version>
         <junit-version>5.10.2</junit-version>
     </properties>
 
