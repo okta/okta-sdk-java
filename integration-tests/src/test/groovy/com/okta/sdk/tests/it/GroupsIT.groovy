@@ -260,15 +260,23 @@ class GroupsIT extends ITSupport {
 
         validateGroup(createdGroup, groupName)
 
-        // Allow time for the group to be indexed and available in list results
-        Thread.sleep(1000)
-
-        // 2. List all groups and find the group created
-        List<Group> groups = groupApi.listGroups(null, null, null, null, null, null, null, null)
+        // 2. Search for the group by name with retry to handle Okta indexing lag.
+        // An unfiltered listGroups() only returns the first page and the newly created
+        // group may not be indexed yet, so we use q=groupName and retry.
+        List<Group> groups = null
+        int maxRetries = 20
+        int retryCount = 0
+        while (retryCount < maxRetries) {
+            groups = groupApi.listGroups(null, null, groupName, null, null, null, null, null)
+            if (groups != null && isGroupPresent(groups, createdGroup)) {
+                break
+            }
+            Thread.sleep(1000)
+            retryCount++
+        }
 
         // 3. Assert that the list is valid and contains our newly created group
-        assertThat(groups, notNullValue())
-        assertThat(groups, not(empty()))
+        assertThat("Group should appear in search results after ${retryCount} retries", groups, notNullValue())
         assertGroupPresent(groups, createdGroup)
     }
 
@@ -647,12 +655,24 @@ class GroupsIT extends ITSupport {
 
         // Wait for eventual consistency with retry logic
         List<User> groupMembers = null
-        int maxRetries = 10
+        int maxRetries = 20
         int retryCount = 0
         while (retryCount < maxRetries) {
             // Use explicit 500ms delay to allow for API eventual consistency
             TimeUnit.MILLISECONDS.sleep(500)
-            groupMembers = groupApi.listGroupUsers(group.getId(), null, null)
+            try {
+                groupMembers = groupApi.listGroupUsers(group.getId(), null, null)
+            } catch (ApiException e) {
+                // The newly created group can be absent from the replica serving this
+                // read for a short window (replication lag), returning 404 (UserGroup).
+                // Treat as not-yet-consistent and keep retrying instead of failing.
+                if (e.code == 404) {
+                    retryCount++
+                    logger.debug("Retry {}/{}: group not yet visible (404), retrying", retryCount, maxRetries)
+                    continue
+                }
+                throw e
+            }
             if (groupMembers.size() >= 3) {
                 break
             }

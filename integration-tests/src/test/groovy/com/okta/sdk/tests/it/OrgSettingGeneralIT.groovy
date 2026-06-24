@@ -160,10 +160,18 @@ class OrgSettingGeneralIT extends ITSupport {
             // ========================================
             logger.debug("\n5. GET /api/v1/org (Verify full replace)")
             
+            // The GET can land on a replica that hasn't caught up with the PUT yet
+            // (read-after-write replication lag), returning the pre-replace value.
+            // Poll until the replace is visible before asserting.
             def verifyFullReplace = orgSettingGeneralApi.getOrgSettings()
-            
+            int replaceRetries = 20
+            for (int i = 0; i < replaceRetries && verifyFullReplace.website != "http://www.test-sdk-full-replace.com"; i++) {
+                Thread.sleep(1000)
+                verifyFullReplace = orgSettingGeneralApi.getOrgSettings()
+            }
+
             assertThat "All fields should be persisted", verifyFullReplace, notNullValue()
-            assertThat "Website should match", 
+            assertThat "Website should match",
                        verifyFullReplace.website, equalTo("http://www.test-sdk-full-replace.com")
             assertThat "Support URL should match", 
                        verifyFullReplace.endUserSupportHelpURL, equalTo("http://support.test-sdk.com")
