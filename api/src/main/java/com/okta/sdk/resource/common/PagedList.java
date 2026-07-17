@@ -67,27 +67,29 @@ public class PagedList<T> extends ArrayList<T> {
     public static <T> T constructPagedList(HttpResponse response, T value) {
         Assert.notNull(response);
         Assert.isTrue(value instanceof List);
-        Header[] linkHeaders = response.getHeaders("link");
-        if (linkHeaders == null || linkHeaders.length == 0) {
+        if (value instanceof PagedList) {
             return value;
         }
         String nextPage = null;
         String self = null;
-        for (Header link : linkHeaders) {
-            String[] parts = link.getValue().split("; *");
-            String url = parts[0]
-                .replaceAll("<", "")
-                .replaceAll(">", "");
-            String rel = parts[1];
-            if (rel.equals("rel=\"next\"")) {
-                nextPage = url;
-            } else if (rel.equals("rel=\"self\"")) {
-                self = url;
+        Header[] linkHeaders = response.getHeaders("link");
+        if (linkHeaders != null) {
+            for (Header link : linkHeaders) {
+                String[] parts = link.getValue().split("; *");
+                String url = parts[0]
+                    .replaceAll("<", "")
+                    .replaceAll(">", "");
+                String rel = parts[1];
+                if (rel.equals("rel=\"next\"")) {
+                    nextPage = url;
+                } else if (rel.equals("rel=\"self\"")) {
+                    self = url;
+                }
             }
         }
-        if (nextPage == null && self == null) {
-            return value;
-        }
+        // Always wrap in a PagedList, even when there's no Link header (e.g. a filtered
+        // query that fits on a single page), so callers get a consistent return type.
+        // getAfter()/hasMoreItems() already report "no more pages" when nextPage is null.
         return (T) new PagedList((List) value, self, nextPage, null);
     }
 
