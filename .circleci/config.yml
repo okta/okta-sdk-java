@@ -110,7 +110,13 @@ workflows:
   "Circle CI Tests":
     jobs:
       - jdk11
-      - jdk21
+      - jdk21:
+          # jdk11 and jdk21 run the same integration test suite against the same shared
+          # live test org (no per-job isolation). Running them concurrently lets one job's
+          # writes to org-singleton resources (e.g. OrgSetting) clobber the other's,
+          # causing flaky read-after-write assertion failures. Serialize them.
+          requires:
+            - jdk11
       - platform-helpers/job-semgrep-scan:
           name: "Scan with Semgrep"
           context:
