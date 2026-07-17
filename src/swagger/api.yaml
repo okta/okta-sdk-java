@@ -69180,6 +69180,7 @@ components:
           type: array
           readOnly: true
           nullable: true
+          items: {}
     LogSeverity:
       description: Indicates how severe the event is
       type: string
