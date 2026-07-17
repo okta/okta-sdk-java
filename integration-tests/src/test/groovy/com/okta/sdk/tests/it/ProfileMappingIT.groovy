@@ -320,11 +320,6 @@ class ProfileMappingIT extends ITSupport {
      * Test 4: Update Profile Mapping
      * Tests updating a profile mapping's property expressions
      * Endpoint: POST /api/v1/mappings/{mappingId}
-     *
-     * NOTE: The SDK model ProfileMappingRequest.properties is typed as a single
-     * ProfileMappingProperty object, but the API expects a Map of property names
-     * to property objects. This test validates the SDK call is made correctly
-     * and handles the expected model limitation.
      */
     @Test(groups = "group1")
     @Scenario("profile-mapping-update")
@@ -375,28 +370,27 @@ class ProfileMappingIT extends ITSupport {
         ProfileMapping currentMapping = profileMappingApi.getProfileMapping(mappingId)
         assertThat("Mapping must exist", currentMapping, notNullValue())
 
-        // Update the profile mapping with a property expression
-        // NOTE: SDK model maps properties as a single object rather than a Map.
+        // Update the profile mapping with a property expression.
         // The API expects: {"properties": {"fieldName": {"expression": "...", "pushStatus": "..."}}}
-        // The SDK sends: {"properties": {"expression": "...", "pushStatus": "..."}}
-        // This mismatch causes a 400 error - this is a known SDK limitation.
-        try {
-            ProfileMappingProperty prop = new ProfileMappingProperty()
-            prop.setExpression("user.firstName")
-            prop.setPushStatus(ProfileMappingPropertyPushStatus.PUSH)
+        // i.e. a map keyed by target property name.
+        ProfileMappingProperty prop = new ProfileMappingProperty()
+        prop.setExpression("user.firstName")
+        prop.setPushStatus(ProfileMappingPropertyPushStatus.PUSH)
 
-            ProfileMappingRequest updateRequest = new ProfileMappingRequest()
-            updateRequest.setProperties(prop)
+        ProfileMappingRequest updateRequest = new ProfileMappingRequest()
+        updateRequest.setProperties(["firstName": prop])
 
-            ProfileMapping updatedMapping = profileMappingApi.updateProfileMapping(mappingId, updateRequest)
-            assertThat("Updated mapping must not be null", updatedMapping, notNullValue())
-            assertThat("Updated mapping ID should match", updatedMapping.getId(), is(mappingId))
-        } catch (ApiException e) {
-            // Expected 400 due to SDK model mismatch (properties is single object, not a Map)
-            logger.info("updateProfileMapping returned {} (SDK model limitation: properties is single object, not a Map)", e.getCode())
-            assertThat("Should return 400 for SDK model mismatch",
-                e.getCode(), anyOf(equalTo(400), equalTo(500)))
-        }
+        ProfileMapping updatedMapping = profileMappingApi.updateProfileMapping(mappingId, updateRequest)
+        assertThat("Updated mapping must not be null", updatedMapping, notNullValue())
+        assertThat("Updated mapping ID should match", updatedMapping.getId(), is(mappingId))
+        assertThat("Updated mapping should have properties map", updatedMapping.getProperties(), notNullValue())
+        assertThat("Updated mapping properties should contain firstName mapping",
+            updatedMapping.getProperties(), hasKey("firstName"))
+
+        ProfileMappingProperty updatedProp = updatedMapping.getProperties().get("firstName")
+        assertThat("firstName mapping should have expression", updatedProp.getExpression(), is("user.firstName"))
+        assertThat("firstName mapping should have pushStatus", updatedProp.getPushStatus(),
+            is(ProfileMappingPropertyPushStatus.PUSH))
 
         logger.info("updateProfileMapping test completed successfully")
     }
@@ -434,7 +428,7 @@ class ProfileMappingIT extends ITSupport {
             ProfileMappingProperty prop = new ProfileMappingProperty()
             prop.setExpression("appuser.firstName")
             ProfileMappingRequest updateRequest = new ProfileMappingRequest()
-            updateRequest.setProperties(prop)
+            updateRequest.setProperties(["firstName": prop])
 
             profileMappingApi.updateProfileMapping("prm_non_existent_id_12345", updateRequest)
             assertThat("Should throw exception for non-existent mapping ID on update", false)
