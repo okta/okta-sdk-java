@@ -67,9 +67,12 @@ class OrgSettingGeneralIT extends ITSupport {
         // against the same shared live test org, so a fixed literal value here could be
         // clobbered by (or read back from) a concurrently-running job. Use a per-run unique
         // value so this run's writes/reads can never be confused with another run's.
+        // .toString() is required: Groovy string interpolation produces a GString, and
+        // GString.equals(String) is always false even when the text matches, which would
+        // make every equalTo() assertion below fail despite identical-looking values.
         def runId = UUID.randomUUID().toString()
-        def partialUpdateWebsite = "http://www.test-sdk-integration-${runId}.com"
-        def fullReplaceWebsite = "http://www.test-sdk-full-replace-${runId}.com"
+        def partialUpdateWebsite = "http://www.test-sdk-integration-${runId}.com".toString()
+        def fullReplaceWebsite = "http://www.test-sdk-full-replace-${runId}.com".toString()
 
         // Track original values for cleanup
         def originalSettings = null
@@ -146,7 +149,7 @@ class OrgSettingGeneralIT extends ITSupport {
             // ========================================
             logger.debug("\n4. PUT /api/v1/org (Full replace - update multiple fields)")
             
-            def fullReplaceSupportUrl = "http://support.test-sdk-${runId}.com"
+            def fullReplaceSupportUrl = "http://support.test-sdk-${runId}.com".toString()
             def fullReplace = new OrgSetting()
                 .companyName(originalSettings.companyName)
                 .website(fullReplaceWebsite)
