@@ -179,10 +179,33 @@ class ApplicationSSOPublicKeysIT extends ITSupport {
         app.credentials(credentials)
         app.signOnMode(ApplicationSignOnMode.OPENID_CONNECT)
 
-        OpenIdConnectApplication createdApp = applicationApi.createApplication(app, true, null) as OpenIdConnectApplication
+        OpenIdConnectApplication createdApp = createApplicationWithRetry(app)
         registerForCleanup(createdApp)
 
         return createdApp.getId()
+    }
+
+    /**
+     * The SDK's built-in HTTP retry strategy (OktaHttpRequestRetryStrategy) only retries
+     * 429/503/504 - a bare 500 "Internal Server Error" from the backend during app creation
+     * is occasionally transient but isn't covered by that policy. Retry a few times here
+     * before giving up, since this call runs in @BeforeClass and a spurious 500 would fail
+     * the whole test class.
+     */
+    private OpenIdConnectApplication createApplicationWithRetry(OpenIdConnectApplication app) {
+        int maxAttempts = 3
+        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                return applicationApi.createApplication(app, true, null) as OpenIdConnectApplication
+            } catch (ApiException e) {
+                if (e.code != 500 || attempt == maxAttempts) {
+                    throw e
+                }
+                logger.warn("createApplication returned 500 (attempt {}/{}), retrying...", attempt, maxAttempts)
+                Thread.sleep(2000L * attempt)
+            }
+        }
+        throw new IllegalStateException("unreachable")
     }
 
     /**
