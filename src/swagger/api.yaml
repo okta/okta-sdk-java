@@ -64042,6 +64042,18 @@ components:
           example: macOSFirewall
         _links:
           $ref: '#/components/schemas/LinksSelf'
+    DevicePostureCheckMapping:
+      description: A reference to a Device Posture Check by `variableName` and the value to match against it
+      type: object
+      properties:
+        variableName:
+          type: string
+          description: Unique name of the device posture check
+          example: macOSFirewall
+        value:
+          type: string
+          description: The value to match for this device posture check
+          example: '1'
     DevicePostureChecks:
       x-okta-lifecycle:
         lifecycle: EA
@@ -64053,6 +64065,8 @@ components:
         include:
           type: array
           description: An array of key value pairs including Device Posture Check `variableNames`
+          items:
+            $ref: '#/components/schemas/DevicePostureCheckMapping'
           example:
             - variableName: macOSFirewall
               value: '1'
@@ -64422,6 +64436,7 @@ components:
       type: string
       enum:
         - COMPLETED
+        - FAILED_TO_VERIFY
         - IN_PROGRESS
         - NOT_STARTED
         - VERIFIED
