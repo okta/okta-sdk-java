@@ -19,13 +19,18 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.okta.sdk.cache.Cache;
 import com.okta.sdk.cache.CacheManager;
+import com.okta.sdk.resource.model.AgentJsonSigningKeyRequest;
+import com.okta.sdk.resource.model.AgentJsonSigningKeyResponse;
 import com.okta.sdk.resource.model.Application;
 import com.okta.sdk.resource.model.ApplicationVisibility;
 import com.okta.sdk.resource.model.ApplicationVisibilityHide;
 import com.okta.sdk.resource.model.ListJwk200ResponseInner;
+import com.okta.sdk.resource.model.ManagedConnection;
+import com.okta.sdk.resource.model.ManagedConnectionCreatable;
 import com.okta.sdk.resource.model.OpenIdConnectApplication;
 import com.okta.sdk.resource.model.OrgContactType;
 import com.okta.sdk.resource.model.OrgContactTypeObj;
+import com.okta.sdk.resource.model.PotentialConnection;
 import com.okta.sdk.resource.model.SamlApplication;
 import com.okta.sdk.resource.model.SamlAttributeStatement;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
@@ -189,5 +194,106 @@ public class ApiClientJacksonMixinTest {
         assertEquals(contacts.size(), 2);
         assertEquals(contacts.get(0).getContactType(), OrgContactType.BILLING);
         assertEquals(contacts.get(1).getContactType(), OrgContactType.TECHNICAL);
+    }
+
+    /**
+     * Same audit finding as OrgContactTypeObj: AgentJsonSigningKeyRequest declares RSA/EC subtypes that
+     * don't extend it. Currently unreferenced by any operation in the spec, fixed for consistency.
+     */
+    @Test
+    public void deserializeAgentJsonSigningKeyRequest_withRsaAndEcEntries_doesNotThrow() throws Exception {
+        String json = "["
+            + "{\"kty\":\"RSA\",\"e\":\"AQAB\",\"n\":\"mkC6\",\"use\":\"sig\",\"alg\":\"RS256\"},"
+            + "{\"kty\":\"EC\",\"crv\":\"P-256\",\"x\":\"abc\",\"y\":\"def\",\"use\":\"sig\",\"alg\":\"ES256\"}"
+            + "]";
+
+        List<AgentJsonSigningKeyRequest> keys = objectMapper.readValue(json,
+            new TypeReference<List<AgentJsonSigningKeyRequest>>() { });
+
+        assertEquals(keys.size(), 2);
+        assertEquals(keys.get(0).getE(), "AQAB");
+        assertEquals(keys.get(1).getCrv().getValue(), "P-256");
+    }
+
+    /**
+     * Same audit finding, response-side counterpart of AgentJsonSigningKeyRequest.
+     */
+    @Test
+    public void deserializeAgentJsonSigningKeyResponse_withRsaAndEcEntries_doesNotThrow() throws Exception {
+        String json = "["
+            + "{\"kty\":\"RSA\",\"e\":\"AQAB\",\"n\":\"mkC6\",\"use\":\"sig\",\"alg\":\"RS256\",\"id\":\"key1\"},"
+            + "{\"kty\":\"EC\",\"crv\":\"P-256\",\"x\":\"abc\",\"y\":\"def\",\"use\":\"sig\",\"alg\":\"ES256\",\"id\":\"key2\"}"
+            + "]";
+
+        List<AgentJsonSigningKeyResponse> keys = objectMapper.readValue(json,
+            new TypeReference<List<AgentJsonSigningKeyResponse>>() { });
+
+        assertEquals(keys.size(), 2);
+        assertEquals(keys.get(0).getId(), "key1");
+        assertEquals(keys.get(1).getCrv().getValue(), "P-256");
+    }
+
+    /**
+     * Same audit finding: ManagedConnection declares 4 connectionType subtypes that don't extend it.
+     * Reachable from the managed-connection-list endpoint.
+     *
+     * Separate, pre-existing quirk unrelated to this fix: each oneOf branch declares its own
+     * single-value connectionType enum (e.g. just "IDENTITY_ASSERTION_APP_INSTANCE"), and the flat
+     * merged class ends up keeping only the last-merged branch's enum ("STS_SERVICE_ACCOUNT") - every
+     * other value falls back to UNKNOWN_DEFAULT_OPEN_API (harmless, since
+     * READ_UNKNOWN_ENUM_VALUES_AS_NULL-style fallback is already relied on elsewhere; it doesn't throw).
+     * This test only asserts the polymorphism fix - that deserialization doesn't throw - not full type
+     * fidelity, which is a separate, wider issue with how the generator merges oneOf enum properties.
+     */
+    @Test
+    public void deserializeManagedConnection_withDifferentConnectionTypes_doesNotThrow() throws Exception {
+        String json = "["
+            + "{\"connectionType\":\"IDENTITY_ASSERTION_APP_INSTANCE\",\"id\":\"conn1\"},"
+            + "{\"connectionType\":\"STS_SERVICE_ACCOUNT\",\"id\":\"conn2\"}"
+            + "]";
+
+        List<ManagedConnection> connections = objectMapper.readValue(json,
+            new TypeReference<List<ManagedConnection>>() { });
+
+        assertEquals(connections.size(), 2);
+        assertEquals(connections.get(0).getId(), "conn1");
+        assertEquals(connections.get(1).getConnectionType(), ManagedConnection.ConnectionTypeEnum.STS_SERVICE_ACCOUNT);
+    }
+
+    /**
+     * Same audit finding, "creatable" (request-body) counterpart of ManagedConnection. See the enum
+     * fidelity caveat on {@link #deserializeManagedConnection_withDifferentConnectionTypes_doesNotThrow}.
+     */
+    @Test
+    public void deserializeManagedConnectionCreatable_withDifferentConnectionTypes_doesNotThrow() throws Exception {
+        String json = "["
+            + "{\"connectionType\":\"IDENTITY_ASSERTION_CUSTOM_AS\"},"
+            + "{\"connectionType\":\"STS_SERVICE_ACCOUNT\"}"
+            + "]";
+
+        List<ManagedConnectionCreatable> connections = objectMapper.readValue(json,
+            new TypeReference<List<ManagedConnectionCreatable>>() { });
+
+        assertEquals(connections.size(), 2);
+        assertEquals(connections.get(1).getConnectionType(), ManagedConnectionCreatable.ConnectionTypeEnum.STS_SERVICE_ACCOUNT);
+    }
+
+    /**
+     * Same audit finding: PotentialConnection is a near-duplicate of ManagedConnection with the identical
+     * defect (same 4 subtypes, same discriminator). See the enum fidelity caveat on
+     * {@link #deserializeManagedConnection_withDifferentConnectionTypes_doesNotThrow}.
+     */
+    @Test
+    public void deserializePotentialConnection_withDifferentConnectionTypes_doesNotThrow() throws Exception {
+        String json = "["
+            + "{\"connectionType\":\"IDENTITY_ASSERTION_APP_INSTANCE\"},"
+            + "{\"connectionType\":\"STS_SERVICE_ACCOUNT\"}"
+            + "]";
+
+        List<PotentialConnection> connections = objectMapper.readValue(json,
+            new TypeReference<List<PotentialConnection>>() { });
+
+        assertEquals(connections.size(), 2);
+        assertEquals(connections.get(1).getConnectionType(), PotentialConnection.ConnectionTypeEnum.STS_SERVICE_ACCOUNT);
     }
 }
