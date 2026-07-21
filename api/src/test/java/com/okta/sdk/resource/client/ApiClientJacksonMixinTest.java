@@ -19,10 +19,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.okta.sdk.cache.Cache;
 import com.okta.sdk.cache.CacheManager;
+import com.okta.sdk.resource.model.Application;
 import com.okta.sdk.resource.model.ApplicationVisibility;
 import com.okta.sdk.resource.model.ApplicationVisibilityHide;
 import com.okta.sdk.resource.model.ListJwk200ResponseInner;
 import com.okta.sdk.resource.model.OpenIdConnectApplication;
+import com.okta.sdk.resource.model.OrgContactType;
+import com.okta.sdk.resource.model.OrgContactTypeObj;
+import com.okta.sdk.resource.model.SamlApplication;
 import com.okta.sdk.resource.model.SamlAttributeStatement;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.testng.annotations.Test;
@@ -134,5 +138,56 @@ public class ApiClientJacksonMixinTest {
 
         assertNotNull(json);
         assertTrue(json.contains("\"name\""), "name should be present when set, got: " + json);
+    }
+
+    /**
+     * GH-1654: reported that listApplications only returned OIDC apps, no SAML apps. A SAML app whose
+     * settings.signOn.attributeStatements uses the (now-fixed) broken SamlAttributeStatement type would
+     * throw InvalidTypeIdException while parsing the response array - depending on how a caller's
+     * pagination/error handling reacted to that, it could plausibly look like SAML apps were being
+     * silently dropped. Confirms a mixed OIDC/SAML list - with attribute statements populated - now
+     * deserializes cleanly end-to-end via Application's own (structurally correct) polymorphism.
+     */
+    @Test
+    public void deserializeApplicationList_withMixedOidcAndSamlAttributeStatements_doesNotThrow() throws Exception {
+        String json = "["
+            + "{\"signOnMode\":\"OPENID_CONNECT\",\"label\":\"oidc-app\",\"id\":\"0oa1\"},"
+            + "{\"signOnMode\":\"SAML_2_0\",\"label\":\"saml-app\",\"id\":\"0oa2\",\"settings\":{\"signOn\":{"
+            + "\"attributeStatements\":["
+            + "{\"type\":\"EXPRESSION\",\"name\":\"email\",\"values\":[\"user.email\"]},"
+            + "{\"type\":\"GROUP\",\"filterType\":\"STARTS_WITH\",\"filterValue\":\"Team\"}"
+            + "]}}}"
+            + "]";
+
+        List<Application> apps = objectMapper.readValue(json, new TypeReference<List<Application>>() { });
+
+        assertEquals(apps.size(), 2);
+        assertTrue(apps.get(0) instanceof OpenIdConnectApplication, "expected OpenIdConnectApplication, got " + apps.get(0).getClass());
+        assertTrue(apps.get(1) instanceof SamlApplication, "expected SamlApplication, got " + apps.get(1).getClass());
+
+        SamlApplication samlApp = (SamlApplication) apps.get(1);
+        List<SamlAttributeStatement> statements = samlApp.getSettings().getSignOn().getAttributeStatements();
+        assertEquals(statements.size(), 2);
+        assertEquals(statements.get(0).getType(), SamlAttributeStatement.TypeEnum.EXPRESSION);
+        assertEquals(statements.get(1).getType(), SamlAttributeStatement.TypeEnum.GROUP);
+    }
+
+    /**
+     * Found via an audit of every oneOf/anyOf + discriminator pair in the spec for the same defect class
+     * as OKTA-1227472: OrgContactTypeObj declares BILLING/TECHNICAL subtypes that don't extend it, breaking
+     * the real listOrgContactTypes endpoint.
+     */
+    @Test
+    public void deserializeOrgContactTypeObj_withBillingAndTechnicalEntries_doesNotThrow() throws Exception {
+        String json = "["
+            + "{\"contactType\":\"BILLING\"},"
+            + "{\"contactType\":\"TECHNICAL\"}"
+            + "]";
+
+        List<OrgContactTypeObj> contacts = objectMapper.readValue(json, new TypeReference<List<OrgContactTypeObj>>() { });
+
+        assertEquals(contacts.size(), 2);
+        assertEquals(contacts.get(0).getContactType(), OrgContactType.BILLING);
+        assertEquals(contacts.get(1).getContactType(), OrgContactType.TECHNICAL);
     }
 }

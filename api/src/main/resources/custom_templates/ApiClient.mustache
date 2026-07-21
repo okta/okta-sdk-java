@@ -238,9 +238,19 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
             objectMapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
 
             // OKTA-1227472: disable broken polymorphic type resolution on models whose spec-declared
-            // discriminator subtypes don't actually extend them.
+            // discriminator subtypes don't actually extend them. Found via an audit of every
+            // oneOf/anyOf + discriminator pair in the spec for this same defect class - these six
+            // have the identical problem (ListJwk200ResponseInner/SamlAttributeStatement above were
+            // the first two found; OrgContactTypeObj in particular breaks the real, commonly-used
+            // listOrgContactTypes endpoint).
             objectMapper.addMixIn(com.okta.sdk.resource.model.ListJwk200ResponseInner.class, NoPolymorphicTypeInfoMixin.class);
             objectMapper.addMixIn(com.okta.sdk.resource.model.SamlAttributeStatement.class, NoPolymorphicTypeInfoMixin.class);
+            objectMapper.addMixIn(com.okta.sdk.resource.model.AgentJsonSigningKeyRequest.class, NoPolymorphicTypeInfoMixin.class);
+            objectMapper.addMixIn(com.okta.sdk.resource.model.AgentJsonSigningKeyResponse.class, NoPolymorphicTypeInfoMixin.class);
+            objectMapper.addMixIn(com.okta.sdk.resource.model.ManagedConnection.class, NoPolymorphicTypeInfoMixin.class);
+            objectMapper.addMixIn(com.okta.sdk.resource.model.ManagedConnectionCreatable.class, NoPolymorphicTypeInfoMixin.class);
+            objectMapper.addMixIn(com.okta.sdk.resource.model.OrgContactTypeObj.class, NoPolymorphicTypeInfoMixin.class);
+            objectMapper.addMixIn(com.okta.sdk.resource.model.PotentialConnection.class, NoPolymorphicTypeInfoMixin.class);
 
             // OKTA-1218351: restore NON_NULL serialization on Application and its subtypes, overriding the
             // per-property JsonInclude(ALWAYS) generated for their required properties.
