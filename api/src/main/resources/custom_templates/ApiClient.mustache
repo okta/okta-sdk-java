@@ -20,6 +20,10 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
+import com.fasterxml.jackson.databind.ser.PropertyWriter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 {{#joda}}
     import com.fasterxml.jackson.datatype.joda.JodaModule;
 {{/joda}}
@@ -125,6 +129,43 @@ public class ApiClient{{#jsr310}} extends JavaTimeFormatter{{/jsr310}} {
 
 private static final Logger log = LoggerFactory.getLogger(ApiClient.class);
 
+/**
+ * Some generated models (e.g. ListJwk200ResponseInner, SamlAttributeStatement) declare
+ * {@literal @}JsonSubTypes entries pointing at classes that don't actually extend them, because their
+ * source schemas use oneOf/anyOf + discriminator without allOf-based inheritance. Jackson requires real
+ * Java inheritance for polymorphic resolution, so deserializing these throws InvalidTypeIdException.
+ * These classes already contain the union of all their branches' properties as flat fields, so disabling
+ * polymorphic resolution loses no data.
+ */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
+private interface NoPolymorphicTypeInfoMixin {
+}
+
+/**
+ * Required properties on generated models get {@literal @}JsonInclude(ALWAYS) so create payloads always
+ * include them. But Application subtypes (e.g. OpenIdConnectApplication) reuse the same class for partial
+ * PUT updates, where ALWAYS forces unrelated required fields (credentials, name, settings) to serialize as
+ * literal null, overwriting them server-side. Jackson property filters run before per-property
+ * JsonInclude, so this filter restores NON_NULL behavior for Application and all its subtypes.
+ */
+@JsonFilter("applicationNullFieldFilter")
+private interface ApplicationNullFieldFilterMixin {
+}
+
+private static final class SkipNullPropertyFilter extends SimpleBeanPropertyFilter {
+    @Override
+    public void serializeAsField(Object pojo, com.fasterxml.jackson.core.JsonGenerator jgen,
+            SerializerProvider provider, PropertyWriter writer) throws Exception {
+        if (writer instanceof BeanPropertyWriter && ((BeanPropertyWriter) writer).get(pojo) == null) {
+            if (!jgen.canOmitFields()) {
+                writer.serializeAsOmittedField(pojo, jgen, provider);
+            }
+            return;
+        }
+        super.serializeAsField(pojo, jgen, provider, writer);
+    }
+}
+
 private Map<String, String> defaultHeaderMap = new HashMap<String, String>();
 private Map<String, String> defaultCookieMap = new HashMap<String, String>();
 private String basePath = "{{{basePath}}}";
@@ -195,6 +236,18 @@ protected List<ServerConfiguration> servers = new ArrayList<ServerConfiguration>
             objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
             objectMapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
             objectMapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+
+            // OKTA-1227472: disable broken polymorphic type resolution on models whose spec-declared
+            // discriminator subtypes don't actually extend them.
+            objectMapper.addMixIn(com.okta.sdk.resource.model.ListJwk200ResponseInner.class, NoPolymorphicTypeInfoMixin.class);
+            objectMapper.addMixIn(com.okta.sdk.resource.model.SamlAttributeStatement.class, NoPolymorphicTypeInfoMixin.class);
+
+            // OKTA-1218351: restore NON_NULL serialization on Application and its subtypes, overriding the
+            // per-property JsonInclude(ALWAYS) generated for their required properties.
+            objectMapper.addMixIn(com.okta.sdk.resource.model.Application.class, ApplicationNullFieldFilterMixin.class);
+            objectMapper.setFilterProvider(new SimpleFilterProvider()
+                .addFilter("applicationNullFieldFilter", new SkipNullPropertyFilter())
+                .setFailOnUnknownId(false));
             {{#joda}}
                 objectMapper.registerModule(new JodaModule());
             {{/joda}}

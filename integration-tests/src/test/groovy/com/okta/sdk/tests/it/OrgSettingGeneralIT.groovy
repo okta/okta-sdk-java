@@ -63,6 +63,17 @@ class OrgSettingGeneralIT extends ITSupport {
         // Initialize API
         orgSettingGeneralApi = new OrgSettingGeneralApi(getClient())
 
+        // OrgSetting is a singleton per org. IT jobs for different JDKs run this same test
+        // against the same shared live test org, so a fixed literal value here could be
+        // clobbered by (or read back from) a concurrently-running job. Use a per-run unique
+        // value so this run's writes/reads can never be confused with another run's.
+        // .toString() is required: Groovy string interpolation produces a GString, and
+        // GString.equals(String) is always false even when the text matches, which would
+        // make every equalTo() assertion below fail despite identical-looking values.
+        def runId = UUID.randomUUID().toString()
+        def partialUpdateWebsite = "http://www.test-sdk-integration-${runId}.com".toString()
+        def fullReplaceWebsite = "http://www.test-sdk-full-replace-${runId}.com".toString()
+
         // Track original values for cleanup
         def originalSettings = null
 
@@ -103,13 +114,13 @@ class OrgSettingGeneralIT extends ITSupport {
             logger.debug("\n2. POST /api/v1/org (Partial update - modify website only)")
             
             def partialUpdate = new OrgSetting()
-                .website("http://www.test-sdk-integration.com")
-            
+                .website(partialUpdateWebsite)
+
             def updatedSettings = orgSettingGeneralApi.updateOrgSettings(partialUpdate)
-            
+
             assertThat "Updated settings should not be null", updatedSettings, notNullValue()
-            assertThat "Website should be updated", 
-                       updatedSettings.website, equalTo("http://www.test-sdk-integration.com")
+            assertThat "Website should be updated",
+                       updatedSettings.website, equalTo(partialUpdateWebsite)
             assertThat "Company name should remain unchanged", 
                        updatedSettings.companyName, equalTo(originalSettings.companyName)
             assertThat "Org ID should remain unchanged", 
@@ -126,8 +137,8 @@ class OrgSettingGeneralIT extends ITSupport {
             
             def verifyPartialUpdate = orgSettingGeneralApi.getOrgSettings()
             
-            assertThat "Website should be persisted", 
-                       verifyPartialUpdate.website, equalTo("http://www.test-sdk-integration.com")
+            assertThat "Website should be persisted",
+                       verifyPartialUpdate.website, equalTo(partialUpdateWebsite)
             assertThat "Other fields should be unchanged", 
                        verifyPartialUpdate.companyName, equalTo(originalSettings.companyName)
             
@@ -138,18 +149,19 @@ class OrgSettingGeneralIT extends ITSupport {
             // ========================================
             logger.debug("\n4. PUT /api/v1/org (Full replace - update multiple fields)")
             
+            def fullReplaceSupportUrl = "http://support.test-sdk-${runId}.com".toString()
             def fullReplace = new OrgSetting()
                 .companyName(originalSettings.companyName)
-                .website("http://www.test-sdk-full-replace.com")
-                .endUserSupportHelpURL("http://support.test-sdk.com")
-            
+                .website(fullReplaceWebsite)
+                .endUserSupportHelpURL(fullReplaceSupportUrl)
+
             def replacedSettings = orgSettingGeneralApi.replaceOrgSettings(fullReplace)
-            
+
             assertThat "Replaced settings should not be null", replacedSettings, notNullValue()
-            assertThat "Website should be updated", 
-                       replacedSettings.website, equalTo("http://www.test-sdk-full-replace.com")
-            assertThat "Support URL should be updated", 
-                       replacedSettings.endUserSupportHelpURL, equalTo("http://support.test-sdk.com")
+            assertThat "Website should be updated",
+                       replacedSettings.website, equalTo(fullReplaceWebsite)
+            assertThat "Support URL should be updated",
+                       replacedSettings.endUserSupportHelpURL, equalTo(fullReplaceSupportUrl)
             
             logger.debug("   Full replace successful:")
             logger.debug("    - Website: {}", replacedSettings.website)
@@ -165,16 +177,16 @@ class OrgSettingGeneralIT extends ITSupport {
             // Poll until the replace is visible before asserting.
             def verifyFullReplace = orgSettingGeneralApi.getOrgSettings()
             int replaceRetries = 20
-            for (int i = 0; i < replaceRetries && verifyFullReplace.website != "http://www.test-sdk-full-replace.com"; i++) {
+            for (int i = 0; i < replaceRetries && verifyFullReplace.website != fullReplaceWebsite; i++) {
                 Thread.sleep(1000)
                 verifyFullReplace = orgSettingGeneralApi.getOrgSettings()
             }
 
             assertThat "All fields should be persisted", verifyFullReplace, notNullValue()
             assertThat "Website should match",
-                       verifyFullReplace.website, equalTo("http://www.test-sdk-full-replace.com")
-            assertThat "Support URL should match", 
-                       verifyFullReplace.endUserSupportHelpURL, equalTo("http://support.test-sdk.com")
+                       verifyFullReplace.website, equalTo(fullReplaceWebsite)
+            assertThat "Support URL should match",
+                       verifyFullReplace.endUserSupportHelpURL, equalTo(fullReplaceSupportUrl)
             
             logger.debug("   Verified full replace persisted correctly")
 
