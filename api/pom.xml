@@ -227,6 +227,7 @@
                                 <sourceFolder>src/gen/java/main</sourceFolder>
                                 <useRuntimeException>true</useRuntimeException>
                                 <enumUnknownDefaultCase>true</enumUnknownDefaultCase>
+                                <useEnumCaseInsensitive>true</useEnumCaseInsensitive>
                                 <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <additionalProperties>serializableModel=true</additionalProperties>

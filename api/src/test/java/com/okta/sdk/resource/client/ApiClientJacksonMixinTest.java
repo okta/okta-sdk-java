@@ -24,10 +24,12 @@ import com.okta.sdk.resource.model.AgentJsonSigningKeyResponse;
 import com.okta.sdk.resource.model.Application;
 import com.okta.sdk.resource.model.ApplicationVisibility;
 import com.okta.sdk.resource.model.ApplicationVisibilityHide;
+import com.okta.sdk.resource.model.KnowledgeConstraint;
 import com.okta.sdk.resource.model.ListJwk200ResponseInner;
 import com.okta.sdk.resource.model.ManagedConnection;
 import com.okta.sdk.resource.model.ManagedConnectionCreatable;
 import com.okta.sdk.resource.model.OpenIdConnectApplication;
+import com.okta.sdk.resource.model.PossessionConstraint;
 import com.okta.sdk.resource.model.OrgContactType;
 import com.okta.sdk.resource.model.OrgContactTypeObj;
 import com.okta.sdk.resource.model.PotentialConnection;
@@ -295,5 +297,37 @@ public class ApiClientJacksonMixinTest {
 
         assertEquals(connections.size(), 2);
         assertEquals(connections.get(1).getConnectionType(), PotentialConnection.ConnectionTypeEnum.STS_SERVICE_ACCOUNT);
+    }
+
+    /**
+     * OKTA-1232842: KnowledgeConstraint/PossessionConstraint's methods/types enums declare uppercase values
+     * (PASSWORD, PUSH, SECURITY_KEY, ...), matching the spec. But fromValue() did an exact-match equals(),
+     * so any lowercase variant of a value the API might send falls through to UNKNOWN_DEFAULT_OPEN_API
+     * instead of resolving to the real constant. useEnumCaseInsensitive makes matching case-insensitive.
+     */
+    @Test
+    public void deserializeKnowledgeConstraint_withLowercaseMethodsAndTypes_resolvesRealEnumConstants() throws Exception {
+        String json = "{\"methods\":[\"password\",\"push\"],\"types\":[\"security_key\",\"phone\"]}";
+
+        KnowledgeConstraint constraint = objectMapper.readValue(json, KnowledgeConstraint.class);
+
+        assertEquals(constraint.getMethods(),
+            List.of(KnowledgeConstraint.MethodsEnum.PASSWORD, KnowledgeConstraint.MethodsEnum.PUSH));
+        assertEquals(constraint.getTypes(),
+            List.of(KnowledgeConstraint.TypesEnum.SECURITY_KEY, KnowledgeConstraint.TypesEnum.PHONE));
+    }
+
+    /**
+     * Same fix, PossessionConstraint counterpart.
+     */
+    @Test
+    public void deserializePossessionConstraint_withLowercaseMethodsAndTypes_resolvesRealEnumConstants() throws Exception {
+        String json = "{\"methods\":[\"sms\"],\"types\":[\"app\",\"federated\"]}";
+
+        PossessionConstraint constraint = objectMapper.readValue(json, PossessionConstraint.class);
+
+        assertEquals(constraint.getMethods(), List.of(PossessionConstraint.MethodsEnum.SMS));
+        assertEquals(constraint.getTypes(),
+            List.of(PossessionConstraint.TypesEnum.APP, PossessionConstraint.TypesEnum.FEDERATED));
     }
 }
