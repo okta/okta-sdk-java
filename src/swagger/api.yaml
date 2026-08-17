@@ -73314,8 +73314,10 @@ components:
           default: 1
         maxConsecutiveCharacters:
           type: integer
-          description: 'The maximum number of consecutive characters allowed in a password: `0` indicates no limit'
+          description: '<x-lifecycle-container><x-lifecycle class="ea"></x-lifecycle> <x-lifecycle class="oie"></x-lifecycle></x-lifecycle-container>The maximum number of consecutive characters allowed in a password: `0` indicates no limit'
           default: 0
+          x-okta-lifecycle:
+            lifecycle: EA
         oelStatement:
           type: string
           description: <x-lifecycle-container><x-lifecycle class="ea"></x-lifecycle> <x-lifecycle class="oie"></x-lifecycle></x-lifecycle-container>Use an [Expression Language](https://developer.okta.com/docs/reference/okta-expression-language-in-identity-engine/) expression to block a word from being used in a password. You can only block one word per expression. Use the `OR` operator to connect multiple expressions to block multiple words.

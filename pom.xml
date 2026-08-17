@@ -247,6 +247,16 @@
                         <skipTests>${skipImplTests}</skipTests>
                         <argLine>@{argLine} --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.base/java.text=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED</argLine>
                     </configuration>
+                    <dependencies>
+                        <!-- Every test class in every module uses TestNG, but api's junit-jupiter dependency
+                             makes Surefire auto-detect the JUnit Platform provider instead, which silently
+                             discovers zero tests. Declaring the TestNG provider explicitly forces its use. -->
+                        <dependency>
+                            <groupId>org.apache.maven.surefire</groupId>
+                            <artifactId>surefire-testng</artifactId>
+                            <version>3.5.3</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
