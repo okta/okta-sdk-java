@@ -723,6 +723,8 @@ okta.client.requestTimeout = 0 //Sets the maximum number of seconds to wait when
 okta.client.rateLimit.maxRetries = 4 //Sets the maximum number of attempts to retrying before giving up.
 ```
 
+Note: a `429` response includes a server-supplied `x-rate-limit-reset` header telling the SDK how long to wait before retrying. That value is untrusted input, so the SDK always caps how long it will actually sleep for a single `429` retry: to `requestTimeout` if you've set it explicitly, or to a 20 second default ceiling otherwise (the same ceiling already applied to `503`/`504` retries). Set `requestTimeout` explicitly if your use case legitimately needs a longer per-retry wait than 20 seconds.
+
 For interactive clients (i.e. web pages) it is optimal to set `requestTimeout` to be 10 sec (or less, based on your needs), and the `maxRetries` attempts to be 0.
 This means the requests will retry as many times as possible within 10 seconds:
 
