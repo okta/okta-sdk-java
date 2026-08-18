@@ -38,7 +38,7 @@
         <snakeyaml.version>2.4</snakeyaml.version>
         <bouncycastle.version>1.84</bouncycastle.version>
         <jjwt.version>0.12.6</jjwt.version>
-        <org.apache.httpcomponents.client5.version>5.6.2</org.apache.httpcomponents.client5.version>
+        <org.apache.httpcomponents.client5.version>5.6.4</org.apache.httpcomponents.client5.version>
         <okta.sdk.previousVersion>24.0.1</okta.sdk.previousVersion>
         <okta.commons.version>2.0.1</okta.commons.version>
         <com.google.auto.service.version>1.1.1</com.google.auto.service.version>
