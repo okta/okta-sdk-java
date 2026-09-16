@@ -10717,6 +10717,17 @@ paths:
       summary: Retrieve a device
       description: Retrieves a device by `deviceId`
       operationId: getDevice
+      parameters:
+        - name: expand
+          in: query
+          description: Includes associated device provider data for the device in the `providers` attribute
+          schema:
+            type: string
+            example: providers
+            enum:
+              - providers
+            x-enumDescriptions:
+              providers: Includes associated device provider data for the device
       responses:
         '200':
           description: OK
@@ -63550,6 +63561,12 @@ components:
           readOnly: true
         profile:
           $ref: '#/components/schemas/DeviceProfile'
+        providers:
+          type: array
+          description: Provider-specific data for the device. Only populated when the `expand=providers` query parameter is specified on the request.
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/DeviceProviderInfo'
         resourceAlternateId:
           type: string
           readOnly: true
@@ -64192,6 +64209,22 @@ components:
         - displayName
         - platform
         - registered
+    DeviceProviderInfo:
+      type: object
+      description: Provider-specific data collected for a device
+      properties:
+        provider:
+          type: string
+          description: Name of the provider that supplied the device data
+          readOnly: true
+        payloadVersion:
+          type: string
+          description: Version of the `payload` schema
+          readOnly: true
+        payload:
+          type: object
+          description: Provider-specific payload data for the device
+          readOnly: true
     DeviceSignalCollectionPolicy:
       allOf:
         - $ref: '#/components/schemas/Policy'
