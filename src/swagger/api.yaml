@@ -24068,6 +24068,14 @@ paths:
         Lists all groups of which the user is a member.
         > **Note:** To list all groups in your org, use the [List all groups endpoints in the Groups API](/openapi/okta-management/management/tag/Group/#tag/Group/operation/listGroups).
       operationId: listUserGroups
+      parameters:
+        - $ref: '#/components/parameters/queryAfter'
+        - name: limit
+          in: query
+          description: Specifies the number of group results in a page
+          schema:
+            type: integer
+            format: int32
       responses:
         '200':
           description: Success
