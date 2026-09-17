@@ -408,7 +408,7 @@ public class DefaultClientBuilder implements ClientBuilder {
         HttpClientBuilder httpClientBuilder = HttpClients.custom()
             .setDefaultRequestConfig(createHttpRequestConfigBuilder(clientConfig).build())
             .setConnectionManager(createHttpClientConnectionManagerBuilder(clientConfig).build())
-            .setRetryStrategy(new OktaHttpRequestRetryStrategy(clientConfig.getRetryMaxAttempts()))
+            .setRetryStrategy(new OktaHttpRequestRetryStrategy(clientConfig.getRetryMaxAttempts(), clientConfig.getRetryMaxElapsed()))
             .setConnectionBackoffStrategy(new DefaultBackoffStrategy())
             .setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy())
             .setConnectionReuseStrategy(new DefaultConnectionReuseStrategy())

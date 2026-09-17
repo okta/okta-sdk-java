@@ -32,16 +32,25 @@ import com.okta.sdk.impl.test.RestoreEnvironmentVariables
 import com.okta.sdk.impl.test.RestoreSystemProperties
 import com.okta.sdk.resource.client.ApiClient
 import com.okta.sdk.resource.client.Configuration
+import org.apache.hc.client5.http.HttpRequestRetryStrategy
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder
 import org.apache.hc.client5.http.impl.classic.HttpClients
+import org.apache.hc.core5.http.Header
+import org.apache.hc.core5.http.HttpResponse
+import org.apache.hc.core5.http.protocol.HttpContext
+import org.apache.hc.core5.util.TimeValue
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 import org.testng.annotations.Listeners
 import org.testng.annotations.Test
 
+import java.lang.reflect.Field
 import java.nio.file.Path
 import java.security.KeyPair
 import java.security.KeyPairGenerator
 import java.security.PrivateKey
+import java.text.SimpleDateFormat
+import java.util.concurrent.TimeUnit
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is
@@ -441,7 +450,86 @@ class DefaultClientBuilderTest {
         assertThat clientBuilder.clientConfiguration.getKid(), is("kid-value")
     }
 
+    // Regression coverage for OKTA-1235975: an unbounded server-controlled retry sleep on HTTP 429.
+    // A malicious/MitM server can return an arbitrarily large x-rate-limit-reset value; the retry
+    // strategy built here must always cap the resulting sleep, whether or not retryMaxElapsed was
+    // explicitly configured.
+    //
+    // Unlike OktaHttpRequestRetryStrategyTest (which exercises the capping math directly against a
+    // strategy instance), these tests go through the real DefaultClientBuilder.createHttpClientBuilder
+    // wiring - so a regression like swapping getRetryMaxAttempts()/getRetryMaxElapsed() arguments at
+    // the call site would be caught here even though the strategy's own unit tests would still pass.
+
+    @Test
+    void testRetryStrategyDefaultRetryMaxElapsedStillBoundsMalicious429Delay() {
+        clearOktaEnvAndSysProps()
+        DefaultClientBuilder clientBuilder = new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+        // retryMaxElapsed intentionally left unconfigured (defaults to 0 / "no explicit limit")
+
+        HttpRequestRetryStrategy retryStrategy = buildRetryStrategy(clientBuilder)
+        TimeValue retryInterval = retryStrategy.getRetryInterval(maliciousRateLimitResponse(), 1, mock(HttpContext))
+
+        // must never honor the malicious ~1 year delay; a sane client-side ceiling always applies
+        assertTrue retryInterval.toMilliseconds() <= TimeUnit.MINUTES.toMillis(1)
+    }
+
+    @Test
+    void testRetryStrategyHonorsConfiguredRetryMaxElapsedFor429Delay() {
+        clearOktaEnvAndSysProps()
+        DefaultClientBuilder clientBuilder = new DefaultClientBuilder(noDefaultYamlNoAppYamlResourceFactory())
+        clientBuilder.setRetryMaxElapsed(5) // seconds
+
+        HttpRequestRetryStrategy retryStrategy = buildRetryStrategy(clientBuilder)
+        TimeValue retryInterval = retryStrategy.getRetryInterval(maliciousRateLimitResponse(), 1, mock(HttpContext))
+
+        assertEquals(TimeUnit.SECONDS.toMillis(5) as long, retryInterval.toMilliseconds() as long)
+    }
+
     // helper methods
+
+    /**
+     * Builds the retry strategy exactly as DefaultClientBuilder wires it up in createHttpClientBuilder,
+     * so the test exercises the real wiring rather than re-testing OktaHttpRequestRetryStrategy in isolation.
+     *
+     * HttpClientBuilder doesn't expose a public getter for the configured retry strategy, so this
+     * reaches into its private `retryStrategy` field via reflection. That's a known trade-off: it
+     * would break if Apache HttpClient renamed/removed that field. Accepted here because it's the
+     * only way to catch a wiring regression (e.g. swapped constructor arguments) without it; if
+     * client5 ever restructures HttpClientBuilder, delete these two tests rather than fight the
+     * reflection - the direct OktaHttpRequestRetryStrategy tests remain the source of truth for the
+     * capping behavior itself.
+     */
+    static HttpRequestRetryStrategy buildRetryStrategy(DefaultClientBuilder clientBuilder) {
+        HttpClientBuilder httpClientBuilder =
+            clientBuilder.createHttpClientBuilder(clientBuilder.getClientConfiguration())
+        Field field = HttpClientBuilder.class.getDeclaredField("retryStrategy")
+        field.setAccessible(true)
+        return (HttpRequestRetryStrategy) field.get(httpClientBuilder)
+    }
+
+    /**
+     * A 429 response with an x-rate-limit-reset one year in the future, simulating a malicious or
+     * MitM server trying to force an excessively long client-side sleep.
+     */
+    static HttpResponse maliciousRateLimitResponse() {
+        HttpResponse response = mock(HttpResponse)
+        when(response.getCode()).thenReturn(429)
+
+        long currentTime = System.currentTimeMillis()
+        long maliciousResetTime = currentTime / 1000 + TimeUnit.DAYS.toSeconds(365)
+
+        Header resetHeader = mock(Header)
+        when(resetHeader.getValue()).thenReturn(String.valueOf(maliciousResetTime))
+        when(response.getFirstHeader("x-rate-limit-reset")).thenReturn(resetHeader)
+
+        Header dateHeader = mock(Header)
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US)
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"))
+        when(dateHeader.getValue()).thenReturn(dateFormat.format(new Date(currentTime)))
+        when(response.getHeader("Date")).thenReturn(dateHeader)
+
+        return response
+    }
 
     static generatePrivateKey(String algorithm, int keySize, String fileNamePrefix, String fileNameSuffix) {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance(algorithm)

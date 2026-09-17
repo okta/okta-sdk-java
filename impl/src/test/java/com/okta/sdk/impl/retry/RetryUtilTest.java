@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
@@ -119,16 +120,127 @@ public class RetryUtilTest {
         when(dateHeader.getValue()).thenReturn(httpDateString);
         when(response.getHeader("Date")).thenReturn(dateHeader);
 
-        // Delay should be approximately 30 seconds (30000ms) plus the 1000ms padding
-        long delay = RetryUtil.get429DelayMillis(response);
+        // Delay should be approximately 30 seconds (30000ms) plus the 1000ms padding,
+        // well within the (generous) 60 second max used here
+        long delay = RetryUtil.get429DelayMillis(response, 60_000L);
         assertTrue(delay >= 30000 && delay <= 32000);
 
         // Test with missing rate limit header
         HttpResponse noResetResponse = mock(HttpResponse.class);
         when(noResetResponse.getFirstHeader("x-rate-limit-reset")).thenReturn(null);
-        assertEquals(-1, RetryUtil.get429DelayMillis(noResetResponse));
+        assertEquals(-1, RetryUtil.get429DelayMillis(noResetResponse, 60_000L));
     }
 
+    @Test
+    public void testGet429DelayMillisIsCappedByMaxDelay() throws ProtocolException {
+        // Simulates a malicious/MitM server returning an x-rate-limit-reset far in the future
+        // to try to force an excessively long thread sleep.
+        HttpResponse response = mock(HttpResponse.class);
 
+        long currentTime = System.currentTimeMillis();
+        long resetTime = currentTime / 1000 + TimeUnit.DAYS.toSeconds(365); // 1 year in the future
+
+        Header resetHeader = mock(Header.class);
+        when(resetHeader.getValue()).thenReturn(String.valueOf(resetTime));
+        when(response.getFirstHeader("x-rate-limit-reset")).thenReturn(resetHeader);
+
+        Header dateHeader = mock(Header.class);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        when(dateHeader.getValue()).thenReturn(dateFormat.format(new Date(currentTime)));
+        when(response.getHeader("Date")).thenReturn(dateHeader);
+
+        long maxDelayMillis = 20_000L;
+        long delay = RetryUtil.get429DelayMillis(response, maxDelayMillis);
+        assertEquals(maxDelayMillis, delay);
+    }
+
+    @Test
+    public void testGet429DelayMillisBelowMaxDelayIsUnaffected() throws ProtocolException {
+        HttpResponse response = mock(HttpResponse.class);
+
+        long currentTime = System.currentTimeMillis();
+        long resetTime = currentTime / 1000 + 5; // 5 seconds in the future
+
+        Header resetHeader = mock(Header.class);
+        when(resetHeader.getValue()).thenReturn(String.valueOf(resetTime));
+        when(response.getFirstHeader("x-rate-limit-reset")).thenReturn(resetHeader);
+
+        Header dateHeader = mock(Header.class);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        when(dateHeader.getValue()).thenReturn(dateFormat.format(new Date(currentTime)));
+        when(response.getHeader("Date")).thenReturn(dateHeader);
+
+        // 5s wait + 1s buffer = ~6s, well under the 20s max, so the max should not kick in
+        long delay = RetryUtil.get429DelayMillis(response, 20_000L);
+        assertTrue(delay >= 6000 && delay <= 7000);
+    }
+
+    @Test
+    public void testGet429DelayMillisCapWinsOverMinimumFloor() throws ProtocolException {
+        // Even a "normal" (small, non-malicious) reset value must still respect an aggressively
+        // small configured max, i.e. the safety ceiling always wins over MIN_RETRY_DELAY_MS.
+        HttpResponse response = mock(HttpResponse.class);
+
+        long currentTime = System.currentTimeMillis();
+        long resetTime = currentTime / 1000 + 30;
+
+        Header resetHeader = mock(Header.class);
+        when(resetHeader.getValue()).thenReturn(String.valueOf(resetTime));
+        when(response.getFirstHeader("x-rate-limit-reset")).thenReturn(resetHeader);
+
+        Header dateHeader = mock(Header.class);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        when(dateHeader.getValue()).thenReturn(dateFormat.format(new Date(currentTime)));
+        when(response.getHeader("Date")).thenReturn(dateHeader);
+
+        long maxDelayMillis = 500L; // below MIN_RETRY_DELAY_MS (1000ms)
+        assertEquals(maxDelayMillis, RetryUtil.get429DelayMillis(response, maxDelayMillis));
+    }
+
+    @Test
+    public void testGet429DelayMillisWithOverflowingResetHeaderIsStillBounded() throws ProtocolException {
+        // A malicious server could try to overflow the internal long math (resetLimit * 1000L) by
+        // sending a value near Long.MAX_VALUE. Regardless of how that overflow resolves, the final
+        // Math.min(..., maxDelayMillis) clamp must guarantee the result never exceeds maxDelayMillis.
+        HttpResponse response = mock(HttpResponse.class);
+
+        Header resetHeader = mock(Header.class);
+        when(resetHeader.getValue()).thenReturn(String.valueOf(Long.MAX_VALUE));
+        when(response.getFirstHeader("x-rate-limit-reset")).thenReturn(resetHeader);
+
+        Header dateHeader = mock(Header.class);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        when(dateHeader.getValue()).thenReturn(dateFormat.format(new Date()));
+        when(response.getHeader("Date")).thenReturn(dateHeader);
+
+        long maxDelayMillis = 20_000L;
+        long delay = RetryUtil.get429DelayMillis(response, maxDelayMillis);
+        assertTrue(delay >= 0 && delay <= maxDelayMillis);
+    }
+
+    @Test
+    public void testGet429DelayMillisWithExpiredResetTimeUsesMinimum() throws ProtocolException {
+        // Reset time already in the past should fall back to MIN_RETRY_DELAY_MS, not a negative delay.
+        HttpResponse response = mock(HttpResponse.class);
+
+        long currentTime = System.currentTimeMillis();
+        long resetTime = currentTime / 1000 - 3600; // 1 hour in the past
+
+        Header resetHeader = mock(Header.class);
+        when(resetHeader.getValue()).thenReturn(String.valueOf(resetTime));
+        when(response.getFirstHeader("x-rate-limit-reset")).thenReturn(resetHeader);
+
+        Header dateHeader = mock(Header.class);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        when(dateHeader.getValue()).thenReturn(dateFormat.format(new Date(currentTime)));
+        when(response.getHeader("Date")).thenReturn(dateHeader);
+
+        assertEquals(1000L, RetryUtil.get429DelayMillis(response, 20_000L));
+    }
 
 }

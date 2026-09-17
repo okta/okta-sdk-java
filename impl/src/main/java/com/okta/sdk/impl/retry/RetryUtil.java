@@ -33,8 +33,10 @@ public class RetryUtil {
 
     /**
      * Maximum exponential back-off time before retrying a request (20 seconds).
+     * Also used as the fallback ceiling for {@link #get429DelayMillis} when no
+     * explicit {@code retryMaxElapsed} value has been configured.
      */
-    private static final int DEFAULT_MAX_BACKOFF_IN_MILLISECONDS = 20 * 1000;
+    static final int DEFAULT_MAX_BACKOFF_IN_MILLISECONDS = 20 * 1000;
 
     /**
      * Initial backoff delay in milliseconds for exponential backoff calculation.
@@ -75,11 +77,16 @@ public class RetryUtil {
     /**
      * Calculates the delay in milliseconds for a 429 (Too Many Requests) response.
      * Uses the x-rate-limit-reset header to determine when the rate limit resets.
-     * 
+     *
+     * <p>The server-supplied reset time is untrusted input (e.g. a MitM or malicious
+     * server could return an arbitrarily large value), so the result is always capped
+     * at {@code maxDelayMillis} to prevent an unbounded thread sleep.</p>
+     *
      * @param response The HTTP response containing rate limit headers
+     * @param maxDelayMillis The maximum delay to allow, regardless of the reset header value
      * @return The delay in milliseconds, or -1 if headers are missing/invalid
      */
-    static long get429DelayMillis(HttpResponse response) {
+    static long get429DelayMillis(HttpResponse response, long maxDelayMillis) {
         // the time at which the rate limit will reset, specified in UTC epoch time.
         long resetLimit = getRateLimitResetValue(response);
         if (resetLimit == -1L) {
@@ -95,8 +102,9 @@ public class RetryUtil {
         long waitUntil = resetLimit * 1000L;
         long requestTime = requestDate.getTime();
         long delay = Math.max(waitUntil - requestTime + RATE_LIMIT_BUFFER_MS, MIN_RETRY_DELAY_MS);
-        logger.debug("429 wait: Math.max({} - {} + {}ms), {}ms = {})", 
-            waitUntil, requestTime, RATE_LIMIT_BUFFER_MS, MIN_RETRY_DELAY_MS, delay);
+        delay = Math.min(delay, maxDelayMillis);
+        logger.debug("429 wait: Math.min(Math.max({} - {} + {}ms, {}ms), {}ms) = {})",
+            waitUntil, requestTime, RATE_LIMIT_BUFFER_MS, MIN_RETRY_DELAY_MS, maxDelayMillis, delay);
 
         return delay;
     }
