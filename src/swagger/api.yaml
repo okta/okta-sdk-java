@@ -10679,6 +10679,17 @@ paths:
             UserSummaries:
               summary: Get the list of associated user summaries
               value: userSummary
+        - name: fields
+          in: query
+          description: |-
+            Specifies a comma-separated list of fields to include in the response, to reduce response size. `id` is always included even if omitted from the request.
+
+            Top-level fields: `id`, `status`, `created`, `lastUpdated`, `profile`, `_links`.
+
+            To select a subset of `profile` fields, use either `profile.<subfield>` or `profile:(<subfield1>,<subfield2>,...)`, where `<subfield>` is one of: `displayName`, `platform`, `manufacturer`, `model`, `osVersion`, `serialNumber`, `imei`, `meid`, `udid`, `sid`, `tpmPublicKeyHash`, `registered`, `secureHardwarePresent`, `screenLockType`, `diskEncryptionType`.
+          schema:
+            type: string
+            example: id,status,profile:(displayName,platform)
       responses:
         '200':
           description: OK
