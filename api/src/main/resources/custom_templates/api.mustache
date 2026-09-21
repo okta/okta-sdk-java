@@ -223,6 +223,43 @@ import org.openapitools.jackson.nullable.JsonNullableModule;
             );
             }
 
+        {{#hasOptionalParams}}
+        /**
+        * {{summary}} (compatibility overload)
+        * {{notes}}
+        *
+        * Convenience overload that omits the optional parameters below; they're sent unset. Use the overload that accepts all parameters to set them.
+        {{#optionalParams}}
+            * @param {{paramName}} {{description}} (optional, unset when using this overload)
+        {{/optionalParams}}
+        {{#returnType}}
+            * @return {{returnType}}
+        {{/returnType}}
+        * @throws ApiException if fails to make API call
+        */
+        public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#requiredParams}}{{{dataType}}} {{paramName}}{{^-last}}, {{/-last}}{{/requiredParams}}) throws ApiException {
+        {{#returnType}}return {{/returnType}}this.{{operationId}}({{#allParams}}{{#required}}{{paramName}}{{/required}}{{^required}}null{{/required}}, {{/allParams}}Collections.emptyMap());
+        }
+
+        /**
+        * {{summary}} (compatibility overload)
+        * {{notes}}
+        *
+        * Convenience overload that omits the optional parameters below; they're sent unset. Use the overload that accepts all parameters to set them.
+        {{#optionalParams}}
+            * @param {{paramName}} {{description}} (optional, unset when using this overload)
+        {{/optionalParams}}
+        * @param additionalHeaders additionalHeaders for this call
+        {{#returnType}}
+            * @return {{returnType}}
+        {{/returnType}}
+        * @throws ApiException if fails to make API call
+        */
+        public {{#returnType}}{{{returnType}}} {{/returnType}}{{^returnType}}void {{/returnType}}{{operationId}}({{#requiredParams}}{{{dataType}}} {{paramName}}, {{/requiredParams}}Map<String, String> additionalHeaders) throws ApiException {
+        {{#returnType}}return {{/returnType}}this.{{operationId}}({{#allParams}}{{#required}}{{paramName}}{{/required}}{{^required}}null{{/required}}, {{/allParams}}additionalHeaders);
+        }
+        {{/hasOptionalParams}}
+
         {{#returnType}}
         {{#isArray}}
 
@@ -334,6 +371,37 @@ import org.openapitools.jackson.nullable.JsonNullableModule;
                 }
             });
         }
+
+        {{#hasOptionalParams}}
+        /**
+        * {{summary}} (Paginated, compatibility overload)
+        * {{notes}}
+        *
+        * Convenience overload that omits the optional parameters below; they're sent unset. Use the overload that accepts all parameters to set them.
+        {{#optionalParams}}
+            * @param {{paramName}} {{description}} (optional, unset when using this overload)
+        {{/optionalParams}}
+            * @return Iterable&lt;{{returnBaseType}}&gt; lazy iterable over all pages
+        */
+        public Iterable<{{{returnBaseType}}}> {{operationId}}Paged({{#requiredParams}}{{{dataType}}} {{paramName}}{{^-last}}, {{/-last}}{{/requiredParams}}) {
+            return this.{{operationId}}Paged({{#allParams}}{{#required}}{{paramName}}{{/required}}{{^required}}null{{/required}}, {{/allParams}}Collections.emptyMap());
+        }
+
+        /**
+        * {{summary}} (Paginated with additional headers, compatibility overload)
+        * {{notes}}
+        *
+        * Convenience overload that omits the optional parameters below; they're sent unset. Use the overload that accepts all parameters to set them.
+        {{#optionalParams}}
+            * @param {{paramName}} {{description}} (optional, unset when using this overload)
+        {{/optionalParams}}
+            * @param additionalHeaders additional headers for this call
+            * @return Iterable&lt;{{returnBaseType}}&gt; lazy iterable over all pages
+        */
+        public Iterable<{{{returnBaseType}}}> {{operationId}}Paged({{#requiredParams}}{{{dataType}}} {{paramName}}, {{/requiredParams}}Map<String, String> additionalHeaders) {
+            return this.{{operationId}}Paged({{#allParams}}{{#required}}{{paramName}}{{/required}}{{^required}}null{{/required}}, {{/allParams}}additionalHeaders);
+        }
+        {{/hasOptionalParams}}
         {{/isArray}}
         {{/returnType}}
 
