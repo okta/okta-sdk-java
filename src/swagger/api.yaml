@@ -24068,6 +24068,7 @@ paths:
         Lists all groups of which the user is a member.
         > **Note:** To list all groups in your org, use the [List all groups endpoints in the Groups API](/openapi/okta-management/management/tag/Group/#tag/Group/operation/listGroups).
       operationId: listUserGroups
+      x-preserve-compat: true
       parameters:
         - $ref: '#/components/parameters/queryAfter'
         - name: limit
