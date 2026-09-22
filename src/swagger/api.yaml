@@ -10616,6 +10616,7 @@ paths:
 
         This operation requires [URL encoding](https://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.1). For example, `search=profile.displayName eq "Bob"` is encoded as `search=profile.displayName%20eq%20%22Bob%22`.
       operationId: listDevices
+      x-preserve-compat: true
       parameters:
         - name: after
           in: query
