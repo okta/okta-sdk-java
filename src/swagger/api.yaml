@@ -10717,6 +10717,7 @@ paths:
       summary: Retrieve a device
       description: Retrieves a device by `deviceId`
       operationId: getDevice
+      x-preserve-compat: true
       parameters:
         - name: expand
           in: query
