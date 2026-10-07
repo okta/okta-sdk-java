@@ -44,6 +44,10 @@
         <junit.version>4.13.2</junit.version>
         <com.github.jknack.handlebars.version>4.4.0</com.github.jknack.handlebars.version>
         <junit-version>5.10.2</junit-version>
+        <!-- Override to regenerate from a refreshed spec, e.g. -Dokta.sdk.spec.source=/path/to/management-minimal.yaml -->
+        <okta.sdk.spec.source>${project.basedir}/../src/swagger/api.yaml</okta.sdk.spec.source>
+        <okta.sdk.spec.fixed>${project.build.directory}/generated-sources/spec-fixed/api.yaml</okta.sdk.spec.fixed>
+        <okta.sdk.scripts.dir>${project.basedir}/../scripts</okta.sdk.scripts.dir>
     </properties>
 
     <dependencies>
@@ -187,6 +191,52 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <!-- Pre-process the spec so known generator-breaking constructs (e.g. a
+                         discriminator-mapped schema redeclaring its own discriminator property
+                         without an enum) are fixed before codegen runs. See scripts/GENERATION_FIXES.md -->
+                    <execution>
+                        <id>fix-spec</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-cp</argument>
+                                <argument>${settings.localRepository}/org/yaml/snakeyaml/2.0/snakeyaml-2.0.jar</argument>
+                                <argument>${okta.sdk.scripts.dir}/FixSpec.java</argument>
+                                <argument>--input</argument>
+                                <argument>${okta.sdk.spec.source}</argument>
+                                <argument>--output</argument>
+                                <argument>${okta.sdk.spec.fixed}</argument>
+                                <argument>--log</argument>
+                                <argument>${okta.sdk.scripts.dir}/GENERATION_FIXES.log</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <!-- Post-process generated Java sources for any residual codegen-output-only
+                         defects. No-op today; extend scripts/FixGenerated.java as new cases are found. -->
+                    <execution>
+                        <id>fix-generated</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>${okta.sdk.scripts.dir}/FixGenerated.java</argument>
+                                <argument>--generated-dir</argument>
+                                <argument>${project.build.directory}/generated-sources/openapi/src/gen/java/main</argument>
+                                <argument>--log</argument>
+                                <argument>${okta.sdk.scripts.dir}/GENERATION_FIXES.log</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.openapitools</groupId>
@@ -217,7 +267,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/../src/swagger/api.yaml</inputSpec>
+                            <inputSpec>${okta.sdk.spec.fixed}</inputSpec>
                             <generatorName>java</generatorName>
                             <packageName>com.okta.sdk.resource</packageName>
                             <apiPackage>com.okta.sdk.resource.api</apiPackage>
