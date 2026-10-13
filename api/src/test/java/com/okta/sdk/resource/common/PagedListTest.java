@@ -25,6 +25,7 @@ import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -76,6 +77,24 @@ public class PagedListTest {
         PagedList<?> pagedList = (PagedList<?>) result;
         assertEquals(pagedList.getSelf(), "https://example.okta.com/api/v1/users?after=xyz");
         assertFalse(pagedList.hasMoreItems());
+    }
+
+    @Test
+    public void getAfter_withNextPageHavingNoQueryString_returnsNull() {
+        PagedList<String> pagedList = new PagedList<>(Arrays.asList("a"), null, "https://example.okta.com/api/v1/devices", null);
+
+        assertNull(pagedList.getAfter());
+        assertFalse(pagedList.hasMoreItems());
+    }
+
+    @Test
+    public void getAfter_withQueryPairMissingEquals_doesNotThrow() {
+        PagedList<String> pagedList = new PagedList<>(Arrays.asList("a"), null, "https://example.okta.com/api/v1/devices?flag&after=abc", null);
+
+        assertEquals(pagedList.getAfter(), "abc");
+
+        PagedList<String> noAfter = new PagedList<>(Arrays.asList("a"), null, "https://example.okta.com/api/v1/devices?flag", null);
+        assertNull(noAfter.getAfter());
     }
 
     @Test
