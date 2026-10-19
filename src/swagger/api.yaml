@@ -81739,6 +81739,7 @@ components:
         - SUCCESS
         - TIMEOUT
         - TIME_WINDOW_EXCEEDED
+        - WAITING
       x-enumDescriptions:
         CANCELED: User cancelled the verification
         CHALLENGE: Okta issued a verification challenge
@@ -81750,6 +81751,7 @@ components:
         SUCCESS: User completed the verification
         TIMEOUT: Okta didn't complete the verification within the allowed time window
         TIME_WINDOW_EXCEEDED: User completed the verification outside of the allowed time window. Another verification is required.
+        WAITING: Verification is in progress
     UserFactorVerifyResultWaiting:
       description: Result of a factor verification
       type: string
