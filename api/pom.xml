@@ -188,6 +188,33 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Resolve the SnakeYAML jar that FixSpec.java is run against, rather than assuming it is
+                 already present in the local Maven repository. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.1</version>
+                <executions>
+                    <execution>
+                        <id>fetch-fixspec-snakeyaml</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.yaml</groupId>
+                                    <artifactId>snakeyaml</artifactId>
+                                    <version>2.0</version>
+                                    <destFileName>snakeyaml-2.0.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/fixspec-lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -206,7 +233,7 @@
                             <executable>java</executable>
                             <arguments>
                                 <argument>-cp</argument>
-                                <argument>${settings.localRepository}/org/yaml/snakeyaml/2.0/snakeyaml-2.0.jar</argument>
+                                <argument>${project.build.directory}/fixspec-lib/snakeyaml-2.0.jar</argument>
                                 <argument>${okta.sdk.scripts.dir}/FixSpec.java</argument>
                                 <argument>--input</argument>
                                 <argument>${okta.sdk.spec.source}</argument>
