@@ -42,7 +42,19 @@ import org.yaml.snakeyaml.Yaml;
 
 public class FixSpec {
 
-    record Fix(String baseName, String childName, String propName, String discValue) {
+    static final class Fix {
+        final String baseName;
+        final String childName;
+        final String propName;
+        final String discValue;
+
+        Fix(String baseName, String childName, String propName, String discValue) {
+            this.baseName = baseName;
+            this.childName = childName;
+            this.propName = propName;
+            this.discValue = discValue;
+        }
+
         String describe() {
             return "discriminator-missing-enum: " + baseName + " -> " + childName + "." + propName
                 + " had no enum; injected enum: [" + discValue + "]";
@@ -119,7 +131,19 @@ public class FixSpec {
     // Resolves a schema's `allOf` into its ($ref) parent schema and its own
     // inline `{properties: {...}}` branch, or (null, null) if the schema
     // doesn't have that exact shape.
-    record ParentAndOwnBranch(Map<String, Object> parent, Map<String, Object> ownBranch) {}
+    static final class ParentAndOwnBranch {
+        private final Map<String, Object> parent;
+        private final Map<String, Object> ownBranch;
+
+        ParentAndOwnBranch(Map<String, Object> parent, Map<String, Object> ownBranch) {
+            this.parent = parent;
+            this.ownBranch = ownBranch;
+        }
+
+        Map<String, Object> parent() { return parent; }
+
+        Map<String, Object> ownBranch() { return ownBranch; }
+    }
 
     static ParentAndOwnBranch resolveAllOfParentAndOwnBranch(Map<String, Object> schemas, Map<String, Object> schema) {
         Object allOfObj = schema.get("allOf");
@@ -432,16 +456,19 @@ public class FixSpec {
         return args;
     }
 
+    private static final int DEFAULT_CODEPOINT_LIMIT = 50_000_000;
+
     public static void main(String[] argv) throws IOException {
         Map<String, String> args = parseArgs(argv);
         Path input = Paths.get(requireArg(args, "input"));
         Path output = Paths.get(requireArg(args, "output"));
         String logPath = args.get("log");
 
-        // Match the project's own codepoint-limit workaround (see .mvn/jvm.config);
-        // SnakeYAML's Java API only honors this via LoaderOptions, not a system property.
+        // SnakeYAML's Java API only honors the limit via LoaderOptions, not a system property.
+        // Defaults to the project's codepoint-limit workaround (see .mvn/maven.config); the spec Bacon builds
+        // is larger than the checked-in one, so allow an override via -Dsnakeyaml.codepoint.limit=<n>.
         LoaderOptions loaderOptions = new LoaderOptions();
-        loaderOptions.setCodePointLimit(3_500_000);
+        loaderOptions.setCodePointLimit(Integer.getInteger("snakeyaml.codepoint.limit", DEFAULT_CODEPOINT_LIMIT));
         Yaml yaml = new Yaml(loaderOptions);
         Map<String, Object> spec;
         try (var reader = Files.newBufferedReader(input, StandardCharsets.UTF_8)) {
