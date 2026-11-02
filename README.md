@@ -832,12 +832,12 @@ In most cases, you won't need to build the SDK from source. If you want to build
 > 1. Ensure `.mvn/jvm.config` is present with appropriate settings:
 >    ```
 >    -Xmx2g
->    -DmaxYamlCodePoints=3500000
+>    -DmaxYamlCodePoints=50000000
 >    ```
 > 
 > 2. Ensure `.mvn/maven.config` has SnakeYAML limits:
 >    ```
->    -Dsnakeyaml.codepoint.limit=3500000
+>    -Dsnakeyaml.codepoint.limit=50000000
 >    ```
  
 ## Contributing
